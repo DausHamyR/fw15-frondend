@@ -9,10 +9,10 @@ import org2 from '../assets/org2.png'
 import org3 from '../assets/org3.png'
 import org4 from '../assets/org4.png'
 import peta from '../assets/peta.png'
-import fb from '../assets/fb.png'
-import wa from '../assets/wa.png'
-import ig from '../assets/ig.png'
-import twitter from '../assets/twitter.png'
+import {AiFillFacebook} from "react-icons/ai"
+import {FaWhatsappSquare} from "react-icons/fa"
+import {AiFillInstagram} from "react-icons/ai"
+import {AiOutlineTwitter} from "react-icons/ai"
 import Avatar from '../assets/Avatar.png'
 import menuHamburger from '../assets/menu-hamburger.png'
 import { Link } from "react-router-dom"
@@ -81,7 +81,7 @@ const Event = ()=> {
                 <img src={peta} />
             </div>
             <div className="flex justify-center items-center text-white bg-blue-500 w-[50%] max-md:w-full h-[45px] mt-10 rounded-xl mb-16">
-                <a href="payment.html" className="font-semibold tracking-wider">Buy Tickets</a>
+                <Link to='/payment' className="font-semibold tracking-wider">Buy Tickets</Link>
             </div>
         </div>
     </main>
@@ -92,11 +92,19 @@ const Event = ()=> {
                 <img src={Wetick} className="w-[90px] h-[35px]" />
             </div>
             <h3 className="font-medium mt-4">Find events you love with our</h3>
-            <div className="flex w-[120px] h-[150px] justify-between mt-3">
-                <img src={fb} className="w-[18px] h-[18px]" />
-                <img src={wa} className="w-[18px] h-[18px]" />
-                <img src={ig} className="w-[18px] h-[18px]" />
-                <img src={twitter} className="w-[18px] h-[18px]" />
+            <div className="flex w-[140px] h-[150px] justify-between mt-3">
+                <button className="w-[18px] h-[18px]">
+                <AiFillFacebook color='8BACAA' size={25} />
+                </button>
+                <button className="w-[18px] h-[18px]">
+                <FaWhatsappSquare color='8BACAA' size={25} />
+                </button>
+                <button className="w-[18px] h-[18px]">
+                <AiFillInstagram color='8BACAA' size={25} />
+                </button>
+                <button className="w-[18px] h-[18px]">
+                <AiOutlineTwitter color='8BACAA' size={25} />
+                </button>
             </div>
             <h2 className="text-slate-600 max-md:hidden">© 2020 Wetick All Rights Reserved</h2>
         </section>

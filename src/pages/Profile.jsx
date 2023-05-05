@@ -2,10 +2,10 @@ import Fill from '../assets/Fill 1.png'
 import Wetick from '../assets/Wetick.png'
 import Avatar from '../assets/Avatar.png'
 import menuHamburger from '../assets/menu-hamburger.png'
-import fb from '../assets/fb.png'
-import wa from '../assets/wa.png'
-import ig from '../assets/ig.png'
-import twitter from '../assets/twitter.png'
+import {AiFillFacebook} from "react-icons/ai"
+import {FaWhatsappSquare} from "react-icons/fa"
+import {AiFillInstagram} from "react-icons/ai"
+import {AiOutlineTwitter} from "react-icons/ai"
 import Vector from '../assets/Vector.png'
 import Vector1 from '../assets/Vector (1).png'
 import Vector3 from '../assets/Vector (3).png'
@@ -59,22 +59,22 @@ const Profile = ()=> {
                     <h3 className="ml-6">Card</h3>
                     <div className="relative left-[-85px] w-24 h-[1px] bg-black"></div>
                 </div>
-                <a href="./profile.html" className="flex items-center font-semibold ml-12">
+                <Link to='/profile' className="flex items-center font-semibold ml-12">
                     <img src={Vector3} className="w-[18.75px] h-[18.75px]" />
                     <h3 className="ml-6 text-blue-500">Edit Profile</h3>
-                </a>
-                <a href="./changePassword.html" className="flex items-center font-semibold ml-12">
+                </Link>
+                <Link to='/change-password' className="flex items-center font-semibold ml-12">
                     <img src={Vector4} className="w-[16px] h-[20px]" />
                     <h3 className="ml-6">Change Password</h3>
-                </a>
-                <a href="myBooking.html" className="flex items-center font-semibold">
+                </Link>
+                <Link to='/my-booking' className="flex items-center font-semibold">
                     <img src={Vector5} className="w-[20px] h-[20px]" />
                     <h3 className="ml-6">My Booking</h3>
-                </a>
-                <a href="myWishlist.html" className="flex items-center font-semibold">
+                </Link>
+                <Link to='/my-wishlist' className="flex items-center font-semibold">
                     <img src={Vector6} className="w-[20px] h-[18px]" />
                     <h3 className="ml-6">My Wishlist</h3>
-                </a>
+                </Link>
                 <div className="flex items-center font-semibold">
                     <img src={Vector7} className="w-[18.5px] h-[19px]" />
                     <h3 className="ml-6">Settings</h3>
@@ -159,11 +159,19 @@ const Profile = ()=> {
                 <img src={Wetick} className="w-[90px] h-[35px]" />
             </div>
             <h3 className="font-medium mt-4">Find events you love with our</h3>
-            <div className="flex w-[120px] h-[150px] justify-between mt-3">
-                <img src={fb} className="w-[18px] h-[18px]" />
-                <img src={wa} className="w-[18px] h-[18px]" />
-                <img src={ig} className="w-[18px] h-[18px]" />
-                <img src={twitter} className="w-[18px] h-[18px]" />
+            <div className="flex w-[140px] h-[150px] justify-between mt-3">
+                <button className="w-[18px] h-[18px]">
+                <AiFillFacebook color='8BACAA' size={25} />
+                </button>
+                <button className="w-[18px] h-[18px]">
+                <FaWhatsappSquare color='8BACAA' size={25} />
+                </button>
+                <button className="w-[18px] h-[18px]">
+                <AiFillInstagram color='8BACAA' size={25} />
+                </button>
+                <button className="w-[18px] h-[18px]">
+                <AiOutlineTwitter color='8BACAA' size={25} />
+                </button>
             </div>
             <h2 className="text-slate-600 max-md:hidden">© 2020 Wetick All Rights Reserved</h2>
         </section>

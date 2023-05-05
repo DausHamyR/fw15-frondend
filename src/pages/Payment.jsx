@@ -2,10 +2,10 @@ import Fill from '../assets/Fill 1.png'
 import Wetick from '../assets/Wetick.png'
 import Avatar from '../assets/Avatar.png'
 import menuHamburger from '../assets/menu-hamburger.png'
-import fb from '../assets/fb.png'
-import wa from '../assets/wa.png'
-import ig from '../assets/ig.png'
-import twitter from '../assets/twitter.png'
+import {AiFillFacebook} from "react-icons/ai"
+import {FaWhatsappSquare} from "react-icons/fa"
+import {AiFillInstagram} from "react-icons/ai"
+import {AiOutlineTwitter} from "react-icons/ai"
 import Ellipse7 from '../assets/Ellipse 7.png'
 import Ellipse8 from '../assets/Ellipse 8.png'
 import cardBiru from '../assets/card-biru.png'
@@ -142,11 +142,19 @@ const Tickets = ()=> {
                 <img src={Wetick} className="w-[90px] h-[35px]" />
             </div>
             <h3 className="font-medium mt-4">Find events you love with our</h3>
-            <div className="flex w-[120px] h-[150px] justify-between mt-3">
-                <img src={fb} className="w-[18px] h-[18px]" />
-                <img src={wa} className="w-[18px] h-[18px]" />
-                <img src={ig} className="w-[18px] h-[18px]" />
-                <img src={twitter} className="w-[18px] h-[18px]" />
+            <div className="flex w-[140px] h-[150px] justify-between mt-3">
+                <button className="w-[18px] h-[18px]">
+                <AiFillFacebook color='8BACAA' size={25} />
+                </button>
+                <button className="w-[18px] h-[18px]">
+                <FaWhatsappSquare color='8BACAA' size={25} />
+                </button>
+                <button className="w-[18px] h-[18px]">
+                <AiFillInstagram color='8BACAA' size={25} />
+                </button>
+                <button className="w-[18px] h-[18px]">
+                <AiOutlineTwitter color='8BACAA' size={25} />
+                </button>
             </div>
             <h2 className="text-slate-600 max-md:hidden">© 2020 Wetick All Rights Reserved</h2>
         </section>

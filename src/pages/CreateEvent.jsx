@@ -17,7 +17,7 @@ import {FaWhatsappSquare} from "react-icons/fa"
 import {AiFillInstagram} from "react-icons/ai"
 import {AiOutlineTwitter} from "react-icons/ai"
 
-const ManageEvent = ()=> {
+const CreateEvent = ()=> {
     return (
         <>
         <header className="w-full flex justify-between items-center bg-white px-6">
@@ -230,4 +230,4 @@ const ManageEvent = ()=> {
     )
 }
 
-export default ManageEvent
+export default CreateEvent
