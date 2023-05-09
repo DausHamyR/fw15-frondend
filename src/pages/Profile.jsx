@@ -99,7 +99,7 @@ const Profile = ()=> {
                 <article className="w-[55%] grid content-between h-[550px] text-md font-normal pt-8 pl-8">
                     <div className="flex justify-between max-md:grid max-md:mb-6">
                         <h3 className="max-md:mb-2">Name</h3>
-                        <input type="text" placeholder="Jhon Tomson" className="w-[315px] h-[45px] rounded-2xl border-2 border-slate-400 pl-6 tracking-wider" />
+                        <input type="text" placeholder="Jhon Tomson" className="input input-bordered w-full max-w-xs" />
                     </div>
                     <div className="flex max-md:grid max-md:mb-6">
                         <h3 className="max-md:mb-2">Username</h3>
@@ -122,25 +122,26 @@ const Profile = ()=> {
                     </div>
                     <div className="flex justify-between max-md:grid max-md:mb-6">
                         <h3 className="max-md:mb-2">Profession</h3>
-                        <input type="text" placeholder="Entrepreneur" className="w-[315px] h-[45px] rounded-2xl border-2 border-slate-400 pl-6 tracking-wider" />
+                        <input type="text" placeholder="Entrepreneur" className="input input-bordered w-full max-w-xs" />
                     </div>
                     <div className="flex justify-between max-md:grid max-md:mb-6">
                         <h3 className="max-md:mb-2">Nationality</h3>
-                        <input type="text" placeholder="Indonesia" className="w-[315px] h-[45px] rounded-2xl border-2 border-slate-400 pl-6 tracking-wider" />
+                        <input type="text" placeholder="Indonesia" className="input input-bordered w-full max-w-xs" />
                     </div>
                     <div className="flex max-md:grid">
                         <h3 className="max-md:mb-2">Birthday Date</h3>
                         <p className="pl-[9vw] max-md:pl-0 text-slate-400">24 / 10 / 2000 <span>Edit</span></p>
                     </div>
                 </article>
-                <div className="w-[45%] h-[550px] max-lg:hidden">
-                    <div className="w-full grid">
+                <div className="w-[45%] h-[550px] max-md:hidden">
+                    <div className="w-[80%] grid">
                         <img src={Avatar} className="h-[110px] w-[110px] justify-self-center p-1 brightness-75 border-[4px] rounded-full border-blue-500" />
                         <img src={kamera} className="relative left-[47.5%] max-md:left-[45%] max-lg:left-[45.5%] top-[-60px]" />
                     </div>
-                    <div className="w-[80%] h-[40px] mx-[10%] flex justify-center items-center border-2 rounded-md border-blue-500 mt-8">
+                    <button className='btn btn-outline btn-primary w-[80%] mt-8'>Choose Photo</button>
+                    {/* <div className="w-[80%] h-[40px] mx-[10%] flex justify-center items-center border-2 rounded-md border-blue-500 mt-8">
                         <h1 className="text-blue-500 font-bold tracking-wider">Choose Photo</h1>
-                    </div>
+                    </div> */}
                     <div className="w-[80%] mx-[10%]">
                         <p className="my-4">Image size: max, 2 MB</p>
                         <p>Image formats: .JPG, .JPEG, .PNG</p>
@@ -148,7 +149,7 @@ const Profile = ()=> {
                 </div>
             </div>
             <div className="mt-10 ml-8">
-                <button className="w-[315px] h-[60px] bg-blue-500 text-white text-xl rounded-xl">Save</button>
+                <button className="btn btn-primary w-full max-w-xs">Save</button>
             </div>
         </section>
     </main>

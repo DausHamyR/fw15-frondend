@@ -7,11 +7,11 @@ import { Link } from "react-router-dom"
 const Register = ()=> {
     return (
         <main className="container mx-auto flex h-[100vh]">
-        <section className="bg-blue-500 w-[50%] max-sm:hidden">
+        <section className="bg-blue-500 w-[50%] max-md:hidden">
             <img src={male} className="relative left-[55%] top-[300px]" />
             <img src={female} className="relative left-[5%] top-[-90px]" />
         </section>
-        <section className="bg-white w-[50%] max-sm:w-full">
+        <section className="bg-white w-[50%] max-md:w-full">
             <div className="w-[70%] h-[80vh] my-[80px] mx-[15%]">
                 <div className="w-full relative top-[50px] flex">
                     <img src={Fill} />
@@ -19,20 +19,22 @@ const Register = ()=> {
                 </div>
                 <div className="w-full relative top-[80px]">
                     <h1 className="text-3xl mb-[15px]">Sign Up</h1>
-                    <h1 className="max-sm:w-[250px]">Already have an account? <Link className="text-blue-500" to="/login">Log In</Link></h1>
+                    <h1 className="max-md:w-[250px]">Already have an account? <Link className="text-blue-500" to="/login">Log In</Link></h1>
                 </div>
                 <div>
                     <form action="">
-                        <input type="text" placeholder="Full Name" className="w-[315px] h-[45px] bg-white border rounded-[15px] relative top-[110px] pl-[25px] tracking-wide" />
-                        <input type="email" placeholder="Email" className="w-[315px] h-[45px] bg-white border rounded-[15px] relative top-[125px] pl-[25px] tracking-wide" />
-                        <input type="password" placeholder="Password" className="w-[315px] h-[45px] bg-white border rounded-[15px] relative top-[140px] pl-[25px] tracking-wide" />
-                        <input type="password" placeholder="Confirm Password" className="w-[315px] h-[45px] bg-white border rounded-[15px] relative top-[155px] pl-[25px] tracking-wide" />
+                        <input type="text" placeholder="Full Name" className="input input-bordered w-full max-w-xs relative top-[110px]" />
+                        {/* <input type="text" placeholder="Full Name" className="w-[315px] h-[45px] bg-white border rounded-[15px] relative top-[110px] pl-[25px] tracking-wide" /> */}
+                        <input type="email" placeholder="Email" className="input input-bordered w-full max-w-xs relative top-[125px]" />
+                        <input type="password" placeholder="Password" className="input input-bordered w-full max-w-xs relative top-[140px]" />
+                        <input type="password" placeholder="Confirm Password" className="input input-bordered w-full max-w-xs relative top-[155px]" />
                     </form>
                     <div className="relative top-[170px] flex">
                         <input type="checkbox" />
                         <h5 className="ml-[15px] tracking-wide">Accept terms and condition</h5>
                     </div>
-                    <button className="w-[315px] h-[45px] bg-blue-500 rounded-[15px] relative top-[185px] text-white text-lg tracking-wider">Sign Up</button>
+                    <button className="btn btn-primary w-[315px] relative top-[185px]">Sign Up</button>
+                    {/* <button className="w-[315px] h-[45px] bg-blue-500 rounded-[15px] relative top-[185px] text-white text-lg tracking-wider">Sign Up</button> */}
                 </div>
             </div>
         </section>

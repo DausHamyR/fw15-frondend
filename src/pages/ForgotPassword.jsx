@@ -22,9 +22,9 @@ const ForgotPassword = ()=> {
                 </div>
                 <div>
                     <form action="">
-                        <input type="email" placeholder="Email" className="w-[315px] h-[45px] bg-white border rounded-[15px] relative top-[125px] pl-[25px] tracking-wide" />
+                        <input type="email" placeholder="Email" className="input input-bordered w-full max-w-xs relative top-[125px]" />
+                        <button className="btn btn-primary w-full max-w-xs relative top-[155px]">Send</button>
                     </form>
-                    <button className="w-[315px] h-[45px] bg-blue-500 rounded-[15px] relative top-[155px] text-white text-lg tracking-wider">Send</button>
                 </div>
             </div>
         </section>

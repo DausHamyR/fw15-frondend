@@ -11,12 +11,14 @@ import ChangePassword from "./pages/ChangePassword";
 import MyBooking from "./pages/MyBooking";
 import MyWishlist from "./pages/MyWishlist";
 import CreateEvent from "./pages/CreateEvent";
+import Modal from "./pages/ModalProfile";
+import Latihan from "./pages/Latihan";
 
 const App = ()=> {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/home" element={<Home />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -28,6 +30,8 @@ const App = ()=> {
                 <Route path="/my-booking" element={<MyBooking />} />
                 <Route path="/my-wishlist" element={<MyWishlist />} />
                 <Route path="/create-event" element={<CreateEvent />} />
+                <Route path="/modal" element={<Modal />} />
+                <Route path="/latihan" element={<Latihan />} />
             </Routes>
         </BrowserRouter>
     )

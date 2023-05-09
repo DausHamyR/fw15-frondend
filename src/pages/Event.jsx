@@ -16,8 +16,19 @@ import {AiOutlineTwitter} from "react-icons/ai"
 import Avatar from '../assets/Avatar.png'
 import menuHamburger from '../assets/menu-hamburger.png'
 import { Link } from "react-router-dom"
+import { useEffect, useState } from "react"
+import axios from "axios"
+import moment from "moment"
 
 const Event = ()=> {
+    const [detailEvent, setDetailEvent] = useState([])
+    useEffect(()=> {
+        async function getDetailEvent(){
+            const {data} = await axios.get('http://localhost:8888//events/:id')
+            setDetailEvent(data.results)
+        }
+        getDetailEvent()
+    }, [])
     return (
         <>
         <header className="w-full flex justify-between items-center bg-white px-6">

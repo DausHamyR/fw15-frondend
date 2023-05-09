@@ -91,17 +91,17 @@ const ChangePassword = ()=> {
             <div className="w-[80%] grid h-[400px] ml-16 max-sm:ml-4">
                 <div className="flex items-center justify-between">
                     <h1 className="text-slate-400">Old Password</h1>
-                    <input type="text" className="w-[70%] h-[45px] rounded-2xl border-2 border-slate-400 pl-6 tracking-wider" placeholder="Input Old Password ..." />
+                    <input type="text" className="input input-bordered w-[70%] h-[45px] rounded-2xl border-2 border-slate-400 pl-6 tracking-wider" placeholder="Input Old Password ..." />
                 </div>
                 <div className="flex items-center justify-between">
                     <h1 className="text-slate-400">New Password</h1>
-                    <input type="text" className="w-[70%] h-[45px] rounded-2xl border-2 border-slate-400 pl-6 tracking-wider" placeholder="Input New Password ..." />
+                    <input type="text" className="input input-bordered w-[70%] h-[45px] rounded-2xl border-2 border-slate-400 pl-6 tracking-wider" placeholder="Input New Password ..." />
                 </div>
                 <div className="flex items-center justify-between">
                     <h1 className="text-slate-400">Confirm Password</h1>
-                    <input type="text" className="w-[70%] h-[45px] rounded-2xl border-2 border-slate-400 pl-6 tracking-wider" placeholder="Input Confirm Password ..." />
+                    <input type="text" className="input input-bordered w-[70%] h-[45px] rounded-2xl border-2 border-slate-400 pl-6 tracking-wider" placeholder="Input Confirm Password ..." />
                 </div>
-                <button className="w-full h-[60px] bg-blue-500 text-white text-xl rounded-xl mt-10">Update</button>
+                <button className="btn btn-primary w-full h-[60px] text-xl mt-10">Update</button>
             </div>
         </section>
     </main>
