@@ -12,28 +12,34 @@ import MyBooking from "./pages/MyBooking";
 import MyWishlist from "./pages/MyWishlist";
 import CreateEvent from "./pages/CreateEvent";
 import Modal from "./pages/ModalProfile";
-import Latihan from "./pages/Latihan";
+import { Provider } from "react-redux";
+import { store, persistor } from "./redux/store";
+import PrivateRoute from "./components/PrivateRoute";
+import {PersistGate} from 'redux-persist/integration/react'
 
 const App = ()=> {
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/home" element={<Home />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/event" element={<Event />} />
-                <Route path="/tickets" element={<Tickets />} />
-                <Route path="/payment" element={<Payment />} />
-                <Route path="/change-password" element={<ChangePassword />} />
-                <Route path="/my-booking" element={<MyBooking />} />
-                <Route path="/my-wishlist" element={<MyWishlist />} />
-                <Route path="/create-event" element={<CreateEvent />} />
-                <Route path="/modal" element={<Modal />} />
-                <Route path="/latihan" element={<Latihan />} />
-            </Routes>
-        </BrowserRouter>
+        <Provider store={store}>
+            <PersistGate persistor={persistor}>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/home" element={<Home />} />
+                        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/forgot-password" element={<ForgotPassword />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/event/:id" element={<Event />} />
+                        <Route path="/tickets" element={<PrivateRoute><Tickets /></PrivateRoute>} />
+                        <Route path="/payment" element={<PrivateRoute><Payment /></PrivateRoute>} />
+                        <Route path="/change-password" element={<ChangePassword />} />
+                        <Route path="/my-booking" element={<MyBooking />} />
+                        <Route path="/my-wishlist" element={<MyWishlist />} />
+                        <Route path="/create-event" element={<CreateEvent />} />
+                        <Route path="/modal" element={<Modal />} />
+                    </Routes>
+                </BrowserRouter>
+            </PersistGate>
+        </Provider>
     )
 }
 

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import axios from "axios"
 import moment from "moment"
 import Fill from '../assets/Fill 1.png'
 import Wetick from '../assets/Wetick.png'
@@ -29,11 +28,18 @@ import {FaWhatsappSquare} from "react-icons/fa"
 import {AiFillInstagram} from "react-icons/ai"
 import {AiOutlineTwitter} from "react-icons/ai"
 import menuHamburger from '../assets/menu-hamburger.png'
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import http from "../helpers/http.helper"
+import { useDispatch, useSelector } from "react-redux"
+// import { useDispatch } from "react-redux"
+import { logout as logoutAction, setWarningMessage } from "../redux/reducers/auth"
+// dispatchEvent(logoutAction())
 
 const Home = ()=> {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [profile, setProfile] = useState({})
+    const token = useSelector(state => state.auth.token)
     const [events, setEvents] = useState([])
     const [cities, setCities] = useState([])
     const [category, setCategory] = useState([])
@@ -42,41 +48,61 @@ const Home = ()=> {
 
     useEffect(()=> {
         async function getProfileData(){
-            const token = window.localStorage.getItem('token')
-            const {data} = await http(token).get('/profile')
+            const fallback = (message)=> {
+                dispatch(logoutAction())
+                dispatch(setWarningMessage(message))
+                navigate('/login')
+            }
+            const {data} = await http(token, fallback).get('/profile')
             setProfile(data.results)
         }
         async function getEvents(){
-            const {data} = await axios.get('http://localhost:8888/events')
+            const {data} = await http().get('http://localhost:8888/events')
             setEvents(data.results)
         }
         async function getCities(){
-            const {data} = await axios.get('http://localhost:8888/city')
+            const {data} = await http().get('http://localhost:8888/city')
             setCities(data.results)
         }
         async function getCategory(){
-            const {data} = await axios.get('http://localhost:8888/categories')
+            const {data} = await http(token).get('/categories', {params: {limit: 1000}})
             setCategory(data.results)
         }
         async function getPartners(){
-            const {data} = await axios.get('http://localhost:8888/partners')
+            const {data} = await http().get('http://localhost:8888/partners')
             setPartners(data.results)
         }
-        getProfileData()
+        if(token){
+            getProfileData()
+        }
+        // if(window.localStorage.getItem('token')){
+        //     setToken(window.localStorage.getItem('token'))
+        // }
         getEvents()
         getCities()
         getCategory()
         getPartners()
+        // if(window.localStorage.getItem('token')){
+        //     setToken(window.localStorage.getItem('token'))
+        // }
     }, [])
-    const handleClick = (category) => {
-        setSelectedCategory(category)
+    const doLogout = ()=> {
+        window.localStorage.removeItem('token')
+        dispatch(logoutAction())
+        navigate('/login')
     }
-        // const categories = ["Music", "Arts", "Outdoors", "Workshop" ,"Sport", "Festival", "Fashion"]
-    // function handleClick(category) {
-    //     setSelectedCategory(category);
-    // }
+    const handleClick = (categoryName) => {
+        if (categoryName === selectedCategory) {
+          return
+        }
+        setSelectedCategory(categoryName)
+        // setErrorMessage('')
+      }
+    
+      const categoryOrder = ['Music', 'Arts', 'Outdoor', 'Workshop', 'Sport', 'Festival', 'Fashion']
     return (
         <>
+        {/* {token ? <h1>{profile?.fullName}</h1> :} */}
         <header className="bg-white flex items-center justify-between flex-wrap pt-4 px-4 fixed w-full z-50">
             <section className="flex items-center flex-[1.3] max-md:flex-[2.5]">
                 <img src={Fill} className="w-16" />
@@ -91,10 +117,16 @@ const Home = ()=> {
                         <Link to='/create-event' className="w-[104px] block mt-4 sm:inline-block text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium mt-[0]">Create Event</Link>
                         <Link to='/event' className="w-[0] block mt-4 sm:inline-block text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium mt-[0]">Location</Link>
                 </nav>
+                {token ? 
+                <div>
+                    <Link to={'/profile'} className="text-black ml-4">{profile.fullName}</Link>
+                    <button onClick={doLogout} className="btn btn-error w-[100px]">Logout</button>
+                </div> :
                 <section>
                     <Link to='/login' className="btn btn-active btn-primary w-[100px] mr-4">Log in</Link>
                     <Link to='/register' className="btn btn-active btn-ghost w-[100px]">Sign Up</Link>
                 </section>
+                }
             </div>
         </header>
 <main className="container mx-auto pt-4">
@@ -136,7 +168,7 @@ const Home = ()=> {
     <section className="w-full flex flex-wrap justify-evenly">
         {events.map(event => {
             return (
-        <Link className="w-[200px]" key={event.id} to='/event'>
+        <Link className="w-[200px]" key={`event-${event.id}`} to={`/event/${event.id}`}>
             <img className="h-[270px] object-cover rounded-2xl filter brightness-75" src={`http://localhost:8888/uploads/${event.picture}`} />
             <div className="relative top-[-80px] left-[5px] text-white">
                 <h1 className="text-xs">{moment(event.date).format('DD-MM-YYYY')}</h1>
@@ -242,19 +274,25 @@ const Home = ()=> {
         <div className="font-bold text-2xl flex flex-col items-center gap-[30px] my-[40px]">Browse Events By Category</div>
         <div className="flex md:flex-row flex-col flex-1 gap-3">
             <div className="flex">
-                {category.map(category => (
+                {categoryOrder.map(cat => {
+                    const catObj = category.find(c => c.name === cat)
+                    if(catObj) {
+                    return (
                     <div
-                    className={`flex justify-center items-center min-w-[100px] ${
-                        category.name === selectedCategory
+                    className={`flex justify-center items-center min-w-[170px] ${
+                        catObj.name === selectedCategory
                         ? 'text-blue-500 border-b-2 pb-1 border-blue-500 font-bold'
                         : 'text-gray-600 border-b-2 pb-1 border-transparent hover:border-red-400 font-bold'
                     }`}
-                    key={category.id}
-                    onClick={() => handleClick(category.name)}
+                    key={catObj.id}
+                    onClick={() => handleClick(catObj.name)}
                     >
-                    {category.name}
+                    {catObj.name}
                     </div>
-                ))}
+                )
+                }
+            return null
+            })}
             </div>
                 {/* <div className="flex justify-center items-center min-w-[100px]">
                 <a className="text-blue-500 border-b-2 pb-1 border-blue-500 font-bold" href="#">Music</a>
@@ -289,12 +327,12 @@ const Home = ()=> {
             <button className="hidden md:inline-block font-bold rounded-lg text-slate-600 h-8 w-8 bg-slate-200">&larr;</button>
         </div>
         {category
-        .filter((category) => category.name === selectedCategory)
-        .map((category) => {
+        .filter((cat) => cat.name === selectedCategory)
+        .map((cat) => {
             return (
-        <div className="w-[300px] h-[350px] rounded-xl overflow-hidden flex flex-col" key={category.id}>
+        <div className="w-[300px] h-[350px] rounded-xl overflow-hidden flex flex-col" key={cat.id}>
             <div className="flex-2 overflow-hidden">
-                <img className="object-cover w-full h-[200px]" src={`http://localhost:8888/uploads/${category.picture}`} alt="banner1" />
+                <img className="object-cover w-full h-[200px]" src={`http://localhost:8888/uploads/${cat.picture}`} alt="banner1" />
             </div>
             <div className="flex flex-col justify-end flex-1 min-h-[161px] bg-blue-500 text-white p-8 relative">
                 <div className="flex absolute -top-5 ml-2">
@@ -311,8 +349,8 @@ const Home = ()=> {
                         <img className="w-full h-full object-cover" src={org4} alt="profile4" />
                     </div>
                 </div>
-                <div>{moment(category.date).format('DD-MM-YYYY')}</div>
-                <div className="text-2xl">{category.title}</div>
+                <div>{moment(cat.date).format('DD-MM-YYYY')}</div>
+                <div className="text-2xl">{cat.title}</div>
             </div>
         </div>
             )

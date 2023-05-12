@@ -1,14 +1,22 @@
 import axios from "axios"
 
-const http = (token) => {
+const http = (token, fallback) => {
     const headers = {}
     if(token){
         headers.Authorization = `Bearer ${token}`
     }
-    return axios.create({
+    const instance = axios.create({
         headers,
-        baseURL: 'http://localhost:8888'
+        baseURL: import.meta.env.BACKEND_URL || 'http://localhost:8888'
     })
+    instance.interceptors.response.use((response)=> {
+        return response
+    }, (err)=> {
+        if(err.response.status === 401){
+            return Promise.reject(fallback(err.response.data.message))
+        }
+    })
+    return instance
 }
 
 export default http

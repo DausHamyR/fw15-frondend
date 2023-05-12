@@ -5,37 +5,122 @@ import male from '../assets/male.png'
 import female from '../assets/female.png'
 import Fill from '../assets/Fill 1.png'
 import Wetick from '../assets/Wetick.png'
-import { useNavigate } from "react-router-dom"
-import http from '../helpers/http.helper'
+import { useNavigate, } from "react-router-dom"
+// import http from '../helpers/http.helper'
+// import http from "../helpers/http.helper"
 import { useEffect, useState } from "react"
+import {FiEye, FiEyeOff} from 'react-icons/fi'
+import { asyncLoginAction } from "../redux/actions/auth.action"
+import { Formik } from "formik"
+import * as Yup from 'yup'
+import propTypes from 'prop-types'
+import { useDispatch, useSelector } from "react-redux"
+// import {login} from '../redux/reducers/auth'
+import { clearMessage } from "../redux/reducers/auth"
+
+const validationSchema = Yup.object({
+    email: Yup.string().email('Email is invalid'),
+    password: Yup.string().required('Password is invalid')
+})
+
+const FormLogin = ({values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting}) => {
+    // const dispatch = useDispatch()
+    // const token = useSelector(state => state.auth.token)
+    // const formError = useSelector(state => state.auth.formError)
+    const [showPassword, setShowPassword] = useState(false)
+    const handleTogglePassword = () => {
+        setShowPassword((prevState) => !prevState)
+    }
+    
+    // const handleInputChange = () => {
+    //     if (errorMessage !== '') {
+    //         setErrorMessage('')
+    //     }
+    // }
+    return (
+        <form onSubmit={handleSubmit} className="form-control">
+        {/* <input onFocus={()=> setWarningMessage('')} type="email" placeholder="Email" className={`input input-bordered ${errorMessage && !errorMessage.includes("wrong password") ? 'input-error' : ''} w-full max-w-xs relative top-[100px]`} name="email" onChange={handleInputChange}/> */}
+        <input 
+        type="email" 
+        placeholder="Email" 
+        className={`input input-bordered ${errors.email && touched.email && 'input-error'}`} 
+        name="email" 
+        onChange={handleChange}
+        onBlur={handleBlur}
+        value={values.email}
+        />
+        {/* <label className="label relative top-[100px]">
+            <span className={`label-text-alt ${errorMessage ? 'text-error' : ''}`}>{errorMessage && !errorMessage.includes("wrong password") ? errorMessage : ""}</span>
+        </label> */}
+        {errors.email && touched.email && (
+            <label className="label relative top-[100px]">
+                <span className='label-text-alt text-error'>{errors.email}</span>
+            </label>
+        )}
+        
+        <div className="form-control">  
+            <input 
+            placeholder="Password" 
+            className={`input input-bordered w-full ${errors.password && touched.password && 'input-error'}`}
+            type="password"
+            name="password"
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.password}
+            />
+            {errors.password && touched.password && (
+            <label className="label relative top-[100px]">
+                <span className='label-text-alt text-error'>{errors.password}</span>
+            </label>
+        )}
+            {/* className={`input input-bordered ${errorMessage && !errorMessage.includes("wrong email") ? 'input-error' : ''} w-full max-w-xs relative top-[115px]`} name="password" onChange={handleInputChange}/> */}
+        </div>
+        {/* <label className="label relative top-[115px]">
+            <span className={`label-text-alt ${errorMessage ? 'text-error' : ''}`}>{errorMessage && !errorMessage.includes("wrong email") ? errorMessage : ""}</span>
+        </label> */}
+        <div className="relative top-[60px] left-[270px]" onClick={handleTogglePassword}>
+            {showPassword ? <FiEyeOff size={30}/> : <FiEye size={30}/>}
+        </div>
+    <button disabled={isSubmitting} className="btn btn-primary w-[315px] max-sm:w-full relative top-[185px]">Sign In</button>
+    </form>
+    )
+}
+
+FormLogin.propTypes = {
+    values: propTypes.objectOf(propTypes.string),
+    errors: propTypes.objectOf(propTypes.string),
+    touched: propTypes.objectOf(propTypes.bool),
+    handleBlur: propTypes.func,
+    handleChange: propTypes.func,
+    handleSubmit: propTypes.func,
+    isSubmitting: propTypes.bool
+}
 
 const Login = ()=> {
+    // const location = useLocation()
     const navigate = useNavigate()
-    const [errorMessage, setErrorMessage] = useState('')
-    const [token, setToken] = useState('')
-    const doLogin = async (event) => {
-        try{
-            event.preventDefault()
-            const {value: email} = event.target.email
-            const {value: password} = event.target.password
-            const body = new URLSearchParams({email, password}).toString()
-            const {data} = await http().post('http://localhost:8888/auth/login', body)
-            window.localStorage.setItem('token', data.results.token)
-            setErrorMessage('')
-            setToken(data.results.token)
-        }catch(err){
-            console.log(err)
-            const message = err?.response?.data?.message
-            if(message){
-                setErrorMessage(message)
-            }
-        }
-    }
+    const dispatch = useDispatch()
+    const token = useSelector(state => state.auth.token)
+    const formError = useSelector(state => state.auth.formError)
+    const warningMessage = useSelector(state => state.auth.warningMessage)
+    const errorMessage = useSelector(state => state.auth.errorMessage)
+
     useEffect(() => {
         if(token){
             navigate('/home')
         }
     }, [token, navigate])
+
+    const doLogin = async (values, {setSubmitting, setErrors}) => {
+        dispatch(clearMessage())
+        dispatch(asyncLoginAction(values))
+        if(formError.length){
+            setErrors({
+                email: formError.filter(item => item.param === 'email')[0].message, 
+                password: formError.filter(item => item.param === 'email')[0].message
+            })
+        }
+        setSubmitting(false)
     return (
         <main className="container mx-auto flex h-[100vh]">
         <section className="bg-blue-500 w-[50%] max-md:hidden">
@@ -55,13 +140,24 @@ const Login = ()=> {
                     (<div>
                         <h1 className="alert alert-error mt-4 w-[330px]">{errorMessage}</h1>
                     </div>)}
+                    {warningMessage && 
+                    (<div>
+                        <h1 className="alert alert-warning mt-4 w-[330px]">{warningMessage}</h1>
+                    </div>)}
                 </div>
                 <div>
-                    <form onSubmit={doLogin}>
-                        <input type="email" placeholder="Email" className="input input-bordered w-full max-w-xs relative top-[100px]" name="email" />
-                        <input type="password" placeholder="Password" className="input input-bordered w-full max-w-xs relative top-[115px]" name="password" />
-                    <button className="btn btn-primary w-[315px] max-sm:w-full relative top-[185px]">Sign In</button>
-                    </form>
+                    <Formik 
+                        initialValues={{
+                            email: '',
+                            password: ''
+                        }}
+                        validationSchema={validationSchema}
+                        onSubmit={doLogin}
+                    >
+                    {(props) => (
+                        <FormLogin {...props} />
+                    )}
+                    </Formik>
                     <div className="relative top-[90px] flex text-blue-500">
                         <Link to='/forgot-password' className="relative left-[170px] tracking-wide font-bold">Forgot Password?</Link>
                     </div>
@@ -83,6 +179,7 @@ const Login = ()=> {
         </section>
     </main>
     )
+    }
 }
 
 export default Login

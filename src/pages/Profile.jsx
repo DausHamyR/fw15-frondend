@@ -16,8 +16,29 @@ import Vector7 from '../assets/Vector (7).png'
 import Vector8 from '../assets/Vector 8.png'
 import kamera from '../assets/kamera.png'
 import { Link } from "react-router-dom"
+import { useSelector } from 'react-redux'
+import { useEffect, useState } from 'react'
+import http from '../helpers/http.helper'
+import moment from 'moment'
 
 const Profile = ()=> {
+    const token = useSelector(state => state.auth.token)
+    const [profile, setProfile] = useState({})
+    useEffect(() => {
+        const getProfile = async() => {
+            const {data} = await http(token).get('/profile')
+            setProfile(data.results)
+        }
+        getProfile()
+    }, [])
+
+    // useEffect(()=> {
+    //     if(initToken){
+    //         if(!token){
+    //             navigate('/login', {state: {warningMessage: 'You have to login first!'}})
+    //         }   
+    //     }
+    // }, [token, initToken, navigate])
     return (
         <>
         <header className="w-full flex justify-between items-center bg-white px-6">
@@ -34,7 +55,7 @@ const Profile = ()=> {
         </div>
         <div className="flex items-center max-md:hidden">
             <img className="rounded-full border-2 border-blue-500 p-1" src={Avatar} />
-            <h1 className="text-black ml-4">Jhon Tomson</h1>
+            <h1 className="text-black ml-4">{profile?.fullName}</h1>
         </div>
         <div className="md:hidden">
             <img src={menuHamburger} />
@@ -45,8 +66,8 @@ const Profile = ()=> {
             <div className="flex justify-center">
                 <img className="rounded-full border-2 border-blue-500 p-1" src={Avatar} />
                 <div className="grid ml-4">
-                    <h1 className="text-md tracking-wider font-medium">Jhon Tomson</h1>
-                    <p className="text-slate-400 text-sm tracking-wider">Entrepreneur, ID</p>
+                    <h1 className="text-md tracking-wider font-medium">{profile?.fullName}</h1>
+                    <p className="text-slate-400 text-sm tracking-wider">{profile?.profession}</p>
                 </div>
             </div>
             <div className="w-[80%] h-[440px] mt-8 grid ml-[20%] content-between">
@@ -99,19 +120,19 @@ const Profile = ()=> {
                 <article className="w-[55%] grid content-between h-[550px] text-md font-normal pt-8 pl-8">
                     <div className="flex justify-between max-md:grid max-md:mb-6">
                         <h3 className="max-md:mb-2">Name</h3>
-                        <input type="text" placeholder="Jhon Tomson" className="input input-bordered w-full max-w-xs" />
+                        <input type="text" placeholder={`${profile.fullName}`} className="input input-bordered w-full max-w-xs" />
                     </div>
                     <div className="flex max-md:grid max-md:mb-6">
                         <h3 className="max-md:mb-2">Username</h3>
-                        <p className="pl-[10.7vw] max-md:pl-0 text-slate-400">@jhont0 <span>Edit</span></p>
+                        <p className="pl-[10.7vw] max-md:pl-0 text-slate-400">{profile.username} <span>Edit</span></p>
                     </div>
                     <div className="flex max-md:grid max-md:mb-6">
                         <h3 className="max-md:mb-2">Email</h3>
-                        <p className="pl-[13.1vw] max-md:pl-0 text-slate-400">jhont0@mail.com <span>Edit</span></p>
+                        <p className="pl-[13.1vw] max-md:pl-0 text-slate-400">{profile.email} <span>Edit</span></p>
                     </div>
                     <div className="flex max-md:grid max-md:mb-6">
                         <h3 className="max-md:mb-2">Phone Number</h3>
-                        <p className="pl-[8.5vw] max-md:pl-0 text-slate-400">081234567890 <span>Edit</span></p>
+                        <p className="pl-[8.5vw] max-md:pl-0 text-slate-400">{profile.phoneNumber} <span>Edit</span></p>
                     </div>
                     <div className="flex max-md:grid max-md:mb-6">
                         <h3 className="max-md:mb-2">Gender</h3>
@@ -122,15 +143,15 @@ const Profile = ()=> {
                     </div>
                     <div className="flex justify-between max-md:grid max-md:mb-6">
                         <h3 className="max-md:mb-2">Profession</h3>
-                        <input type="text" placeholder="Entrepreneur" className="input input-bordered w-full max-w-xs" />
+                        <input type="text" placeholder={`${profile.profession}`} className="input input-bordered w-full max-w-xs" />
                     </div>
                     <div className="flex justify-between max-md:grid max-md:mb-6">
                         <h3 className="max-md:mb-2">Nationality</h3>
-                        <input type="text" placeholder="Indonesia" className="input input-bordered w-full max-w-xs" />
+                        <input type="text" placeholder={`${profile.nationality}`} className="input input-bordered w-full max-w-xs" />
                     </div>
                     <div className="flex max-md:grid">
                         <h3 className="max-md:mb-2">Birthday Date</h3>
-                        <p className="pl-[9vw] max-md:pl-0 text-slate-400">24 / 10 / 2000 <span>Edit</span></p>
+                        <p className="pl-[9vw] max-md:pl-0 text-slate-400">{moment(profile.birthDate)} <span>Edit</span></p>
                     </div>
                 </article>
                 <div className="w-[45%] h-[550px] max-md:hidden">
