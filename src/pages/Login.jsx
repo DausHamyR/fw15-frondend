@@ -6,8 +6,6 @@ import female from '../assets/female.png'
 import Fill from '../assets/Fill 1.png'
 import Wetick from '../assets/Wetick.png'
 import { useNavigate, } from "react-router-dom"
-// import http from '../helpers/http.helper'
-// import http from "../helpers/http.helper"
 import { useEffect, useState } from "react"
 import {FiEye, FiEyeOff} from 'react-icons/fi'
 import { asyncLoginAction } from "../redux/actions/auth.action"
@@ -15,7 +13,6 @@ import { Formik } from "formik"
 import * as Yup from 'yup'
 import propTypes from 'prop-types'
 import { useDispatch, useSelector } from "react-redux"
-// import {login} from '../redux/reducers/auth'
 import { clearMessage } from "../redux/reducers/auth"
 
 const validationSchema = Yup.object({
@@ -29,7 +26,7 @@ const FormLogin = ({values, errors, touched, handleChange, handleBlur, handleSub
     // const formError = useSelector(state => state.auth.formError)
     const [showPassword, setShowPassword] = useState(false)
     const handleTogglePassword = () => {
-        setShowPassword((prevState) => !prevState)
+        setShowPassword(!showPassword)
     }
     
     // const handleInputChange = () => {
@@ -38,12 +35,12 @@ const FormLogin = ({values, errors, touched, handleChange, handleBlur, handleSub
     //     }
     // }
     return (
-        <form onSubmit={handleSubmit} className="form-control">
+        <form onSubmit={handleSubmit} className="form-control relative top-[110px] w-[350px]">
         {/* <input onFocus={()=> setWarningMessage('')} type="email" placeholder="Email" className={`input input-bordered ${errorMessage && !errorMessage.includes("wrong password") ? 'input-error' : ''} w-full max-w-xs relative top-[100px]`} name="email" onChange={handleInputChange}/> */}
         <input 
         type="email" 
         placeholder="Email" 
-        className={`input input-bordered ${errors.email && touched.email && 'input-error'}`} 
+        className={`input input-bordered ${errors.email && touched.email && 'input-error'} mb-4`} 
         name="email" 
         onChange={handleChange}
         onBlur={handleBlur}
@@ -53,7 +50,7 @@ const FormLogin = ({values, errors, touched, handleChange, handleBlur, handleSub
             <span className={`label-text-alt ${errorMessage ? 'text-error' : ''}`}>{errorMessage && !errorMessage.includes("wrong password") ? errorMessage : ""}</span>
         </label> */}
         {errors.email && touched.email && (
-            <label className="label relative top-[100px]">
+            <label className="label relative top-[-15px]">
                 <span className='label-text-alt text-error'>{errors.email}</span>
             </label>
         )}
@@ -62,7 +59,7 @@ const FormLogin = ({values, errors, touched, handleChange, handleBlur, handleSub
             <input 
             placeholder="Password" 
             className={`input input-bordered w-full ${errors.password && touched.password && 'input-error'}`}
-            type="password"
+            type={showPassword? 'text' : 'password'}
             name="password"
             onChange={handleChange}
             onBlur={handleBlur}
@@ -78,10 +75,10 @@ const FormLogin = ({values, errors, touched, handleChange, handleBlur, handleSub
         {/* <label className="label relative top-[115px]">
             <span className={`label-text-alt ${errorMessage ? 'text-error' : ''}`}>{errorMessage && !errorMessage.includes("wrong email") ? errorMessage : ""}</span>
         </label> */}
-        <div className="relative top-[60px] left-[270px]" onClick={handleTogglePassword}>
+        <div className="relative top-[-38px] left-[300px]" onClick={handleTogglePassword}>
             {showPassword ? <FiEyeOff size={30}/> : <FiEye size={30}/>}
         </div>
-    <button disabled={isSubmitting} className="btn btn-primary w-[315px] max-sm:w-full relative top-[185px]">Sign In</button>
+    <button type="submit" disabled={isSubmitting} className="btn btn-primary w-[350px] max-sm:w-full relative top-[35px]">Sign In</button>
     </form>
     )
 }
@@ -117,10 +114,11 @@ const Login = ()=> {
         if(formError.length){
             setErrors({
                 email: formError.filter(item => item.param === 'email')[0].message, 
-                password: formError.filter(item => item.param === 'email')[0].message
+                password: formError.filter(item => item.param === 'password')[0].message
             })
         }
         setSubmitting(false)
+    }
     return (
         <main className="container mx-auto flex h-[100vh]">
         <section className="bg-blue-500 w-[50%] max-md:hidden">
@@ -159,10 +157,10 @@ const Login = ()=> {
                     )}
                     </Formik>
                     <div className="relative top-[90px] flex text-blue-500">
-                        <Link to='/forgot-password' className="relative left-[170px] tracking-wide font-bold">Forgot Password?</Link>
+                        <Link to='/forgot-password' className="relative left-[200px] top-[-40px] tracking-wide font-bold">Forgot Password?</Link>
                     </div>
                 </div>
-                <div className="relative top-[205px]">
+                <div className="relative top-[135px]">
                     <p className="relative left-[110px]">or sign in with</p>
                     <div className="w-[70px] h-[35px] bg-white border relative top-[20px] left-[200px] rounded-[5px] flex justify-center items-center">
                         <button className="btn btn-secondary bg-white w-24 border-primary">
@@ -179,7 +177,6 @@ const Login = ()=> {
         </section>
     </main>
     )
-    }
 }
 
 export default Login

@@ -54,7 +54,7 @@ const Profile = ()=> {
             </nav>
         </div>
         <div className="flex items-center max-md:hidden">
-            <img className="rounded-full border-2 border-blue-500 p-1" src={Avatar} />
+            {profile?.picture && <img className='rounded-full border-2 border-blue-500 p-1' src={profile.picture.startsWith('https')?profile.picture : `http://localhost:8888/uploads/${profile.picture}`} />}
             <h1 className="text-black ml-4">{profile?.fullName}</h1>
         </div>
         <div className="md:hidden">

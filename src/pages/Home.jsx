@@ -65,7 +65,7 @@ const Home = ()=> {
             setCities(data.results)
         }
         async function getCategory(){
-            const {data} = await http(token).get('/categories', {params: {limit: 1000}})
+            const {data} = await http(token).get('/categories')
             setCategory(data.results)
         }
         async function getPartners(){
@@ -85,7 +85,7 @@ const Home = ()=> {
         // if(window.localStorage.getItem('token')){
         //     setToken(window.localStorage.getItem('token'))
         // }
-    }, [])
+    }, [dispatch, navigate, token])
     const doLogout = ()=> {
         window.localStorage.removeItem('token')
         dispatch(logoutAction())
@@ -93,13 +93,13 @@ const Home = ()=> {
     }
     const handleClick = (categoryName) => {
         if (categoryName === selectedCategory) {
-          return
+            return
         }
         setSelectedCategory(categoryName)
         // setErrorMessage('')
-      }
+    }
     
-      const categoryOrder = ['Music', 'Arts', 'Outdoor', 'Workshop', 'Sport', 'Festival', 'Fashion']
+    const categoryOrder = ['Music', 'Arts', 'Outdoor', 'Workshop', 'Sport', 'Festival', 'Fashion']
     return (
         <>
         {/* {token ? <h1>{profile?.fullName}</h1> :} */}
@@ -119,7 +119,7 @@ const Home = ()=> {
                 </nav>
                 {token ? 
                 <div>
-                    <Link to={'/profile'} className="text-black ml-4">{profile.fullName}</Link>
+                    <Link to={'/profile'} className="text-black mr-4">{profile.fullName}</Link>
                     <button onClick={doLogout} className="btn btn-error w-[100px]">Logout</button>
                 </div> :
                 <section>
@@ -168,7 +168,7 @@ const Home = ()=> {
     <section className="w-full flex flex-wrap justify-evenly">
         {events.map(event => {
             return (
-        <Link className="w-[200px]" key={`event-${event.id}`} to={`/event/${event.id}`}>
+        <Link to={`/event/${event.id}`} className="w-[200px]" key={`eventDetails-${event.id}`} >
             <img className="h-[270px] object-cover rounded-2xl filter brightness-75" src={`http://localhost:8888/uploads/${event.picture}`} />
             <div className="relative top-[-80px] left-[5px] text-white">
                 <h1 className="text-xs">{moment(event.date).format('DD-MM-YYYY')}</h1>
@@ -279,12 +279,12 @@ const Home = ()=> {
                     if(catObj) {
                     return (
                     <div
+                    key={catObj.id}
                     className={`flex justify-center items-center min-w-[170px] ${
                         catObj.name === selectedCategory
                         ? 'text-blue-500 border-b-2 pb-1 border-blue-500 font-bold'
                         : 'text-gray-600 border-b-2 pb-1 border-transparent hover:border-red-400 font-bold'
                     }`}
-                    key={catObj.id}
                     onClick={() => handleClick(catObj.name)}
                     >
                     {catObj.name}

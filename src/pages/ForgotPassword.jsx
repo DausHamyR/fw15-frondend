@@ -9,19 +9,19 @@ const ForgotPassword = ()=> {
     const [errorMessage, setErrorMessage] = useState('')
     const [successMessage, setSuccessMessage] = useState('');
     const doForgotPassword = async (event) => {
+        setErrorMessage('')
         try{
             event.preventDefault()
             const {value: email} = event.target.email
             const body = new URLSearchParams({email}).toString()
-            const {data} = await http().post('http://localhost:8888/auth/forgotPassword', body)
+            const {data} = await http().post('/auth/forgotPassword', body)
             if(data){
                 setSuccessMessage("Success, the code was sent to the email")
             }
-            setErrorMessage('')
         }catch(err){
-            const message = err?.response?.data?.message
-            if(message){
-                setErrorMessage(message)
+            // const message = err?.response?.data?.message
+            if(err){
+                setErrorMessage('wrong email')
             }
             setSuccessMessage('')
         }
@@ -52,8 +52,8 @@ const ForgotPassword = ()=> {
                 </div>
                 <div>
                     <form onSubmit={doForgotPassword}>
-                        <input type="email" placeholder="Email" className="input input-bordered w-full max-w-xs relative top-[125px]" name='email' />
-                        <button className="btn btn-primary w-full max-w-xs relative top-[155px]">Send</button>
+                        <input type="email" placeholder="Email" className="input input-bordered w-full max-w-xs relative top-[105px]" name='email' />
+                        <button className="btn btn-primary w-full max-w-xs relative top-[135px]">Send</button>
                     </form>
                 </div>
             </div>

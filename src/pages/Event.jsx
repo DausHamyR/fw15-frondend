@@ -27,6 +27,7 @@ const Event = ()=> {
     useEffect(()=> {
         const getEventData = async(id) => {
             const {data} = await http().get(`/events/${id}`)
+            console.log(data)
             setEvent(data.results)
         }
         if(id){
