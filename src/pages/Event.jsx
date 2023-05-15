@@ -75,7 +75,7 @@ const Event = ()=> {
                 </div>
                 <div className="flex items-center">
                     <img src={clock} />
-                    <h1 className="ml-3">{moment(event?.date)}</h1>
+                    <h1 className="ml-3">{moment(event?.date).format('DD-MM-YYYY')}</h1>
                 </div>
             </div>
             <div className="mt-8">

@@ -15,6 +15,7 @@ const http = (token, fallback) => {
         if(err.response.status === 401){
             return Promise.reject(fallback(err.response.data.message))
         }
+        return Promise.reject(err)
     })
     return instance
 }

@@ -168,7 +168,7 @@ const Home = ()=> {
     <section className="w-full flex flex-wrap justify-evenly">
         {events.map(event => {
             return (
-        <Link to={`/event/${event.id}`} className="w-[200px]" key={`eventDetails-${event.id}`} >
+        <Link to={`/events/${event.id}`} className="w-[200px]" key={`eventDetails-${event.id}`} >
             <img className="h-[270px] object-cover rounded-2xl filter brightness-75" src={`http://localhost:8888/uploads/${event.picture}`} />
             <div className="relative top-[-80px] left-[5px] text-white">
                 <h1 className="text-xs">{moment(event.date).format('DD-MM-YYYY')}</h1>
