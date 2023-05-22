@@ -10,9 +10,7 @@ export const asyncLoginAction = createAsyncThunk(
             const {data} = await http().post('/auth/login', body)
             return data.results.token
         }catch(err){
-            console.log(err)
             const results = err?.response?.data?.results
-            console.log(results)
             const message = err?.response?.data?.message
             if(results){
                 return rejectWithValue(results)

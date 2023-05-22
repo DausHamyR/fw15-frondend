@@ -1,11 +1,6 @@
 import Fill from '../assets/Fill 1.png'
 import Wetick from '../assets/Wetick.png'
-import Avatar from '../assets/Avatar.png'
 import menuHamburger from '../assets/menu-hamburger.png'
-import {AiFillFacebook} from "react-icons/ai"
-import {FaWhatsappSquare} from "react-icons/fa"
-import {AiFillInstagram} from "react-icons/ai"
-import {AiOutlineTwitter} from "react-icons/ai"
 import Ellipse7 from '../assets/Ellipse 7.png'
 import Ellipse8 from '../assets/Ellipse 8.png'
 import cardBiru from '../assets/card-biru.png'
@@ -17,9 +12,67 @@ import ok from '../assets/ok.png'
 import Vectorkuning from '../assets/Vector (1)-kuning.png'
 import Vectordolar from '../assets/Vector (3)-dolar.png'
 import panahbawah from '../assets/panah bawah.png'
-import { Link } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { useEffect, useState } from "react"
+import http from '../helpers/http.helper'
+import { logout as logoutAction, setWarningMessage } from "../redux/reducers/auth"
+import Footer from "../components/Footer"
 
-const Tickets = ()=> {
+const Payment = ()=> {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const token = useSelector(state => state.auth.token)
+    const [profile, setProfile] = useState({})
+    const {state} = useLocation()
+    const [method, setMethod] = useState([])
+    const [selectedPayment, setSelectedPayment] = useState(null)
+
+    useEffect(()=> {
+        const getPaymentMethod = async() => {
+            const {data} = await http(token).get('/payment')
+            setMethod(data.results)
+            setSelectedPayment(data.results[0].id)
+        }
+        getPaymentMethod()
+    }, [token, navigate, state])
+
+    useEffect(()=> {
+
+    }, [])
+
+    useEffect(()=> {
+        async function getProfileData(){
+            const fallback = (message)=> {
+                dispatch(logoutAction())
+                dispatch(setWarningMessage(message))
+                navigate('/login')
+            }
+            const {data} = await http(token, fallback).get('/profile')
+            setProfile(data.results)
+        }
+        if(token){
+            getProfileData()
+        }
+    }, [dispatch, navigate, token])
+
+    const doLogout = ()=> {
+        window.localStorage.removeItem('token')
+        dispatch(logoutAction())
+        navigate('/login')
+    }
+
+    const doPayment = async (e) => {
+        e.preventDefault()
+        const {reservationId} = state
+        const form = new URLSearchParams({
+            reservationId,
+            paymentMethodId: selectedPayment
+        }).toString()
+        const {data} = await http(token).post('/payment', form)
+        navigate('/my-booking', {replace: true})
+    }
+    
     return (
         <>
         <header className="w-full flex justify-between items-center bg-white px-6">
@@ -34,15 +87,24 @@ const Tickets = ()=> {
                 <Link className="" to='/event'>Location</Link>
             </nav>
         </div>
-        <div className="flex items-center max-md:hidden">
-            <img className="rounded-full border-2 border-blue-500 p-1" src={Avatar} />
-            <h1 className="text-black ml-4">Jhon Tomson</h1>
-        </div>
+        {token ?
+        <div className='flex gap-5'>
+            <Link to={'/profile'} className="flex items-center max-md:hidden">
+                {profile?.picture && <img className="w-12 rounded-full border-2 border-blue-500 p-1" src={profile.picture.startsWith('https')?profile.picture : `http://localhost:8888/uploads/${profile.picture}`} />}
+                <h1 className="text-black ml-4">{profile.fullName}</h1>
+            </Link>
+            <button onClick={doLogout} className="btn btn-error w-[100px]">Logout</button>
+        </div> :
+        <section>
+            <Link to='/login' className="btn btn-active btn-primary w-[100px] mr-4">Log in</Link>
+            <Link to='/register' className="btn btn-active btn-ghost w-[100px]">Sign Up</Link>
+        </section>
+        }
         <div className="md:hidden">
             <img src={menuHamburger} />
         </div>
     </header>
-    <main className="flex max-md:grid w-[80%] max-md:w-full ml-[10%] max-md:ml-0 bg-white mt-10 rounded-3xl">
+    <form onSubmit={doPayment} className="flex max-md:grid w-[80%] max-md:w-full ml-[10%] max-md:ml-0 bg-white mt-10 rounded-3xl">
         <div className="ml-[5%] mr-[15%]">
             <div className="h-[120px] flex items-center text-2xl font-semibold">
                 <h1>Payment Method</h1>
@@ -51,12 +113,14 @@ const Tickets = ()=> {
                 <div className="flex">
                     <img src={Ellipse8} className="w-[7px] h-[7px] self-center mr-4" />
                 </div>
-                <div className="flex items-center">
-                    <div className="p-2 border-1 bg-slate-300 rounded-md">
-                        <img src={cardBiru} className="w-[24px] h-[24px]" />
+                {method.find(item => (
+                <div key={`payment-method-${item.id}`} className="flex items-center">
+                    <div onChange={(e)=> setSelectedPayment(e.target.value)} className="p-2 border-1 bg-slate-300 rounded-md">
+                        <img src={cardBiru} className="w-[24px] h-[24px]" defaultChecked={item.id === method[0].id}/>
                     </div>
-                    <h3 className="ml-4">Card</h3>
+                    <h3 className="ml-4">{item[0].name}</h3>
                 </div>
+                ))}
             </div>
             <div className="flex items-center">
                 <div className="w-[285px] h-[173px] bg-amber-500 ml-[10%] max-xl:ml-0 rounded-xl">
@@ -80,29 +144,31 @@ const Tickets = ()=> {
                 </div>
             </div>
             <div className="flex ml-[8%] mt-10 pb-16">
-                <div className="grid content-between h-[200px] mr-28">
+                {method.find(item => (
+                <div key={`payment-method1-${item.id}`} className="grid content-between h-[200px] mr-28">
                     <div className="flex items-center">
                         <img src={Ellipse7} className="w-[15px] h-[15px] mr-4" />
                         <div className="p-2 bg-red-200 rounded-md mr-4">
                             <img src={ok} className="w-[20px] h-[19px]" />
                         </div>
-                        <h1 className="font-semibold tracking-wider">Bank Transfer</h1>
+                        <h1 className="font-semibold tracking-wider">{item[1].name}</h1>
                     </div>
                     <div className="flex items-center">
                         <img src={Ellipse7} className="w-[15px] h-[15px] mr-4" />
                         <div className="p-2 bg-orange-200 rounded-md mr-4">
                             <img src={Vectorkuning} className="w-[20px] h-[19px]" />
                         </div>
-                        <h1 className="font-semibold tracking-wider">Retail</h1>
+                        <h1 className="font-semibold tracking-wider">{item[2].name}</h1>
                     </div>
                     <div className="flex items-center">
                         <img src={Ellipse7} className="w-[15px] h-[15px] mr-4" />
                         <div className="px-3 py-2 bg-blue-200 rounded-md mr-4">
                             <img src={Vectordolar} className="w-[10px] h-[18px]" />
                         </div>
-                        <h1 className="font-semibold tracking-wider">E-Money</h1>
+                        <h1 className="font-semibold tracking-wider">{item[3].name}</h1>
                     </div>
                 </div>
+                ))}
                 <div className="grid mt-3 h-[175px] content-between">
                     <img src={panahbawah} />
                     <img src={panahbawah} />
@@ -115,82 +181,29 @@ const Tickets = ()=> {
             <div className="grid content-between h-[180px] mb-12">
                 <div className="flex justify-between">
                     <h1 className="font-semibold">Event</h1>
-                    <h1 className="text-blue-500">Sights & Sounds Exhibition</h1>
+                    <h1 className="text-blue-500">{state.eventName}</h1>
                 </div>
                 <div className="flex justify-between">
                     <h1 className="font-semibold">Ticket Section</h1>
-                    <h1 className="text-blue-500">VIP</h1>
+                    <h1 className="text-blue-500">{state.sectionName}</h1>
                 </div>
                 <div className="flex justify-between">
                     <h1 className="font-semibold">Quantity</h1>
-                    <h1 className="text-blue-500">2</h1>
+                    <h1 className="text-blue-500">{state.quantity}</h1>
                 </div>
                 <div className="flex justify-between">
                     <h1 className="font-semibold">Total Payment</h1>
-                    <h1 className="text-blue-500">$70</h1>
+                    <h1 className="text-blue-500">${state.totalPayment}</h1>
                 </div>
             </div>
-            <div className="w-full h-[55px] bg-blue-500 flex justify-center items-center rounded-2xl">
-                <button className="text-white text-xl font-normal">Payment</button>
+            <div className="w-full h-[55px] flex justify-center items-center rounded-2xl">
+                <button type='submit' className="btn btn-primary w-full text-white text-xl font-normal">Payment</button>
             </div>
         </div>
-    </main>
-    <footer className="w-full flex justify-center h-[400px] max-md:grid max-sm:ml-8">
-        <section className="w-[400px] mt-10 max-md:h-[150px]">
-            <div className="flex items-center">
-                <img src={Fill} />
-                <img src={Wetick} className="w-[90px] h-[35px]" />
-            </div>
-            <h3 className="font-medium mt-4">Find events you love with our</h3>
-            <div className="flex w-[140px] h-[150px] justify-between mt-3">
-                <button className="w-[18px] h-[18px]">
-                <AiFillFacebook color='8BACAA' size={25} />
-                </button>
-                <button className="w-[18px] h-[18px]">
-                <FaWhatsappSquare color='8BACAA' size={25} />
-                </button>
-                <button className="w-[18px] h-[18px]">
-                <AiFillInstagram color='8BACAA' size={25} />
-                </button>
-                <button className="w-[18px] h-[18px]">
-                <AiOutlineTwitter color='8BACAA' size={25} />
-                </button>
-            </div>
-            <h2 className="text-slate-600 max-md:hidden">© 2020 Wetick All Rights Reserved</h2>
-        </section>
-        <div className="w-[200px] mt-14">
-            <h1 className="font-bold mb-6">Wetick</h1>
-            <div className="grid content-between h-[150px] text-slate-400">
-                <h4>About Us</h4>
-                <h4>Features</h4>
-                <h4>Blog</h4>
-                <h4>Payment</h4>
-                <h4>Mobile App</h4>
-            </div>
-        </div>
-        <div className="w-[200px] mt-14">
-            <h1 className="font-bold mb-6">Features</h1>
-            <div className="grid content-between h-[150px] text-slate-400">
-                <h4>Booking</h4>
-                <h4>Creater Event</h4>
-                <h4>Discover</h4>
-                <h4>Register</h4>
-            </div>
-        </div>
-        <div className="w-[200px] mt-14">
-            <h1 className="font-bold mb-6">Company</h1>
-            <div className="grid content-between h-[150px] text-slate-400">
-                <h4>Partnership</h4>
-                <h4>Help</h4>
-                <h4>Terms of Service</h4>
-                <h4>Privacy Policy</h4>
-                <h4>Sitemap</h4>
-            </div>
-        </div>
-        <h2 className="text-slate-600 my-8 md:hidden">© 2020 Wetick All Rights Reserved</h2>
-    </footer>
+    </form>
+    <Footer />
         </>
     )
 }
 
-export default Tickets
+export default Payment

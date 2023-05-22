@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { clearMessage } from "../redux/reducers/auth"
 
 const validationSchema = Yup.object({
-    email: Yup.string().email('Email is invalid'),
+    email: Yup.string().required().email('Email is invalid'),
     password: Yup.string().required('Password is invalid')
 })
 
@@ -35,8 +35,9 @@ const FormLogin = ({values, errors, touched, handleChange, handleBlur, handleSub
     //     }
     // }
     return (
-        <form onSubmit={handleSubmit} className="form-control relative top-[110px] w-[350px]">
+        <form onSubmit={handleSubmit} className="relative top-[110px] w-[350px]">
         {/* <input onFocus={()=> setWarningMessage('')} type="email" placeholder="Email" className={`input input-bordered ${errorMessage && !errorMessage.includes("wrong password") ? 'input-error' : ''} w-full max-w-xs relative top-[100px]`} name="email" onChange={handleInputChange}/> */}
+        <div className="form-control">
         <input 
         type="email" 
         placeholder="Email" 
@@ -54,9 +55,10 @@ const FormLogin = ({values, errors, touched, handleChange, handleBlur, handleSub
                 <span className='label-text-alt text-error'>{errors.email}</span>
             </label>
         )}
+        </div>
         
         <div className="form-control">  
-            <input 
+            <input
             placeholder="Password" 
             className={`input input-bordered w-full ${errors.password && touched.password && 'input-error'}`}
             type={showPassword? 'text' : 'password'}
@@ -66,7 +68,7 @@ const FormLogin = ({values, errors, touched, handleChange, handleBlur, handleSub
             value={values.password}
             />
             {errors.password && touched.password && (
-            <label className="label relative top-[100px]">
+            <label className="label">
                 <span className='label-text-alt text-error'>{errors.password}</span>
             </label>
         )}
@@ -75,7 +77,7 @@ const FormLogin = ({values, errors, touched, handleChange, handleBlur, handleSub
         {/* <label className="label relative top-[115px]">
             <span className={`label-text-alt ${errorMessage ? 'text-error' : ''}`}>{errorMessage && !errorMessage.includes("wrong email") ? errorMessage : ""}</span>
         </label> */}
-        <div className="relative top-[-38px] left-[300px]" onClick={handleTogglePassword}>
+        <div className="relative top-[-35px] left-[300px]" onClick={handleTogglePassword}>
             {showPassword ? <FiEyeOff size={30}/> : <FiEye size={30}/>}
         </div>
     <button type="submit" disabled={isSubmitting} className="btn btn-primary w-[350px] max-sm:w-full relative top-[35px]">Sign In</button>
@@ -113,7 +115,7 @@ const Login = ()=> {
         dispatch(asyncLoginAction(values))
         if(formError.length){
             setErrors({
-                email: formError.filter(item => item.param === 'email')[0].message, 
+                email: formError.filter(item => item.param === 'email')[0].message,
                 password: formError.filter(item => item.param === 'password')[0].message
             })
         }
@@ -126,7 +128,7 @@ const Login = ()=> {
             <img src={female} className="relative left-[5%] top-[-90px]" />
         </section>
         <section className="bg-white w-[50%] max-md:w-full">
-            <div className="w-[70%] h-[80vh] my-[80px] mx-[15%]">
+            <div className="w-[70%] h-[80vh] mx-[15%]">
                 <div className="w-full relative top-[50px] flex">
                     <img src={Fill} />
                     <img src={Wetick} className="w-[94px] h-[36px] top-[20px] relative" />
@@ -156,7 +158,7 @@ const Login = ()=> {
                         <FormLogin {...props} />
                     )}
                     </Formik>
-                    <div className="relative top-[90px] flex text-blue-500">
+                    <div className="relative top-[90px] flex text-primary">
                         <Link to='/forgot-password' className="relative left-[200px] top-[-40px] tracking-wide font-bold">Forgot Password?</Link>
                     </div>
                 </div>

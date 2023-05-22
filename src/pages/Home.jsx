@@ -1,51 +1,35 @@
 import { useEffect, useState } from "react"
 import moment from "moment"
-import Fill from '../assets/Fill 1.png'
-import Wetick from '../assets/Wetick.png'
-// import Bitmap from '../assets/Bitmap (1).png'
 import org1 from '../assets/org1.png'
 import org2 from '../assets/org2.png'
 import org3 from '../assets/org3.png'
 import org4 from '../assets/org4.png'
 import male from '../assets/male.png'
 import female from '../assets/female.png'
-// import jakarta from '../assets/jakarta.png'
-// import bandung from '../assets/bandung.png'
-// import bali from '../assets/bali.png'
-// import solo from '../assets/solo.png'
-// import aceh from '../assets/aceh.png'
-// import semarang from '../assets/semarang.png'
-// import Yogyakarta from '../assets/Yogyakarta.png'
-// import Icon1 from '../assets/Icon-01.png'
-// import Icon2 from '../assets/Icon-02.png'
-// import Icon3 from '../assets/Icon-03.png'
-// import Icon4 from '../assets/Icon-04.png'
-// import Icon5 from '../assets/Icon-05.png'
-// import Icon6 from '../assets/Icon-06.png'
-// import BitmapLarge from '../assets/Bitmap-large.png'
-import {AiFillFacebook} from "react-icons/ai"
-import {FaWhatsappSquare} from "react-icons/fa"
-import {AiFillInstagram} from "react-icons/ai"
-import {AiOutlineTwitter} from "react-icons/ai"
-import menuHamburger from '../assets/menu-hamburger.png'
 import { Link, useNavigate } from "react-router-dom"
 import http from "../helpers/http.helper"
 import { useDispatch, useSelector } from "react-redux"
-// import { useDispatch } from "react-redux"
 import { logout as logoutAction, setWarningMessage } from "../redux/reducers/auth"
-// dispatchEvent(logoutAction())
+import { Formik } from "formik"
+import NavbarLogout from '../components/NavbarLogout'
+import Footer from "../components/Footer"
 
 const Home = ()=> {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const [profile, setProfile] = useState({})
+    const [setProfile] = useState({})
     const token = useSelector(state => state.auth.token)
     const [events, setEvents] = useState([])
     const [cities, setCities] = useState([])
     const [category, setCategory] = useState([])
-    const [selectedCategory, setSelectedCategory] = useState("Music")
+    const [selectedCategory, setSelectedCategory] = useState([])
     const [partners, setPartners] = useState([])
-
+    
+    
+    async function getEventsCategory(name){
+        const {data} = await http().get('/events', {params: {category: name}})
+        setSelectedCategory(data.results)
+    }
     useEffect(()=> {
         async function getProfileData(){
             const fallback = (message)=> {
@@ -57,15 +41,15 @@ const Home = ()=> {
             setProfile(data.results)
         }
         async function getEvents(){
-            const {data} = await http().get('http://localhost:8888/events')
+            const {data} = await http().get('/events')
             setEvents(data.results)
         }
         async function getCities(){
-            const {data} = await http().get('http://localhost:8888/city')
+            const {data} = await http(token).get('/city', {params:{limit: 1000}})
             setCities(data.results)
         }
         async function getCategory(){
-            const {data} = await http(token).get('/categories')
+            const {data} = await http(token).get('/categories', {params:{limit: 1000}})
             setCategory(data.results)
         }
         async function getPartners(){
@@ -82,57 +66,48 @@ const Home = ()=> {
         getCities()
         getCategory()
         getPartners()
+        getEventsCategory()
         // if(window.localStorage.getItem('token')){
         //     setToken(window.localStorage.getItem('token'))
         // }
-    }, [dispatch, navigate, token])
-    const doLogout = ()=> {
-        window.localStorage.removeItem('token')
-        dispatch(logoutAction())
-        navigate('/login')
-    }
-    const handleClick = (categoryName) => {
-        if (categoryName === selectedCategory) {
-            return
-        }
-        setSelectedCategory(categoryName)
-        // setErrorMessage('')
+    }, [dispatch, navigate, setProfile, token])
+    
+    const onSearch = (values)=> {
+        const qs = new URLSearchParams(values).toString()
+        navigate(`/search?${qs}`)
+        // setSearchParams(values, '/search')
     }
     
-    const categoryOrder = ['Music', 'Arts', 'Outdoor', 'Workshop', 'Sport', 'Festival', 'Fashion']
     return (
         <>
         {/* {token ? <h1>{profile?.fullName}</h1> :} */}
-        <header className="bg-white flex items-center justify-between flex-wrap pt-4 px-4 fixed w-full z-50">
-            <section className="flex items-center flex-[1.3] max-md:flex-[2.5]">
-                <img src={Fill} className="w-16" />
-                <img src={Wetick} className="w-16" />
-            </section>
-            <section className="sm:hidden menu-toggle-hamburger">
-                <img src={menuHamburger} className="header-menu" />
-            </section>
-            <div id="menu-toggle-active" className="w-full max-sm:hidden block flex-grow sm:flex sm:items-center sm:w-auto">
-                <nav className="text-sm sm:flex-grow">
-                        <Link to='/home' className="w-[70px] block mt-4 sm:inline-block text-blue-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium mt-[0]">Home</Link>
-                        <Link to='/create-event' className="w-[104px] block mt-4 sm:inline-block text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium mt-[0]">Create Event</Link>
-                        <Link to='/event' className="w-[0] block mt-4 sm:inline-block text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium mt-[0]">Location</Link>
-                </nav>
-                {token ? 
-                <div>
-                    <Link to={'/profile'} className="text-black mr-4">{profile.fullName}</Link>
-                    <button onClick={doLogout} className="btn btn-error w-[100px]">Logout</button>
-                </div> :
-                <section>
-                    <Link to='/login' className="btn btn-active btn-primary w-[100px] mr-4">Log in</Link>
-                    <Link to='/register' className="btn btn-active btn-ghost w-[100px]">Sign Up</Link>
-                </section>
-                }
-            </div>
-        </header>
+        <NavbarLogout />
 <main className="container mx-auto pt-4">
     <section className="bg-sky-600 h-[35rem]">
         <img src={male} className="w-[14rem] absolute right-[10rem] top-[16rem] max-md:right-[2rem] max-sm:right-[0rem]" />
         <img src={female} className="w-[21rem] absolute top-[13rem] right-[20rem] max-md:right-[10rem] max-sm:right-[7rem]" />
+        <Formik initialValues={
+            {search: '', city: ''}
+        } onSubmit={onSearch}>
+            {({handleBlur, handleChange, handleSubmit}) => (
+                <form onSubmit={handleSubmit} className="max-w-md p-10 relative top-[300px] left-[100px]">
+                <div className="form-control">
+                    <input className="input input-bordered" onChange={handleChange} onBlur={handleBlur} name="search" />
+                </div>
+                <div className="form-control">
+                    <select onBlur={handleBlur} onChange={handleChange} name="city" className="select select-bordered">
+                        <option value=''>All Location</option>
+                        {cities.map(city => (
+                            <option key={`cities-select-${city.id}`} value={city.name}>{city.name}</option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" className="btn btn-primary">Search</button>
+                </div>
+            </form>
+            )}
+        </Formik>
     </section>
     <section className="flex flex-col items-center gap-[30px] my-[40px]">
         <div className="w-[150px] h-[30px] bg-red-300 rounded-[30px] flex justify-center items-center">
@@ -273,26 +248,16 @@ const Home = ()=> {
         </div>
         <div className="font-bold text-2xl flex flex-col items-center gap-[30px] my-[40px]">Browse Events By Category</div>
         <div className="flex md:flex-row flex-col flex-1 gap-3">
-            <div className="flex">
-                {categoryOrder.map(cat => {
-                    const catObj = category.find(c => c.name === cat)
-                    if(catObj) {
-                    return (
-                    <div
-                    key={catObj.id}
-                    className={`flex justify-center items-center min-w-[170px] ${
-                        catObj.name === selectedCategory
-                        ? 'text-blue-500 border-b-2 pb-1 border-blue-500 font-bold'
-                        : 'text-gray-600 border-b-2 pb-1 border-transparent hover:border-red-400 font-bold'
-                    }`}
-                    onClick={() => handleClick(catObj.name)}
+            <div className="flex gap-5">
+                {category.map(category => (
+                    <button
+                    key={`cate-${category.id}`}
+                    onClick={()=> getEventsCategory(category.name)}
+                    className={`flex justify-center items-center min-w-[170px] text-gray-400 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary`}
                     >
-                    {catObj.name}
-                    </div>
-                )
-                }
-            return null
-            })}
+                    {category.name}
+                    </button>
+                ))}
             </div>
                 {/* <div className="flex justify-center items-center min-w-[100px]">
                 <a className="text-blue-500 border-b-2 pb-1 border-blue-500 font-bold" href="#">Music</a>
@@ -326,13 +291,13 @@ const Home = ()=> {
         <div className="hidden md:block">
             <button className="hidden md:inline-block font-bold rounded-lg text-slate-600 h-8 w-8 bg-slate-200">&larr;</button>
         </div>
-        {category
-        .filter((cat) => cat.name === selectedCategory)
-        .map((cat) => {
+        {selectedCategory
+        .map((event) => {
             return (
-        <div className="w-[300px] h-[350px] rounded-xl overflow-hidden flex flex-col" key={cat.id}>
+        <Link to={`/events/${event.id}`} key={`event-category-${event.id}`}>
+        <div className="w-[300px] h-[350px] rounded-xl overflow-hidden flex flex-col">
             <div className="flex-2 overflow-hidden">
-                <img className="object-cover w-full h-[200px]" src={`http://localhost:8888/uploads/${cat.picture}`} alt="banner1" />
+                <img className="object-cover w-full h-[200px]" src={`http://localhost:8888/uploads/${event.picture}`} alt="banner1" />
             </div>
             <div className="flex flex-col justify-end flex-1 min-h-[161px] bg-blue-500 text-white p-8 relative">
                 <div className="flex absolute -top-5 ml-2">
@@ -349,10 +314,10 @@ const Home = ()=> {
                         <img className="w-full h-full object-cover" src={org4} alt="profile4" />
                     </div>
                 </div>
-                <div>{moment(cat.date).format('DD-MM-YYYY')}</div>
-                <div className="text-2xl">{cat.title}</div>
+                <div>{moment(event.date).format('DD-MM-YYYY')}</div>
+                <div className="text-2xl">{event.title}</div>
             </div>
-        </div>
+        </div></Link>
             )
         })}
         {/* {selectedCategory && (
@@ -453,95 +418,7 @@ const Home = ()=> {
         </section>
     </div>
 </main>
-<footer className="py-24 text-gray-600">
-    <div className="flex flex-col md:flex-row px-12">
-        <div className="flex-1 min-w-[300px]">
-            <div className="flex flex-col gap-5">
-                <div className="flex items-center">
-                    <div>
-                        <img src={Fill} alt="logo" />
-                    </div>
-                    <div>
-                        <img src={Wetick} className="w-20" />
-                    </div>
-                </div>
-                <div className="font-medium">Find events you love with our</div>
-                <div className="flex w-[140px] h-[150px] justify-between mt-3">
-                    <button className="w-[18px] h-[18px]">
-                    <AiFillFacebook color='8BACAA' size={25} />
-                    </button>
-                    <button className="w-[18px] h-[18px]">
-                    <FaWhatsappSquare color='8BACAA' size={25} />
-                    </button>
-                    <button className="w-[18px] h-[18px]">
-                    <AiFillInstagram color='8BACAA' size={25} />
-                    </button>
-                    <button className="w-[18px] h-[18px]">
-                    <AiOutlineTwitter color='8BACAA' size={25} />
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div className="flex-1">
-            <div className="font-bold mb-5">Wetick</div>
-            <ul className="flex flex-col gap-3">
-                <li>
-                    <a href="#">About Us</a>
-                </li>
-                <li>
-                    <a href="#">Features</a>
-                </li>
-                <li>
-                    <a href="#">Blog</a>
-                </li>
-                <li>
-                    <a href="#">Payments</a>
-                </li>
-                <li>
-                    <a href="#">Mobile App</a>
-                </li>
-            </ul>
-        </div>
-        <div className="flex-1">
-            <div className="font-bold mb-5">Features</div>
-            <ul className="flex flex-col gap-3">
-                <li>
-                    <a href="#">Booking</a>
-                </li>
-                <li>
-                    <a href="#">Create Event</a>
-                </li>
-                <li>
-                    <a href="#">Discover</a>
-                </li>
-                <li>
-                    <a href="#">Register</a>
-                </li>
-            </ul>
-        </div>
-        <div className="flex-1">
-            <div className="font-bold mb-5">Company</div>
-            <ul className="flex flex-col gap-3">
-                <li>
-                    <a href="#">Partnership</a>
-                </li>
-                <li>
-                    <a href="#">Help</a>
-                </li>
-                <li>
-                    <a href="#">Terms of Service</a>
-                </li>
-                <li>
-                    <a href="#">Privacy Policy</a>
-                </li>
-                <li>
-                    <a href="#">Sitemap</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div className="px-12">&copy; 2020 Wetick All Rights Reserved</div>
-</footer>
+<Footer />
         </>
     )
 }

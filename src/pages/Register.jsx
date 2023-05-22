@@ -2,16 +2,20 @@ import male from '../assets/male.png'
 import female from '../assets/female.png'
 import Fill from '../assets/Fill 1.png'
 import Wetick from '../assets/Wetick.png'
-import { Link } from "react-router-dom"
+import { Link, useNavigate} from "react-router-dom"
 import { useState } from 'react'
 import http from '../helpers/http.helper'
 import {FiEye, FiEyeOff} from 'react-icons/fi'
+// import { useSelector } from "react-redux"
 
 const Register = ()=> {
+    const navigate = useNavigate()
+    // const token = useSelector(state => state.auth.token)
     const [errorMessage, setErrorMessage] = useState('')
     const [successMessage, setSuccessMessage] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
     const handleTogglePassword = () => {
         setShowPassword((prevState) => !prevState)
     }
@@ -49,6 +53,7 @@ const Register = ()=> {
             const body = new URLSearchParams({fullName, email, password, confirmPassword}).toString()
             const {data} = await http().post('http://localhost:8888/auth/register', body)
             setSuccessMessage(data.message)
+            navigate('login')
             setErrorMessage('')
         }catch(err){
             const message = err?.response?.data?.message

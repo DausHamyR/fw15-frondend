@@ -16,6 +16,7 @@ import { store, persistor } from "./redux/store";
 import PrivateRoute from "./components/PrivateRoute";
 import {PersistGate} from 'redux-persist/integration/react'
 import SearchResults from "./pages/SearchResults";
+import CodeForgotPassword from "./pages/CodeForgotPassword";
 
 const App = ()=> {
     return (
@@ -29,13 +30,14 @@ const App = ()=> {
                         <Route path="/forgot-password" element={<ForgotPassword />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/events/:id" element={<Event />} />
-                        <Route path="/tickets" element={<PrivateRoute><Tickets /></PrivateRoute>} />
+                        <Route path="/tickets/:id" element={<PrivateRoute><Tickets /></PrivateRoute>} />
                         <Route path="/payment" element={<PrivateRoute><Payment /></PrivateRoute>} />
                         <Route path="/change-password" element={<ChangePassword />} />
-                        <Route path="/my-booking" element={<MyBooking />} />
+                        <Route path="/my-booking" element={<PrivateRoute><MyBooking /></PrivateRoute>} />
                         <Route path="/my-wishlist" element={<MyWishlist />} />
                         <Route path="/create-event" element={<CreateEvent />} />
                         <Route path="/search" element={<SearchResults />} />
+                        <Route path="/code-forgot-password" element={<CodeForgotPassword />} />
                     </Routes>
                 </BrowserRouter>
             </PersistGate>

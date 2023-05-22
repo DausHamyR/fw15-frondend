@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const http = (token, fallback) => {
+const http = (token, /*fallback*/) => {
     const headers = {}
     if(token){
         headers.Authorization = `Bearer ${token}`
@@ -12,9 +12,9 @@ const http = (token, fallback) => {
     instance.interceptors.response.use((response)=> {
         return response
     }, (err)=> {
-        if(err.response.status === 401){
-            return Promise.reject(fallback(err.response.data.message))
-        }
+        // if(err.response.status === 401){
+        //     return Promise.reject(fallback(err.response.data.message))
+        // }
         return Promise.reject(err)
     })
     return instance
