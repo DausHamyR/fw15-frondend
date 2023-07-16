@@ -1,4 +1,4 @@
-import Avatar from '../assets/Avatar.png'
+// import Avatar from '../assets/Avatar.png'
 import kunciBiru from '../assets/kunci biru.png'
 import coklat from '../assets/coklat.png'
 import Vector from '../assets/Vector.png'
@@ -10,14 +10,22 @@ import { Link } from "react-router-dom"
 import Logout from '../components/Logout'
 import Navbar from '../components/Navbar'
 import Footer from "../components/Footer"
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import http from '../helpers/http.helper'
 import { useSelector } from 'react-redux'
 
 const ChangePassword = ()=> {
+    const [profile, setProfile] = useState({})
     const [errorMessage, setErrorMessage] = useState('')
     const [successMessage, setSuccessMessage] = useState('')
     const token = useSelector(state => state.auth.token)
+    useEffect(() => {
+        const getProfile = async() => {
+            const {data} = await http(token).get('/profile')
+            setProfile(data.results)
+        }
+        getProfile()
+    }, [token])
     const doChangePassword = async (event) => {
         setErrorMessage('')
         try{
@@ -55,10 +63,10 @@ const ChangePassword = ()=> {
     <main className="w-full flex max-sm:ml-[0]">
         <section className="w-[25%] min-h-[825px] mt-12 max-md:hidden">
             <div className="flex justify-center">
-                <img className="rounded-full border-2 border-blue-500 p-1" src={Avatar} />
+                {profile?.picture && <img className='w-12 rounded-full border-2 border-blue-500 p-1' src={profile.picture.startsWith('https')?profile.picture : `http://localhost:8888/uploads/${profile.picture}`} />}
                 <div className="grid ml-4">
-                    <h1 className="text-md tracking-wider font-medium">Jhon Tomson</h1>
-                    <p className="text-slate-400 text-sm tracking-wider">Entrepreneur, ID</p>
+                    <h1 className="text-md tracking-wider font-medium">{profile?.fullName}</h1>
+                    <p className="text-slate-400 text-sm tracking-wider">{profile?.profession}</p>
                 </div>
             </div>
             <div className="w-[80%] h-[440px] mt-8 grid ml-[20%] content-between">

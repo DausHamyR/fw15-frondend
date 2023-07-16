@@ -25,7 +25,6 @@ const Home = ()=> {
     const [selectedCategory, setSelectedCategory] = useState([])
     const [partners, setPartners] = useState([])
     
-    
     async function getEventsCategory(name){
         const {data} = await http().get('/events', {params: {category: name}})
         setSelectedCategory(data.results)
@@ -59,38 +58,31 @@ const Home = ()=> {
         if(token){
             getProfileData()
         }
-        // if(window.localStorage.getItem('token')){
-        //     setToken(window.localStorage.getItem('token'))
-        // }
         getEvents()
         getCities()
         getCategory()
         getPartners()
         getEventsCategory()
-        // if(window.localStorage.getItem('token')){
-        //     setToken(window.localStorage.getItem('token'))
-        // }
     }, [dispatch, navigate, setProfile, token])
     
     const onSearch = (values)=> {
         const qs = new URLSearchParams(values).toString()
         navigate(`/search?${qs}`)
-        // setSearchParams(values, '/search')
     }
     
     return (
         <>
-        {/* {token ? <h1>{profile?.fullName}</h1> :} */}
         <NavbarLogout />
 <main className="container mx-auto pt-4">
     <section className="bg-sky-600 h-[35rem]">
         <img src={male} className="w-[14rem] absolute right-[10rem] top-[16rem] max-md:right-[2rem] max-sm:right-[0rem]" />
         <img src={female} className="w-[21rem] absolute top-[13rem] right-[20rem] max-md:right-[10rem] max-sm:right-[7rem]" />
+        <h1 className="w-[600px] text-white text-7xl font-bold relative top-[150px] left-[130px] tracking-wider leading-tight">Find events you love with our</h1>
         <Formik initialValues={
             {search: '', city: ''}
         } onSubmit={onSearch}>
             {({handleBlur, handleChange, handleSubmit}) => (
-                <form onSubmit={handleSubmit} className="max-w-md p-10 relative top-[300px] left-[100px]">
+                <form onSubmit={handleSubmit} className="max-w-md p-10 relative top-[150px] left-[100px] max-lg:hidden gap-2 grid">
                 <div className="form-control">
                     <input className="input input-bordered" onChange={handleChange} onBlur={handleBlur} name="search" />
                 </div>

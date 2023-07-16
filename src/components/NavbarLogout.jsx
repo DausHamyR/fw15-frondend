@@ -32,6 +32,7 @@ const NavbarLogout = ()=> {
         <header className="bg-white flex items-center justify-between flex-wrap px-4 w-full z-50">
             <section className="flex items-center flex-[1.3] max-md:flex-[2.5]">
                 <img src={logo} className="w-16" />
+                <h1 className="text-4xl font-bold">Cruelty Free</h1>
             </section>
             <section className="sm:hidden menu-toggle-hamburger">
                 <img src={menuHamburger} className="header-menu" />

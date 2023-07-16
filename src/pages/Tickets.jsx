@@ -1,6 +1,8 @@
 import stadion from '../assets/stadion.png'
 import sort from '../assets/sort.png'
 import tiketBlue from '../assets/tiket-blue.png'
+import tiketRed from '../assets/tiket-merah.png'
+import tiketYelow from '../assets/tiket-yelow.png'
 import { useNavigate, useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from "react"
@@ -39,7 +41,7 @@ const Tickets = ()=> {
 
     useEffect(()=> {
         const getSections = async() => {
-            const {data} = await http(token).get('/section')
+            const {data} = await http(token).get('/sections')
             setSections(data.results)
         }
         getSections()
@@ -52,7 +54,7 @@ const Tickets = ()=> {
             quantity: filledSection.quantity
         }).toString()
 
-        const {data} = await http(token).post('/reservation', form)
+        const {data} = await http(token).post('/reservations', form)
         
         navigate('/payment', {state: {
             eventId,
@@ -102,8 +104,7 @@ const Tickets = ()=> {
         </div>
         <div className="w-[37.5%] max-md:ml-8 max-md:w-[90%] mt-10">
             <div className="grid">
-                {sections.map(item => (
-                <div key={`section-select-${item.id}`} className="mb-10">
+                <div className="mb-10">
                     <div className="flex justify-between mb-12">
                         <div>
                             <h1 className="font-bold text-xl">Tickets</h1>
@@ -119,49 +120,48 @@ const Tickets = ()=> {
                                 <img src={tiketBlue} />
                             </div>
                             <div className="ml-3">
-                                <h1>{item.name}</h1>
+                                <h1>{sections[0].name}</h1>
                                 <h1 className="text-slate-400 text-sm">12 Seats available</h1>
                             </div>
                         </div>
                         <div className="text-center">
-                            <h1>${item.price}</h1>
+                            <h1>${sections[0].price}</h1>
                             <h1 className="text-slate-400">per person</h1>
                         </div>
                     </div>
                     <div className="flex justify-between mt-4">
                         <h1 className="font-semibold">Quantity</h1>
                         <div>
-                            <button className='btn btn-error' onClick={()=> decrement(item.id)}>
+                            <button className='btn btn-error' onClick={()=> decrement(sections[0].id)}>
                                 <FiMinus />
                             </button>
-                            <div className='text-xl'>{item.id === filledSection.id ? filledSection.quantity: 0}</div>
-                            <button className='btn btn-success' onClick={()=> increment(item.id)}>
+                            <div className='text-xl'>{sections[0].id === filledSection.id ? filledSection.quantity: 0}</div>
+                            <button className='btn btn-success' onClick={()=> increment(sections[0].id)}>
                                 <FiPlus />
                             </button>
                         </div>
                     </div>
                 </div>
-                ))}
-                {/* <div className="mb-10">
+                <div className="mb-10">
                     <div className="flex justify-between">
                         <div className="flex items-center">
                             <div className="p-2 bg-red-100 rounded-md">
-                                <img src={tiketMerah} />
+                                {/* <img src={tiketMerah} /> */}
                             </div>
                             <div className="ml-3">
-                                <h1>Section vip, Row 2</h1>
+                                <h1>{sections[1].name}</h1>
                                 <h1 className="text-slate-400 text-sm">9 Seats available</h1>
                             </div>
                         </div>
                         <div className="text-center">
-                            <h1>$35</h1>
+                            <h1>{sections[1].price}</h1>
                             <h1 className="text-slate-400">per person</h1>
                         </div>
                     </div>
                     <div className="flex justify-between mt-4">
                         <h1 className="font-semibold">Quantity</h1>
                         <div>
-                            <img src={minAndPlus} />
+                            {/* <img src={minAndPlus} /> */}
                         </div>
                     </div>
                 </div>
@@ -169,25 +169,25 @@ const Tickets = ()=> {
                     <div className="flex justify-between">
                         <div className="flex items-center">
                             <div className="p-2 bg-orange-100 rounded-md">
-                                <img src={tiketYellow} />
+                                {/* <img src={tiketYellow} /> */}
                             </div>
                             <div className="ml-3">
-                                <h1>Section vvip, Row 3</h1>
+                                <h1>{sections[2].name}</h1>
                                 <h1 className="text-slate-400 text-sm">6 Seats available</h1>
                             </div>
                         </div>
                         <div className="text-center">
-                            <h1>$50</h1>
+                            <h1>{sections[2].price}</h1>
                             <h1 className="text-slate-400">per person</h1>
                         </div>
                     </div>
                     <div className="flex justify-between mt-4">
                         <h1 className="font-semibold">Quantity</h1>
                         <div>
-                            <img src={minAndPlus} />
+                            {/* <img src={minAndPlus} /> */}
                         </div>
                     </div>
-                </div> */}
+                </div>
             </div>
             <div className="flex justify-between">
                 <div className="grid content-between h-[100px] font-semibold">

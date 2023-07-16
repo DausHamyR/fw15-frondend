@@ -1,4 +1,4 @@
-import Avatar from '../assets/Avatar.png'
+// import Avatar from '../assets/Avatar.png'
 import coklat from '../assets/coklat.png'
 import Vector from '../assets/Vector.png'
 import tambahBiru from '../assets/tambah biru.png'
@@ -11,18 +11,45 @@ import { Link } from "react-router-dom"
 import Logout from '../components/Logout'
 import Navbar from '../components/Navbar'
 import Footer from "../components/Footer"
+import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import http from '../helpers/http.helper'
+import moment from "moment"
+import axios from 'axios'
 
 const CreateEvent = ()=> {
+    const [histories, setHistories] = useState([])
+    const [profile, setProfile] = useState({})
+    const token = useSelector(state => state.auth.token)
+    const handleClearHistories = async() => {
+        const data = await axios.delete('/history')
+        console.log(data)
+        setHistories([])
+    }
+    useEffect(() => {
+        const getProfile = async() => {
+            const {data} = await http(token).get('/profile')
+            setProfile(data.results)
+        }
+        getProfile()
+    }, [token])
+    useEffect(()=> {
+        const getHistoryData = async() => {
+            const {data} = await http(token).get('/history')
+            setHistories(data.results)
+        }
+        getHistoryData()
+    }, [token])
     return (
         <>
         <Navbar />
     <main className="w-full flex max-sm:ml-[0]">
         <section className="w-[25%] min-h-[825px] mt-12 max-md:hidden">
             <div className="flex justify-center">
-                <img className="rounded-full border-2 border-blue-500 p-1" src={Avatar} />
+            {profile?.picture && <img className='w-12 rounded-full border-2 border-blue-500 p-1' src={profile.picture.startsWith('https')?profile.picture : `http://localhost:8888/uploads/${profile.picture}`} />}
                 <div className="grid ml-4">
-                    <h1 className="text-md tracking-wider font-medium">Jhon Tomson</h1>
-                    <p className="text-slate-400 text-sm tracking-wider">Entrepreneur, ID</p>
+                    <h1 className="text-md tracking-wider font-medium">{profile?.fullName}</h1>
+                    <p className="text-slate-400 text-sm tracking-wider">{profile?.profession}</p>
                 </div>
             </div>
             <div className="w-[80%] h-[440px] mt-8 grid ml-[20%] content-between">
@@ -70,25 +97,38 @@ const CreateEvent = ()=> {
                 </div>
             </div>
             <div className="w-[80%] grid content-between h-[80%] mt-10 ml-16 max-sm:ml-4">
-                <div className="flex">
+                {histories.map(history => (
+                <div key={`history-list-${history.id}`} className="flex">
                     <div className="grid content-start justify-items-center mr-8">
-                        <p className="text-orange-500 font-medium">15</p>
-                        <p className="text-slate-400">Wed</p>
+                        <p className="text-orange-500 font-medium">{moment(history.date).format('DD')}</p>
+                        <p className="text-slate-400">{moment(history.date).format('dddd')}</p>
                     </div>
                     <div className="grid content-start">
-                        <h1 className="font-bold text-2xl">Sights & Sounds Exhibition</h1>
+                        <h1 className="font-bold text-2xl">{history.title}</h1>
                         <div className="mt-4">
-                            <p className="text-slate-400 mb-1">Jakarta, Indonesia</p>
-                            <p className="text-slate-400 mb-1">Wed, 15 Nov, 4:00 PM</p>
+                            <p className="text-slate-400 mb-1">{history.location}</p>
+                            <p className="text-slate-400 mb-1">{moment(history.date).format('DD-MM-YYYY')}</p>
                             <div className="flex">
-                                <p className="text-blue-600 font-semibold mr-4">Detail</p>
-                                <p className="text-blue-600 font-semibold mr-4">Update</p>
-                                <p className="text-blue-600 font-semibold">Delete</p>
+                                <label htmlFor={`my-modal-${history.id}`} className="cursor-pointer text-blue-600 font-semibold mr-4">Detail</label>
+                                <input type="checkbox" id={`my-modal-${history.id}`} className="modal-toggle" />
+                            <div className="modal">
+                            <div className="modal-box relative">
+                                <label htmlFor={`my-modal-${history.id}`} className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                                <h3 className="text-lg font-bold">Detail Events!</h3>
+                                <p className="py-2">{history.id}</p>
+                                <p className="py-2">{history.title}</p>
+                                <p className="py-2">{history.location}</p>
+                                <p className="py-2">{moment(history.date).format('DD-MM-YYYY')}</p>
+                            </div>
+                            </div>
+                                <button className="text-blue-600 font-semibold mr-4">Update</button>
+                                <button onClick={handleClearHistories} className="text-blue-600 font-semibold">Delete</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="flex">
+                ))}
+                {/* <div className="flex">
                     <div className="grid content-start justify-items-center mr-8">
                         <p className="text-orange-500 font-medium">15</p>
                         <p className="text-slate-400">Wed</p>
@@ -141,7 +181,7 @@ const CreateEvent = ()=> {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
             </div>
         </section>
     </main>

@@ -3,8 +3,8 @@ import {FcGoogle} from 'react-icons/fc'
 import {FaFacebook} from 'react-icons/fa'
 import male from '../assets/male.png'
 import female from '../assets/female.png'
-import Fill from '../assets/Fill 1.png'
-import Wetick from '../assets/Wetick.png'
+// import Fill from '../assets/Fill 1.png'
+// import Wetick from '../assets/Wetick.png'
 import { useNavigate, } from "react-router-dom"
 import { useEffect, useState } from "react"
 import {FiEye, FiEyeOff} from 'react-icons/fi'
@@ -14,6 +14,7 @@ import * as Yup from 'yup'
 import propTypes from 'prop-types'
 import { useDispatch, useSelector } from "react-redux"
 import { clearMessage } from "../redux/reducers/auth"
+import logo from '../assets/logo_kelinci.png'
 
 const validationSchema = Yup.object({
     email: Yup.string().required().email('Email is invalid'),
@@ -129,9 +130,9 @@ const Login = ()=> {
         </section>
         <section className="bg-white w-[50%] max-md:w-full">
             <div className="w-[70%] h-[80vh] mx-[15%]">
-                <div className="w-full relative top-[50px] flex">
-                    <img src={Fill} />
-                    <img src={Wetick} className="w-[94px] h-[36px] top-[20px] relative" />
+                <div className="w-full relative top-[50px] flex items-center">
+                    <img src={logo} className="w-16"/>
+                    <h1 className="text-4xl font-bold">Cruelty Free</h1>
                 </div>
                 <div className="w-full relative top-[80px]">
                     <h1 className="text-3xl mb-[15px]">Sign In</h1>

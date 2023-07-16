@@ -71,7 +71,7 @@ const Profile = ()=> {
         setEditUsername(false)
         setEditEmail(false)
         setEditPhoneNumber(false)
-        setOpenModal(true)
+        setOpenModal(false)
     }
 
     // useEffect(()=> {
@@ -145,7 +145,7 @@ const Profile = ()=> {
             enableReinitialize
         >
             {({handleSubmit, handleChange, handleBlur, errors, touched, values})=> (
-                <form onSubmit={handleSubmit} className="w-[70%] bg-white min-h-[100vh] mt-12 rounded-xl max-md:ml-[20vw] max-sm:ml-0 max-md:w-full">
+            <form onSubmit={handleSubmit} className="w-[70%] bg-white min-h-[100vh] mt-12 rounded-xl max-md:ml-[20vw] max-sm:ml-0 max-md:w-full">
                 <article className="w-[20%] h-[120px] flex justify-center items-center text-2xl font-semibold">
                     <h1>Profile</h1>
                 </article>
@@ -194,8 +194,8 @@ const Profile = ()=> {
                         <div className="flex items-center max-md:grid max-md:mb-6">
                             <h3 className="max-md:mb-2">Gender</h3>
                             <div className="flex pl-[12vw] max-md:pl-0">
-                                <Field type="radio" className="mr-1" name="gender" value='0' /><button className="text-slate-400">Male</button> 
-                                <Field type="radio" className="ml-6 mr-1 pt-[-20px]" name="gender" value='1' /><button className="text-slate-400">Female</button> 
+                                <Field type="radio" className="mr-1" name="gender" value='0' /><div className="text-slate-400">Male</div> 
+                                <Field type="radio" className="ml-6 mr-1 pt-[-20px]" name="gender" value='1' /><div className="text-slate-400">Female</div> 
                             </div>
                         </div>
                         <div className="flex justify-between items-center max-md:grid max-md:mb-6">
@@ -211,7 +211,7 @@ const Profile = ()=> {
                             <h3 className="max-md:mb-2">Nationality</h3>
                             <select name='nationality' onChange={handleChange} onBlur={handleBlur} value={values.nationality}  className="input input-bordered w-full max-w-xs">
                                 <option className='hidden'>Select Nationality</option>
-                                <option></option>
+                                <option>Indonesia</option>
                             </select>
                         </div>
                         <div className="flex items-center max-md:grid">
@@ -238,7 +238,10 @@ const Profile = ()=> {
                             className="h-[110px] w-[110px] justify-self-center p-1 brightness-75 border-[4px] rounded-full border-blue-500" />
                             <img src={kamera} className="relative left-[47.5%] max-md:left-[45%] max-lg:left-[45.5%] top-[-60px]" />
                         </div>
-                        <button name='picture' className='btn btn-outline btn-primary w-[80%] mt-8' onChange={(e)=> setSelectedPicture(e.target.files[0])} >Choose Photo</button>
+                        <label >
+                            <span className='btn btn-outline btn-primary w-[80%] mt-8' >Choose Photo</span>
+                            <input name='picture' onChange={(e)=>setSelectedPicture(e.target.files[0])} type="file" className='hidden'/>
+                        </label>
                         {/* <div className="w-[80%] h-[40px] mx-[10%] flex justify-center items-center border-2 rounded-md border-blue-500 mt-8">
                             <h1 className="text-blue-500 font-bold tracking-wider">Choose Photo</h1>
                         </div> */}

@@ -19,6 +19,7 @@ const Navbar = () => {
         <header className="w-full flex justify-between items-center bg-white px-6">
         <div className="flex items-center">
             <img src={logo} className="w-16" />
+            <h1 className="text-4xl font-bold">Cruelty Free</h1>
         </div>
         <div className="max-md:hidden">
             <nav className="text-black">
