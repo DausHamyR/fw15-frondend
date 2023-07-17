@@ -23,7 +23,8 @@ const Payment = ()=> {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.token)
-    const [profile, setProfile] = useState({})
+    const [profilePicture, setProfilePicture] = useState({})
+    const [profileFullName, setProfileFullname] = useState()
     const {state} = useLocation()
     const [method, setMethod] = useState([])
     const [selectedPayment, setSelectedPayment] = useState(null)
@@ -31,30 +32,22 @@ const Payment = ()=> {
     useEffect(()=> {
         const getPaymentMethod = async() => {
             const {data} = await http(token).get('/payment')
+            console.log(data.results[0].id)
             setMethod(data.results)
             setSelectedPayment(data.results[0].id)
         }
         getPaymentMethod()
-    }, [token, navigate, state])
-
-    useEffect(()=> {
-
-    }, [])
+    }, [token, navigate, state, profileFullName, profilePicture])
 
     useEffect(()=> {
         async function getProfileData(){
-            const fallback = (message)=> {
-                dispatch(logoutAction())
-                dispatch(setWarningMessage(message))
-                navigate('/login')
-            }
-            const {data} = await http(token, fallback).get('/profile')
-            setProfile(data.results)
+            const {data} = await http(token).get('/profile')
+            const dataProfilePicture = data.results.picture
+            setProfilePicture(dataProfilePicture)
+            setProfileFullname(data.results.fullName)
         }
-        if(token){
             getProfileData()
-        }
-    }, [dispatch, navigate, token])
+    }, [token])
 
     const doLogout = ()=> {
         window.localStorage.removeItem('token')
@@ -72,6 +65,10 @@ const Payment = ()=> {
         const {data} = await http(token).post('/payment', form)
         navigate('/my-booking', {replace: true})
     }
+
+    useEffect(()=> {
+        console.log(method)
+    }, [method])
     
     return (
         <>
@@ -90,8 +87,8 @@ const Payment = ()=> {
         {token ?
         <div className='flex gap-5'>
             <Link to={'/profile'} className="flex items-center max-md:hidden">
-                {profile?.picture && <img className="w-12 rounded-full border-2 border-blue-500 p-1" src={profile.picture.startsWith('https')?profile.picture : `http://localhost:8888/uploads/${profile.picture}`} />}
-                <h1 className="text-black ml-4">{profile.fullName}</h1>
+                {profilePicture && <img className="w-12 rounded-full border-2 border-blue-500 p-1" src={profilePicture} />}
+                <h1 className="text-black ml-4">{profileFullName}</h1>
             </Link>
             <button onClick={doLogout} className="btn btn-error w-[100px]">Logout</button>
         </div> :
@@ -113,14 +110,12 @@ const Payment = ()=> {
                 <div className="flex">
                     <img src={Ellipse8} className="w-[7px] h-[7px] self-center mr-4" />
                 </div>
-                {method.find(item => (
-                <div key={`payment-method-${item.id}`} className="flex items-center">
+                <div className="flex items-center">
                     <div onChange={(e)=> setSelectedPayment(e.target.value)} className="p-2 border-1 bg-slate-300 rounded-md">
-                        <img src={cardBiru} className="w-[24px] h-[24px]" defaultChecked={item.id === method[0].id}/>
+                        <img src={cardBiru} className="w-[24px] h-[24px]" defaultChecked={method[0]?.id}/>
                     </div>
-                    <h3 className="ml-4">{item[0].name}</h3>
+                    <h3 className="ml-4">{method[0]?.name}</h3>
                 </div>
-                ))}
             </div>
             <div className="flex items-center">
                 <div className="w-[285px] h-[173px] bg-amber-500 ml-[10%] max-xl:ml-0 rounded-xl">
@@ -144,31 +139,29 @@ const Payment = ()=> {
                 </div>
             </div>
             <div className="flex ml-[8%] mt-10 pb-16">
-                {method.find(item => (
-                <div key={`payment-method1-${item.id}`} className="grid content-between h-[200px] mr-28">
+                <div className="grid content-between h-[200px] mr-28">
                     <div className="flex items-center">
                         <img src={Ellipse7} className="w-[15px] h-[15px] mr-4" />
                         <div className="p-2 bg-red-200 rounded-md mr-4">
                             <img src={ok} className="w-[20px] h-[19px]" />
                         </div>
-                        <h1 className="font-semibold tracking-wider">{item[1].name}</h1>
+                        <h1 className="font-semibold tracking-wider">{method[1]?.name}</h1>
                     </div>
                     <div className="flex items-center">
                         <img src={Ellipse7} className="w-[15px] h-[15px] mr-4" />
                         <div className="p-2 bg-orange-200 rounded-md mr-4">
                             <img src={Vectorkuning} className="w-[20px] h-[19px]" />
                         </div>
-                        <h1 className="font-semibold tracking-wider">{item[2].name}</h1>
+                        <h1 className="font-semibold tracking-wider">{method[2]?.name}</h1>
                     </div>
                     <div className="flex items-center">
                         <img src={Ellipse7} className="w-[15px] h-[15px] mr-4" />
                         <div className="px-3 py-2 bg-blue-200 rounded-md mr-4">
                             <img src={Vectordolar} className="w-[10px] h-[18px]" />
                         </div>
-                        <h1 className="font-semibold tracking-wider">{item[3].name}</h1>
+                        <h1 className="font-semibold tracking-wider">{method[3]?.name}</h1>
                     </div>
                 </div>
-                ))}
                 <div className="grid mt-3 h-[175px] content-between">
                     <img src={panahbawah} />
                     <img src={panahbawah} />

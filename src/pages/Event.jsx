@@ -1,4 +1,3 @@
-import loveWishlist from '../assets/love-wishlist.png'
 import mappin from '../assets/map-pin.png'
 import clock from '../assets/clock.png'
 import org1 from '../assets/org1.png'
@@ -15,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { logout as logoutAction, setWarningMessage } from "../redux/reducers/auth"
 import NavbarLogout from '../components/NavbarLogout'
 import Footer from "../components/Footer"
+import {AiFillHeart} from 'react-icons/ai'
 
 const Event = ()=> {
     const navigate = useNavigate()
@@ -23,15 +23,17 @@ const Event = ()=> {
     const [event, setEvent] = useState({})
     const [setProfile] = useState({})
     const token = useSelector(state => state.auth.token)
+    const [wishlist, setWishlist] = useState(false);
+
     useEffect(()=> {
         const getEventData = async(id) => {
-            const {data} = await http().get(`/events/${id}`)
+            const {data} = await http(token).get(`/events/${id}`)
             setEvent(data.results)
         }
         if(id){
             getEventData(id)
         }
-    }, [id])
+    }, [id, token])
 
     useEffect(()=> {
         async function getProfileData(){
@@ -47,6 +49,36 @@ const Event = ()=> {
             getProfileData()
         }
     }, [dispatch, navigate, token, setProfile])
+
+    async function postWishlist(id) {
+        try {
+            if (wishlist) {
+                await http(token).delete(`/wishlists/${id}`);
+                setWishlist(false);
+            } else {
+                const body = new URLSearchParams({
+                    eventId: id,
+                }).toString();
+                await http(token).post('/wishlists', body);
+            setWishlist(true);
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+
+      useEffect(() => {
+        async function getWishlist(id) {
+          const {data} = await http(token).get(`/wishlists/${id}`);
+          if (!data) {
+            setWishlist(false);
+          } else {
+            setWishlist(true);
+          }
+        }
+        getWishlist(id);
+      }, [token, id]);
+
     return (
         <>
         <NavbarLogout />
@@ -54,7 +86,9 @@ const Event = ()=> {
         <div className="ml-[5%] mt-20">
             {event?.picture && <img className="w-[350px] h-[440px] object-cover rounded-2xl brightness-75" src={event.picture.startsWith('https')?event.picture : `http://localhost:8888/uploads/${event.picture}`} />}
             <div className="flex justify-center items-center h-[70px] max-md:justify-start">
-                <img src={loveWishlist} />
+                <button onClick={() => postWishlist(event.id)}>
+                    <AiFillHeart size={40} className={wishlist ? 'text-red-500' : 'text-slate-200'}/>
+                </button>
                 <h1 className="ml-4 font-semibold">Add to Wishlist</h1>
             </div>
         </div>

@@ -27,6 +27,7 @@ const MyBooking = ()=> {
         }
         getProfile()
     }, [token])
+
     useEffect(()=> {
         const getHistoryData = async() => {
             const {data} = await http(token).get('/history')
@@ -34,6 +35,7 @@ const MyBooking = ()=> {
         }
         getHistoryData()
     }, [token])
+
     return (
         <>
         <Navbar />
@@ -87,76 +89,35 @@ const MyBooking = ()=> {
                     <p className="ml-2 text-xs text-blue-400 font-medium">March</p>
                 </div>
             </div>
-            <div className="w-[80%] grid content-between h-[80%] mt-10 ml-16 max-sm:ml-4">
+            <div className="w-[80%] grid content-start gap-12 h-[80%] mt-10 ml-16 max-sm:ml-4">
                 {histories.map(history => (
-                <div key={`history-list-${history.id}`} className="flex">
+                <div key={`history-listttt-${history?.id}`} className="flex">
                     <div className="grid content-start justify-items-center mr-8">
-                        <p className="text-orange-500 font-medium">{moment(history.date).format('DD')}</p>
-                        <p className="text-slate-400">{moment(history.date).format('dddd')}</p>
+                        <p className="text-orange-500 font-medium">{moment(history?.date).format('DD')}</p>
+                        <p className="text-slate-400">{moment(history?.date).format('dddd')}</p>
                     </div>
                     <div className="grid content-start">
-                        <h1 className="font-bold text-2xl">{history.title}</h1>
+                        <h1 className="font-bold text-2xl">{history?.title}</h1>
                         <div className="mt-4">
-                            <p className="text-slate-400 mb-1">{history.location}</p>
-                            <p className="text-slate-400 mb-1">{moment(history.date).format('DD-MM-YYYY')}</p>
-                            <label htmlFor={`my-modal-${history.id}`} className="cursor-pointer text-blue-500 no-underline">Detail</label>
-                            <input type="checkbox" id={`my-modal-${history.id}`} className="modal-toggle" />
+                            <p className="text-slate-400 mb-1">{history?.location}</p>
+                            <p className="text-slate-400 mb-1">{moment(history?.date).format('DD-MM-YYYY')}</p>
+                            <label htmlFor={`my-modal-${history?.id}`} className="cursor-pointer text-blue-500 no-underline">Detail</label>
+                            <input type="checkbox" id={`my-modal-${history?.id}`} className="modal-toggle" />
                             <div className="modal">
                             <div className="modal-box relative">
-                                <label htmlFor={`my-modal-${history.id}`} className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                                <label htmlFor={`my-modal-${history?.id}`} className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
                                 <h3 className="text-lg font-bold">My Booking Details!</h3>
-                                <p className="py-2">{history.id}</p>
-                                <p className="py-2">{history.title}</p>
-                                <p className="py-2">{history.location}</p>
-                                <p className="py-2">{moment(history.date).format('DD-MM-YYYY')}</p>
+                                <p className="py-2">{history?.id}</p>
+                                <p className="py-2">{history?.title}</p>
+                                <p className="py-2">{history?.name}</p>
+                                <p className="py-2">{history?.namePayment}</p>
+                                <p className="py-2">{moment(history?.date).format('DD-MM-YYYY')}</p>
                             </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 ))}
-                {/* <div className="flex">
-                    <div className="grid content-start justify-items-center mr-8">
-                        <p className="text-orange-500 font-medium">15</p>
-                        <p className="text-slate-400">Wed</p>
-                    </div>
-                    <div className="grid content-start">
-                        <h1 className="font-bold text-2xl">Sights & Sounds Exhibition</h1>
-                        <div className="mt-4">
-                            <p className="text-slate-400 mb-1">Jakarta, Indonesia</p>
-                            <p className="text-slate-400 mb-1">Wed, 15 Nov, 4:00 PM</p>
-                            <p className="text-blue-500">Detail</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex max-md:hidden">
-                    <div className="grid content-start justify-items-center mr-8">
-                        <p className="text-orange-500 font-medium">15</p>
-                        <p className="text-slate-400">Wed</p>
-                    </div>
-                    <div className="grid content-start">
-                        <h1 className="font-bold text-2xl">Sights & Sounds Exhibition</h1>
-                        <div className="mt-4">
-                            <p className="text-slate-400 mb-1">Jakarta, Indonesia</p>
-                            <p className="text-slate-400 mb-1">Wed, 15 Nov, 4:00 PM</p>
-                            <p className="text-blue-500">Detail</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex max-md:hidden">
-                    <div className="grid content-start justify-items-center mr-8">
-                        <p className="text-orange-500 font-medium">15</p>
-                        <p className="text-slate-400">Wed</p>
-                    </div>
-                    <div className="grid content-start">
-                        <h1 className="font-bold text-2xl">Sights & Sounds Exhibition</h1>
-                        <div className="mt-4">
-                            <p className="text-slate-400 mb-1">Jakarta, Indonesia</p>
-                            <p className="text-slate-400 mb-1">Wed, 15 Nov, 4:00 PM</p>
-                            <p className="text-blue-500">Detail</p>
-                        </div>
-                    </div>
-                </div> */}
             </div>
         </section>
     </main>

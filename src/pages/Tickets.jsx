@@ -53,14 +53,14 @@ const Tickets = ()=> {
             sectionId: filledSection.id,
             quantity: filledSection.quantity
         }).toString()
-
+        console.log(form)
         const {data} = await http(token).post('/reservations', form)
-        
+        console.log(data)
         navigate('/payment', {state: {
             eventId,
-            eventName: data.results.events.title,
-            reservationId: data.results.id,
-            sectionName: data.results.sectionName,
+            // eventName: data.results.events.title,
+            reservationId: data.results.reservationId,
+            sectionName: data.results.ticketSection,
             quantity: data.results.quantity,
             totalPayment: data.results.totalPrice
         },
@@ -120,12 +120,12 @@ const Tickets = ()=> {
                                 <img src={tiketBlue} />
                             </div>
                             <div className="ml-3">
-                                <h1>{sections[0].name}</h1>
+                                <h1>{sections[0]?.name}</h1>
                                 <h1 className="text-slate-400 text-sm">12 Seats available</h1>
                             </div>
                         </div>
                         <div className="text-center">
-                            <h1>${sections[0].price}</h1>
+                            <h1>${sections[0]?.price}</h1>
                             <h1 className="text-slate-400">per person</h1>
                         </div>
                     </div>
@@ -135,7 +135,7 @@ const Tickets = ()=> {
                             <button className='btn btn-error' onClick={()=> decrement(sections[0].id)}>
                                 <FiMinus />
                             </button>
-                            <div className='text-xl'>{sections[0].id === filledSection.id ? filledSection.quantity: 0}</div>
+                            <div className='text-xl'>{sections[0]?.id === filledSection.id ? filledSection.quantity: 0}</div>
                             <button className='btn btn-success' onClick={()=> increment(sections[0].id)}>
                                 <FiPlus />
                             </button>
@@ -149,12 +149,12 @@ const Tickets = ()=> {
                                 {/* <img src={tiketMerah} /> */}
                             </div>
                             <div className="ml-3">
-                                <h1>{sections[1].name}</h1>
+                                <h1>{sections[1]?.name}</h1>
                                 <h1 className="text-slate-400 text-sm">9 Seats available</h1>
                             </div>
                         </div>
                         <div className="text-center">
-                            <h1>{sections[1].price}</h1>
+                            <h1>{sections[1]?.price}</h1>
                             <h1 className="text-slate-400">per person</h1>
                         </div>
                     </div>
@@ -172,12 +172,12 @@ const Tickets = ()=> {
                                 {/* <img src={tiketYellow} /> */}
                             </div>
                             <div className="ml-3">
-                                <h1>{sections[2].name}</h1>
+                                <h1>{sections[2]?.name}</h1>
                                 <h1 className="text-slate-400 text-sm">6 Seats available</h1>
                             </div>
                         </div>
                         <div className="text-center">
-                            <h1>{sections[2].price}</h1>
+                            <h1>{sections[2]?.price}</h1>
                             <h1 className="text-slate-400">per person</h1>
                         </div>
                     </div>

@@ -21,11 +21,12 @@ const MyWishlist = ()=> {
     const [histories, setHistories] = useState([])
     const [profile, setProfile] = useState({})
     const token = useSelector(state => state.auth.token)
-    const handleClearHistories = async() => {
-        const {data} = await http(token).delete(`/wishlists/${id}`)
-        console.log(data)
+
+    const handleClearHistories = async(id) => {
+        await http(token).delete(`/wishlists/${id}`)
         setHistories([])
     }
+
     useEffect(() => {
         const getProfile = async() => {
             const {data} = await http(token).get('/profile')
@@ -33,13 +34,19 @@ const MyWishlist = ()=> {
         }
         getProfile()
     }, [token])
+
     useEffect(()=> {
         const getHistoryData = async() => {
-            const {data} = await http(token).get('/history')
+            const {data} = await http(token).get('/wishlists')
             setHistories(data.results)
         }
         getHistoryData()
-    }, [token])
+    }, [token, histories, id])
+
+    // useEffect(()=> {
+    //     console.log(histories)
+    // }, [histories])
+
     return (
         <>
         <Navbar />
@@ -90,9 +97,9 @@ const MyWishlist = ()=> {
                 <h1 className="text-2xl font-semibold">My Wishlist</h1>
             </div>
             <div className="flex h-[80%]">
-                <div className="w-[80%] grid content-between mt-10 ml-16 max-sm:ml-4">
+                <div className="w-[80%] mt-10 ml-16 max-sm:ml-4">
                 {histories.map(history => (
-                    <div key={`wishlist-list-${history.id}`} className="flex">
+                    <div key={`wishlist-list-${history.id}`} className="flex mb-12">
                         <div className="grid content-start justify-items-center mr-8">
                             <p className="text-orange-500 font-medium">{moment(history.date).format('DD')}</p>
                             <p className="text-slate-400">{moment(history.date).format('dddd')}</p>
@@ -100,53 +107,14 @@ const MyWishlist = ()=> {
                         <div className="grid content-start">
                             <h1 className="font-bold text-2xl">{history.title}</h1>
                             <div className="mt-4">
-                                <p className="text-slate-400 mb-1">{history.location}</p>
+                                <p className="text-slate-400 mb-1">{history.name}</p>
                                 <p className="text-slate-400 mb-1">{moment(history.date).format('DD-MM-YYYY')}</p>
                             </div>
                         </div>
-                        <button onClick={handleClearHistories} className="grid content-between max-md:content-normal relative right-[-600px] h-[83%] max-md:h-[105%]">
+                        <button onClick={()=>handleClearHistories(history.id)} className="grid content-between max-md:content-normal relative right-[-600px] h-[83%] max-md:h-[105%]">
                             <img src={loveWishlist} />
                         </button>
                     </div>
-                    // <div className="flex">
-                    //     <div className="grid content-start justify-items-center mr-8">
-                    //         <p className="text-orange-500 font-medium">15</p>
-                    //         <p className="text-slate-400">Wed</p>
-                    //     </div>
-                    //     <div className="grid content-start">
-                    //         <h1 className="font-bold text-2xl">Sights & Sounds Exhibition</h1>
-                    //         <div className="mt-4">
-                    //             <p className="text-slate-400 mb-1">Jakarta, Indonesia</p>
-                    //             <p className="text-slate-400 mb-1">Wed, 15 Nov, 4:00 PM</p>
-                    //         </div>
-                    //     </div>
-                    // </div>
-                    // <div className="flex max-md:hidden">
-                    //     <div className="grid content-start justify-items-center mr-8">
-                    //         <p className="text-orange-500 font-medium">15</p>
-                    //         <p className="text-slate-400">Wed</p>
-                    //     </div>
-                    //     <div className="grid content-start">
-                    //         <h1 className="font-bold text-2xl">Sights & Sounds Exhibition</h1>
-                    //         <div className="mt-4">
-                    //             <p className="text-slate-400 mb-1">Jakarta, Indonesia</p>
-                    //             <p className="text-slate-400 mb-1">Wed, 15 Nov, 4:00 PM</p>
-                    //         </div>
-                    //     </div>
-                    // </div>
-                    // <div className="flex max-md:hidden">
-                    //     <div className="grid content-start justify-items-center mr-8">
-                    //         <p className="text-orange-500 font-medium">15</p>
-                    //         <p className="text-slate-400">Wed</p>
-                    //     </div>
-                    //     <div className="grid content-start">
-                    //         <h1 className="font-bold text-2xl">Sights & Sounds Exhibition</h1>
-                    //         <div className="mt-4">
-                    //             <p className="text-slate-400 mb-1">Jakarta, Indonesia</p>
-                    //             <p className="text-slate-400 mb-1">Wed, 15 Nov, 4:00 PM</p>
-                    //         </div>
-                    //     </div>
-                    // </div>
                     ))}
                 </div>
             </div>

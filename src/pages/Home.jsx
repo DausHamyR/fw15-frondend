@@ -26,7 +26,7 @@ const Home = ()=> {
     const [partners, setPartners] = useState([])
     
     async function getEventsCategory(name){
-        const {data} = await http().get('/events', {params: {category: name}})
+        const {data} = await http(token).get('/events', {params: {category: name}})
         setSelectedCategory(data.results)
     }
     useEffect(()=> {
@@ -40,7 +40,7 @@ const Home = ()=> {
             setProfile(data.results)
         }
         async function getEvents(){
-            const {data} = await http().get('/events')
+            const {data} = await http(token).get('/events')
             setEvents(data.results)
         }
         async function getCities(){
@@ -69,6 +69,10 @@ const Home = ()=> {
         const qs = new URLSearchParams(values).toString()
         navigate(`/search?${qs}`)
     }
+
+    useEffect(() => {
+        console.log(selectedCategory)
+    }, [selectedCategory]);
     
     return (
         <>
@@ -136,7 +140,7 @@ const Home = ()=> {
         {events.map(event => {
             return (
         <Link to={`/events/${event.id}`} className="w-[200px]" key={`eventDetails-${event.id}`} >
-            <img className="h-[270px] object-cover rounded-2xl filter brightness-75" src={`http://localhost:8888/uploads/${event.picture}`} />
+            <img className="h-[270px] object-cover rounded-2xl filter brightness-75" src={`${event.picture}`} />
             <div className="relative top-[-80px] left-[5px] text-white">
                 <h1 className="text-xs">{moment(event.date).format('DD-MM-YYYY')}</h1>
                 <h1 className="text-xl font-bold">{event.title}</h1>
@@ -144,34 +148,6 @@ const Home = ()=> {
         </Link>
             )
         })}
-        {/* <div className="w-[200px]" key={events[1].id}>
-            <img className="h-[270px] object-cover rounded-2xl filter brightness-75" src={`http://localhost:8888/uploads/${events.picture}`} />
-            <div className="relative top-[-120px] left-[15px] text-white">
-                <h1 className="text-[12px]">{moment(events.date).format('DD-MM-YYYY')}</h1>
-                <h1 className="text-xl font-bold w-[130px]">{events.title}</h1>
-            </div>
-        </div>
-        <div className="w-[200px] max-sm:hidden" key={events[2].id}>
-            <img className="h-[270px] object-cover rounded-2xl filter brightness-75" src={`http://localhost:8888/uploads/${events[2].picture}`} />
-            <div className="relative top-[-120px] left-[15px] text-white">
-                <h1 className="text-[12px]">{moment(events[2].date).format('DD-MM-YYYY')}</h1>
-                <h1 className="text-xl font-bold">{events[2].title}</h1>
-            </div>
-        </div>
-        <div className="w-[200px] max-sm:hidden max-md:hidden" key={events[3].id}>
-            <img className="h-[270px] object-cover rounded-2xl filter brightness-75" src={`http://localhost:8888/uploads/${events[3].picture}`} />
-            <div className="relative top-[-120px] left-[15px] text-white">
-                <h1 className="text-[12px]">{moment(events[3].date).format('DD-MM-YYYY')}</h1>
-                <h1 className="text-xl font-bold w-[130px]">{events[3].title}</h1>
-            </div>
-        </div>
-        <div className="w-[200px] max-sm:hidden max-md:hidden max-xl:hidden" key={events[4].id}>
-            <img className="h-[270px] object-cover rounded-2xl filter brightness-75" src={`http://localhost:8888/uploads/${events[4].picture}`} />
-            <div className="relative top-[-120px] left-[15px] text-white">
-                <h1 className="text-[12px]">{moment(events[4].date).format('DD-MM-YYYY')}</h1>
-                <h1 className="text-xl font-bold">{events[4].title}</h1>
-            </div>
-        </div> */}
     </section>
     <section className="flex justify-center items-center gap-3 my-5 mb-24">
         <button className="font-bold rounded-lg text-slate-600 h-8 w-8 bg-slate-200">&larr;</button>
@@ -201,38 +177,6 @@ const Home = ()=> {
             <a className="text-blue-500 bg-white flex justify-center items-center font-bold min-w-[300px] tracking-widest h-12 rounded-xl" href="#">See All</a>
         </div>
     </section>
-
-            {/* <div className="flex-1 flex flex-col items-center">
-                <img src={bandung} alt="city2" />
-                Bandung
-            </div>
-            <div className="flex-1 flex flex-col items-center">
-                <img src={bali} alt="city3" />
-                Bali
-            </div>
-        </div> */}
-        {/* <div className="md:flex hidden text-white mt-5">
-            <div className="flex-1 flex flex-col items-center">
-                <img src={aceh} alt="city4" />
-                Aceh
-            </div>
-            <div className="flex-1 flex flex-col items-center">
-                <img src={solo} alt="city5" />
-                Solo
-            </div>
-            <div className="flex-1 flex flex-col items-center">
-                <img src={Yogyakarta} alt="city6" />
-                Yogyakarta
-            </div>
-            <div className="flex-1 flex flex-col items-center">
-                <img src={semarang} alt="city7" />
-                Semarang
-            </div>
-        </div> */}
-        {/* <div className="flex justify-center mt-12">
-            <div><a className="text-blue-500 bg-white flex justify-center items-center font-bold min-w-[180px] tracking-widest h-12 rounded-xl" href="#">See All</a></div>
-        </div>
-    </section> */}
     <section className="flex flex-col items-center gap-[30px] my-[40px]">
         <div className="bg-red-200 flex gap-[10px] items-center text-d0093e py-[5px] px-[10px] rounded-[20px]">
             <div></div>
@@ -251,32 +195,6 @@ const Home = ()=> {
                     </button>
                 ))}
             </div>
-                {/* <div className="flex justify-center items-center min-w-[100px]">
-                <a className="text-blue-500 border-b-2 pb-1 border-blue-500 font-bold" href="#">Music</a>
-                </div> */}
-                {/* <div className="flex justify-center items-center min-w-[100px]">
-                    <a className="text-gray-600 border-b-2 pb-1 border-transparent hover:border-red-400 font-bold" href="#">Arts</a>
-                </div>
-                <div className="flex justify-center items-center min-w-[100px]">
-                    <a className="text-gray-600 border-b-2 pb-1 border-transparent hover:border-red-400 font-bold" href="#">Outdoors</a>
-                </div>
-            </div>
-            <div className="flex">
-                <div className="flex justify-center items-center min-w-[100px]">
-                    <a className="text-gray-600 border-b-2 pb-1 border-transparent hover:border-red-400 font-bold" href="#">Workshop</a>
-                </div>
-                <div className="flex justify-center items-center min-w-[100px]">
-                    <a className="text-gray-600 border-b-2 pb-1 border-transparent hover:border-red-400 font-bold" href="#">Sport</a>
-                </div>
-                <div className="flex justify-center items-center min-w-[100px]">
-                    <a className="text-gray-600 border-b-2 pb-1 border-transparent hover:border-red-400 font-bold" href="#">Festival</a>
-                </div>
-            </div>
-            <div className="flex justify-center">
-                <div className="flex justify-center items-center min-w-[100px]">
-                    <a className="text-gray-600 border-b-2 pb-1 border-transparent hover:border-red-400 font-bold" href="#">Fashion</a>
-                </div>
-            </div> */}
         </div>
     </section>
     <section className="flex md:flex-row flex-col justify-center items-center gap-5 my-5 mb-24">
@@ -289,7 +207,7 @@ const Home = ()=> {
         <Link to={`/events/${event.id}`} key={`event-category-${event.id}`}>
         <div className="w-[300px] h-[350px] rounded-xl overflow-hidden flex flex-col">
             <div className="flex-2 overflow-hidden">
-                <img className="object-cover w-full h-[200px]" src={`http://localhost:8888/uploads/${event.picture}`} alt="banner1" />
+                <img className="object-cover w-full h-[200px]" src={`${event.picture}`} alt="banner1" />
             </div>
             <div className="flex flex-col justify-end flex-1 min-h-[161px] bg-blue-500 text-white p-8 relative">
                 <div className="flex absolute -top-5 ml-2">
@@ -312,58 +230,6 @@ const Home = ()=> {
         </div></Link>
             )
         })}
-        {/* {selectedCategory && (
-        <div>
-            <h2>{selectedCategory.name}</h2>
-            <p>{selectedCategory.description}</p>
-        </div>
-        )} */}
-        {/* <div className="w-[300px] h-[350px] rounded-xl overflow-hidden flex flex-col">
-            <div className="flex-2 overflow-hidden">
-                <img className="object-cover w-full h-full" src={BitmapLarge} alt="banner2" />
-            </div>
-            <div className="flex flex-col justify-end flex-1 min-h-[161px] bg-blue-500 text-white p-8 relative">
-                <div className="flex absolute -top-5 ml-2">
-                    <div className="w-8 h-8 rounded-full overflow-hidden border border-white -ml-2">
-                        <img className="w-full h-full object-cover" src={org1} alt="profile1" />
-                    </div>
-                    <div className="w-8 h-8 rounded-full overflow-hidden border border-white -ml-2">
-                        <img className="w-full h-full object-cover" src={org2} alt="profile2" />
-                    </div>
-                    <div className="w-8 h-8 rounded-full overflow-hidden border border-white -ml-2">
-                        <img className="w-full h-full object-cover" src={org3} alt="profile3" />
-                    </div>
-                    <div className="w-8 h-8 rounded-full overflow-hidden border border-white -ml-2">
-                        <img className="w-full h-full object-cover" src={org4} alt="profile4" />
-                    </div>
-                </div>
-                <div>Wed, 15 Nov, 4:00 PM</div>
-                <div className="text-2xl w-[170px]">See it in Gold Class</div>
-            </div>
-        </div>
-        <div className="w-[300px] h-[350px] rounded-xl overflow-hidden flex flex-col">
-            <div className="flex-2 overflow-hidden">
-                <img className="object-cover w-full h-full" src={Bitmap} alt="banner1" />
-            </div>
-            <div className="flex flex-col justify-end flex-1 min-h-[161px] bg-blue-500 text-white p-8 relative">
-                <div className="flex absolute -top-5 ml-2">
-                    <div className="w-8 h-8 rounded-full overflow-hidden border border-white -ml-2">
-                        <img className="w-full h-full object-cover" src={org1} alt="profile1" />
-                    </div>
-                    <div className="w-8 h-8 rounded-full overflow-hidden border border-white -ml-2">
-                        <img className="w-full h-full object-cover" src={org2} alt="profile2" />
-                    </div>
-                    <div className="w-8 h-8 rounded-full overflow-hidden border border-white -ml-2">
-                        <img className="w-full h-full object-cover" src={org3} alt="profile3" />
-                    </div>
-                    <div className="w-8 h-8 rounded-full overflow-hidden border border-white -ml-2">
-                        <img className="w-full h-full object-cover" src={org4} alt="profile4" />
-                    </div>
-                </div>
-                <div>Wed, 15 Nov, 4:00 PM</div>
-                <div className="text-2xl">Sights & Sounds Exhibition</div>
-            </div>
-        </div> */}
         <div>
             <button className="inline-block md:hidden font-bold rounded-lg text-slate-600 h-8 w-8 bg-slate-200">&larr;</button>
             <button className="font-bold rounded-lg text-white h-8 w-8 bg-blue-500">&rarr;</button>
@@ -384,28 +250,9 @@ const Home = ()=> {
                     <div>
                         <img src={`http://localhost:8888/uploads/${partner.picture}`} alt="sponsor" />
                     </div>
-                    {/* <div>
-                        <img src={Icon2} alt="sponsor" />
-                    </div> */}
                 </div>
                 )
             })}
-                {/* <div className="flex gap-16">
-                    <div>
-                    <img src={Icon3} alt="sponsor" />
-                    </div>
-                    <div>
-                    <img src={Icon4} alt="sponsor" />
-                    </div>
-                    </div>
-                    <div className="flex gap-16">
-                    <div>
-                    <img src={Icon5} alt="sponsor" />
-                    </div>
-                    <div>
-                    <img src={Icon6} alt="sponsor" />
-                    </div>
-                </div> */}
                 </div>
         </section>
     </div>
