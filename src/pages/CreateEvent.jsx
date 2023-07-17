@@ -15,17 +15,92 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import http from '../helpers/http.helper'
 import moment from "moment"
-import axios from 'axios'
+import { Formik } from 'formik'
 
 const CreateEvent = ()=> {
-    const [histories, setHistories] = useState([])
+    const [getAllmanage, setGetAllManage] = useState([])
     const [profile, setProfile] = useState({})
     const token = useSelector(state => state.auth.token)
-    const handleClearHistories = async() => {
-        const data = await axios.delete('/history')
-        console.log(data)
-        setHistories([])
+    const [selectedPicture, setSelectedPicture] = useState('');
+    const [getManageEvent, setGetManageEvent] = useState();
+    const [successMessage, setSuccessMessage] = useState('');
+    const [idEvent, setIdEvent] = useState();
+
+    const btnCreateEvent = async values => {
+        // setLoading(true);
+        const form = new FormData();
+        Object.keys(values).forEach(key => {
+            if (values[key]) {
+                if (key === 'price') {
+                const priceId = (values.price = 3);
+                form.append('price', priceId);
+                } else if (key === 'location') {
+                const cityId = (values.location = 5);
+                form.append('location', cityId);
+                } else if (key === 'category') {
+                const categoryId = (values.category = 3);
+                form.append('category', categoryId);
+                } else {
+                form.append(key, values[key]);
+                }
+            }
+        });
+        if (selectedPicture) {
+            form.append('picture', selectedPicture);
+        }
+        const {data} = await http(token).post('/events/manage', form, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        console.log(data.results);
+        setGetManageEvent(data.results);
+        setSuccessMessage('Create Events successfully');
+        <div className='modal-actions'>
+            <label htmlFor="my_modal_6"></label>
+        </div>
+    };
+
+    const btnUpdateEvent = async values => {
+        // setLoading(true);
+        const form = new FormData();
+        Object.keys(values).forEach(key => {
+            if (values[key]) {
+                if (key === 'price') {
+                const priceId = (values.price = 2);
+                form.append('price', priceId);
+                } else if (key === 'location') {
+                const cityId = (values.location = 2);
+                form.append('location', cityId);
+                } else if (key === 'category') {
+                const categoryId = (values.category = 2);
+                form.append('category', categoryId);
+                } else {
+                form.append(key, values[key]);
+                }
+            }
+        });
+        if (selectedPicture) {
+            form.append('picture', selectedPicture);
+        }
+        const {data} = await http(token).patch(`/events/manage/${idEvent}`, form, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        console.log(data.results);
+        setGetManageEvent(data.results);
+        setSuccessMessage('Update Events successfully');
+    };
+
+    async function removeEvent(id) {
+        try {
+            await http(token).delete(`/events/manage/${id}`);
+        } catch (err) {
+            console.log(err);
+        }
     }
+
     useEffect(() => {
         const getProfile = async() => {
             const {data} = await http(token).get('/profile')
@@ -33,13 +108,23 @@ const CreateEvent = ()=> {
         }
         getProfile()
     }, [token])
-    useEffect(()=> {
-        const getHistoryData = async() => {
-            const {data} = await http(token).get('/history')
-            setHistories(data.results)
-        }
-        getHistoryData()
-    }, [token])
+
+    useEffect(() => {
+        const manageEvent = async () => {
+            try {
+                const {data} = await http(token).get('/events/manage');
+                setGetAllManage(data.results);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        manageEvent();
+    }, [token, getAllmanage]);
+
+    const updateEvent = async id => {
+        setIdEvent(id);
+    };
+
     return (
         <>
         <Navbar />
@@ -92,13 +177,13 @@ const CreateEvent = ()=> {
         <section className="w-[70%] bg-white min-h-[100vh] max-md:min-h-[50vh] mt-12 rounded-xl max-md:w-full">
             <div className="w-[90%] h-[80px] flex justify-between items-center mx-6">
                 <h1 className="text-2xl font-semibold">Manage Event</h1>
-                <div className="flex justify-center px-8 py-3 items-center bg-blue-100 rounded-md">
-                    <p className="text-xs text-blue-500 font-bold tracking-wider">Create</p>
+                <div className="flex justify-center px-8 py-3 items-center rounded-md">
+                    <label htmlFor='my_modal_6' className="text-xs font-bold tracking-wider btn">Create</label>
                 </div>
             </div>
-            <div className="w-[80%] grid content-between h-[80%] mt-10 ml-16 max-sm:ml-4">
-                {histories.map(history => (
-                <div key={`history-list-${history.id}`} className="flex">
+            <div className="w-[80%] h-[80%] mt-10 ml-16 max-sm:ml-4">
+                {getAllmanage.map(history => (
+                <div key={`history-list-${history.id}`} className="flex mb-12">
                     <div className="grid content-start justify-items-center mr-8">
                         <p className="text-orange-500 font-medium">{moment(history.date).format('DD')}</p>
                         <p className="text-slate-400">{moment(history.date).format('dddd')}</p>
@@ -117,75 +202,168 @@ const CreateEvent = ()=> {
                                 <h3 className="text-lg font-bold">Detail Events!</h3>
                                 <p className="py-2">{history.id}</p>
                                 <p className="py-2">{history.title}</p>
-                                <p className="py-2">{history.location}</p>
+                                <p className="py-2">{history.name}</p>
                                 <p className="py-2">{moment(history.date).format('DD-MM-YYYY')}</p>
+                                <p className="py-2">{history.descriptions}</p>
                             </div>
                             </div>
-                                <button className="text-blue-600 font-semibold mr-4">Update</button>
-                                <button onClick={handleClearHistories} className="text-blue-600 font-semibold">Delete</button>
+                                <label htmlFor="modalUpdate" onClick={() => updateEvent(history.id)} className="cursor-pointer text-blue-600 font-semibold mr-4">Update</label>
+                                <button onClick={()=> removeEvent(history.id)}  className="text-blue-600 font-semibold">Delete</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 ))}
-                {/* <div className="flex">
-                    <div className="grid content-start justify-items-center mr-8">
-                        <p className="text-orange-500 font-medium">15</p>
-                        <p className="text-slate-400">Wed</p>
-                    </div>
-                    <div className="grid content-start">
-                        <h1 className="font-bold text-2xl">Sights & Sounds Exhibition</h1>
-                        <div className="mt-4">
-                            <p className="text-slate-400 mb-1">Jakarta, Indonesia</p>
-                            <p className="text-slate-400 mb-1">Wed, 15 Nov, 4:00 PM</p>
-                            <div className="flex">
-                                <p className="text-blue-600 font-semibold mr-4">Detail</p>
-                                <p className="text-blue-600 font-semibold mr-4">Update</p>
-                                <p className="text-blue-600 font-semibold">Delete</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex max-md:hidden">
-                    <div className="grid content-start justify-items-center mr-8">
-                        <p className="text-orange-500 font-medium">15</p>
-                        <p className="text-slate-400">Wed</p>
-                    </div>
-                    <div className="grid content-start">
-                        <h1 className="font-bold text-2xl">Sights & Sounds Exhibition</h1>
-                        <div className="mt-4">
-                            <p className="text-slate-400 mb-1">Jakarta, Indonesia</p>
-                            <p className="text-slate-400 mb-1">Wed, 15 Nov, 4:00 PM</p>
-                            <div className="flex">
-                                <p className="text-blue-600 font-semibold mr-4">Detail</p>
-                                <p className="text-blue-600 font-semibold mr-4">Update</p>
-                                <p className="text-blue-600 font-semibold">Delete</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex max-md:hidden">
-                    <div className="grid content-start justify-items-center mr-8">
-                        <p className="text-orange-500 font-medium">15</p>
-                        <p className="text-slate-400">Wed</p>
-                    </div>
-                    <div className="grid content-start">
-                        <h1 className="font-bold text-2xl">Sights & Sounds Exhibition</h1>
-                        <div className="mt-4">
-                            <p className="text-slate-400 mb-1">Jakarta, Indonesia</p>
-                            <p className="text-slate-400 mb-1">Wed, 15 Nov, 4:00 PM</p>
-                            <div className="flex">
-                                <p className="text-blue-600 font-semibold mr-4">Detail</p>
-                                <p className="text-blue-600 font-semibold mr-4">Update</p>
-                                <p className="text-blue-600 font-semibold">Delete</p>
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
             </div>
         </section>
     </main>
     <Footer />
+    <input type="checkbox" id="my_modal_6" className="modal-toggle" />
+<div className="modal">
+  <div className="modal-box min-w-[30%]">
+    <div>
+        <div className='font-bold text-xl mb-8'>
+            Create Event
+        </div>
+        <Formik
+        initialValues={{
+            name: '',
+            location: '',
+            price: '',
+            category: '',
+            date:  '',
+            picture: '',
+            detail: ''
+        }}
+        onSubmit={btnCreateEvent}
+        enableReinitialize
+    >
+        {({handleSubmit, handleChange, handleBlur, values})=> (
+        <form onSubmit={handleSubmit}>
+            <div className='flex justify-between mb-6'>
+                <div>
+                    <div className='mb-2'>Name</div>
+                    <input name='name' type="text" placeholder='Input Name Event' className="input input-bordered w-full max-w-xs" 
+                    onChange={handleChange} onBlur={handleBlur} value={values.name} />
+                </div>
+                <div>
+                    <div className='mb-2'>Category</div>
+                    <input name='category' type="text" placeholder='Select Location' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.category}/>
+                </div>
+            </div>
+            <div className='flex justify-between mb-6'>
+                <div>
+                    <div className='mb-2'>Location</div>
+                    <input name='location' type="text" placeholder='Select Location' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.location}/>
+                </div>
+                <div>
+                    <div className='mb-2'>Date Time Show</div>
+                    <input name='date' type="date" placeholder='Input Price' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.date}/>
+                </div>
+            </div>
+            <div className='flex justify-between mb-6'>
+                <div>
+                    <div className='mb-2'>Price</div>
+                    <input name='price' type="text" placeholder='Input Price' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.price}/>
+                </div>
+                <div>
+                    <div className='mb-2'>Image</div>
+                    <input name='picture' type="file" placeholder='Chose File ...' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.picture}/>
+                </div>
+            </div>
+            <div className='flex justify-between mb-6'>
+                <div>
+                    <div className='mb-2'>Detail</div>
+                    <input name='detail' type="text" placeholder='Input Detail' className="input input-bordered min-w-[465px]"  onChange={handleChange} onBlur={handleBlur} value={values.detail} />
+                </div>
+            </div>
+            <div className='flex justify-end gap-6 items-end'>
+                <div className='bg-green-600 w-20 h-12 rounded-md flex justify-center items-center'>
+                    <button className='text-white'>Create</button>
+                </div>
+                <div className="modal-action">
+                    <label htmlFor="my_modal_6" className="btn bg-red-500 hover:bg-white hover:text-red-500">Close!</label>
+                </div>
+            </div>
+        </form>
+        )}
+        </Formik>
+    </div>
+  </div>
+</div>
+    <input type="checkbox" id="modalUpdate" className="modal-toggle" />
+<div className="modal">
+  <div className="modal-box min-w-[30%]">
+    <div>
+        <div className='font-bold text-xl mb-8'>
+            Update Event
+        </div>
+        <Formik
+        initialValues={{
+            name: '',
+            location: '',
+            price: '',
+            category: '',
+            date:  '',
+            picture: '',
+            detail: ''
+        }}
+        onSubmit={btnUpdateEvent}
+        enableReinitialize
+    >
+        {({handleSubmit, handleChange, handleBlur, values})=> (
+        <form onSubmit={handleSubmit}>
+            <div className='flex justify-between mb-6'>
+                <div>
+                    <div className='mb-2'>Name</div>
+                    <input name='name' type="text" placeholder='Input Name Event' className="input input-bordered w-full max-w-xs" 
+                    onChange={handleChange} onBlur={handleBlur} value={values.name} />
+                </div>
+                <div>
+                    <div className='mb-2'>Category</div>
+                    <input name='category' type="text" placeholder='Select Location' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.category}/>
+                </div>
+            </div>
+            <div className='flex justify-between mb-6'>
+                <div>
+                    <div className='mb-2'>Location</div>
+                    <input name='location' type="text" placeholder='Select Location' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.location}/>
+                </div>
+                <div>
+                    <div className='mb-2'>Date Time Show</div>
+                    <input name='date' type="date" placeholder='Input Price' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.date}/>
+                </div>
+            </div>
+            <div className='flex justify-between mb-6'>
+                <div>
+                    <div className='mb-2'>Price</div>
+                    <input name='price' type="text" placeholder='Input Price' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.price}/>
+                </div>
+                <div>
+                    <div className='mb-2'>Image</div>
+                    <input name='picture' type="file" placeholder='Chose File ...' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.picture}/>
+                </div>
+            </div>
+            <div className='flex justify-between mb-6'>
+                <div>
+                    <div className='mb-2'>Detail</div>
+                    <input name='detail' type="text" placeholder='Input Detail' className="input input-bordered min-w-[465px]"  onChange={handleChange} onBlur={handleBlur} value={values.detail} />
+                </div>
+            </div>
+            <div className='flex justify-end gap-6 items-end'>
+                <div className='bg-blue-600 w-20 h-12 rounded-md flex justify-center items-center'>
+                    <button className='text-white'>Update</button>
+                </div>
+                <div className="modal-action">
+                    <label htmlFor="modalUpdate" className="btn bg-red-500 hover:bg-white hover:text-red-500">Close!</label>
+                </div>
+            </div>
+        </form>
+        )}
+        </Formik>
+    </div>
+  </div>
+</div>
     </>
     )
 }
