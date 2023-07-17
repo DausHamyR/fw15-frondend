@@ -3,6 +3,7 @@ import female from '../assets/female.png'
 import http from '../helpers/http.helper'
 import { useState } from 'react'
 import logo from '../assets/logo_kelinci.png'
+import orang from '../assets/2orang.png'
 
 const CodeForgotPassword = ()=> {
     const [errorMessage, setErrorMessage] = useState('')
@@ -43,41 +44,34 @@ const CodeForgotPassword = ()=> {
         }
     }
     return (
-        <main className="container mx-auto flex h-[100vh]">
-        <section className="bg-blue-500 w-[50%] max-sm:hidden">
-            <img src={male} className="relative left-[55%] top-[300px]" />
-            <img src={female} className="relative left-[5%] top-[-90px]" />
-        </section>
-        <section className="bg-white w-[50%] max-sm:w-full">
-            <div className="w-[70%] h-[80vh] my-[80px] mx-[15%]">
-                <div className="w-full relative top-[50px] flex items-center">
-                    <img src={logo} className="w-16" />
-                    <h1 className="text-4xl font-bold">Cruelty Free</h1>
-                </div>
-                <div className="w-full relative top-[80px]">
-                    <h1 className="text-3xl mb-[15px] font-medium tracking-wide">Reset Password</h1>
-                    <h1 className="max-sm:w-[250px] tracking-wide text-sm">Enter the code that was sent</h1>
-                    {errorMessage && 
-                    (<div>
-                        <h1 className="alert alert-error mt-4 w-[330px]">{errorMessage}</h1>
-                    </div>)}
-                    {successMessage && 
-                    (<div>
-                        <h1 className="alert alert-success mt-4 w-[330px]">{successMessage}</h1>
-                    </div>)}
+        <div className='flex'>
+        <div className='bg-[#FF8551] h-screen w-[60%] max-sm:hidden'>
+            <div className='flex justify-center items-center h-screen'>
+                <img src={orang} />
+            </div>
+        </div>
+        <div className='bg-white w-[40%] flex justify-center items-center max-sm:w-full max-sm:h-screen'>
+            <div className='w-[70%] h-[80vh]'>
+                <div className='flex items-center'>
+                    <img src={logo} className='w-24 h-24'/>
+                    <div className='text-xl text-[#FF8551] font-bold'>Cruelty Free</div>
                 </div>
                 <div>
-                    <form onSubmit={doForgotPassword} className='gap-3 grid'>
-                        <input type="number" placeholder="Code" className="input input-bordered w-full max-w-xs relative top-[105px]" name='code' />
-                        <input type="email" placeholder="Email" className="input input-bordered w-full max-w-xs relative top-[105px]" name='email' />
-                        <input type="password" placeholder="Password" className="input input-bordered w-full max-w-xs relative top-[105px]" name='password' />
-                        <input type="password" placeholder="ConfirmPassword" className="input input-bordered w-full max-w-xs relative top-[105px]" name='confirmPassword' />
-                        <button className="btn btn-primary w-full max-w-xs relative top-[135px]">Send</button>
-                    </form>
+                    <div className='text-2xl font-bold mb-2'>Reset Password</div>
+                    <div className='font-semibold'>Enter the code that was sent</div>
+                </div>
+                <div className='my-8 grid gap-2'>
+                    <input name='code' type="text" placeholder='Code Forgot Password' className="input input-bordered w-full" />
+                    <input name='email' type="text" placeholder='Email' className="input input-bordered w-full" />
+                    <input name='password' type="password" placeholder='Password' className="input input-bordered w-full" />
+                    <input name='confirmPassword' type="password" placeholder='Confirm Password' className="input input-bordered w-full" />
+                </div>
+                <div className='bg-[#FF8551] rounded-md h-10 flex justify-center items-center'>
+                    <button className='text-white font-bold text-md'>Confirm</button>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </div>
     )
 }
 

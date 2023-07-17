@@ -1,17 +1,33 @@
-import male from '../assets/male.png'
-import female from '../assets/female.png'
+
 import { Link, useNavigate} from "react-router-dom"
 import { useState } from 'react'
 import http from '../helpers/http.helper'
-import {FiEye, FiEyeOff} from 'react-icons/fi'
-// import { useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import logo from '../assets/logo_kelinci.png'
+import orang from '../assets/2orang.png'
+import {FiEye, FiEyeOff} from 'react-icons/fi'
+import { Formik } from 'formik'
+import * as Yup from 'yup';
+
+const validationSchema = Yup.object({
+    fullName: Yup.string()
+      .required('Required Full Name')
+      .min(4, 'FullName must be at least 4 characters long'),
+    email: Yup.string().email('Invalid email address').required('Required Email'),
+    password: Yup.string()
+      .required('Password cannot be empty')
+      .matches(
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/,
+        'Password must contain at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 symbol',
+      ),
+    confirmPassword: Yup.string()
+      .required('Confirm Password cannot be empty')
+      .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+  });
 
 const Register = ()=> {
     const navigate = useNavigate()
-    // const token = useSelector(state => state.auth.token)
     const [errorMessage, setErrorMessage] = useState('')
-    const [successMessage, setSuccessMessage] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
@@ -22,96 +38,117 @@ const Register = ()=> {
         setShowConfirmPassword((prevState) => !prevState)
     }
 
-    const doRegister = async (event) => {
-        try{
-            event.preventDefault()
-            const {value: fullName} = event.target.fullName
-            const {value: email} = event.target.email
-            const {value: password} = event.target.password
-            const {value: confirmPassword} = event.target.confirmPassword
-            setSuccessMessage('')
-
-            
-            if(!fullName || fullName.length < 6){
-                setErrorMessage('FullName must be at least 6 characters long')
-                return
-            }
-            if(!email || !email.includes('@')){
-                setErrorMessage('Invalid email')
-                return
-            }
-            const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
-            if (!password || !passwordRegex.test(password)) {
-                setErrorMessage('Password must contain at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 symbol')
-                return
-            }
-            if (password !== confirmPassword) {
-                setErrorMessage('Password and Confirm Password do not match')
-                return
-            }
-            const body = new URLSearchParams({fullName, email, password, confirmPassword}).toString()
-            const {data} = await http().post('http://localhost:8888/auth/register', body)
-            setSuccessMessage(data.message)
+    const btnRegister = async values => {
+        try {
+            const body = new URLSearchParams({
+                fullName: values.fullName,
+                email: values.email,
+                password: values.password,
+                confirmPassword: values.confirmPassword
+            }).toString();
+            const {data} = await http().post('/auth/register', body);
+            console.log(data)
             navigate('/login')
             setErrorMessage('')
-        }catch(err){
+        } catch (err) {
             const message = err?.response?.data?.message
+            console.log(message)
             if(message){
                 setErrorMessage(message)
             }
-            setSuccessMessage('')
         }
-    }
+    };
+
     return (
-        <main className="container mx-auto flex h-[100vh]">
-        <section className="bg-blue-500 w-[50%] max-md:hidden">
-            <img src={male} className="relative left-[55%] top-[300px]" />
-            <img src={female} className="relative left-[5%] top-[-90px]" />
-        </section>
-        <section className="bg-white w-[50%] max-md:w-full">
-            <div className="w-[70%] h-[80vh] mx-[15%]">
-                <div className="w-full relative top-[50px] flex items-center">
-                    <img src={logo} className="w-16" />
-                    <h1 className="text-4xl font-bold">Cruelty Free</h1>
+        <div className='flex'>
+            <div className='bg-[#FF8551] h-screen w-[60%] max-sm:hidden'>
+                <div className='flex justify-center items-center h-screen'>
+                    <img src={orang} />
                 </div>
-                <div className="w-full relative top-[80px]">
-                    <h1 className="text-3xl mb-[15px]">Sign Up</h1>
-                    <h1 className="max-md:w-[250px]">Already have an account? <Link className="text-blue-500" to="/login">Log In</Link></h1>
+            </div>
+            <div className='bg-white w-[40%] flex justify-center items-center max-sm:w-full max-sm:h-screen'>
+                <Formik
+                initialValues={{
+                    fullName: '',
+                    email: '',
+                    password: '',
+                    confirmPassword: '',
+                }}
+                onSubmit={btnRegister}
+                validationSchema={validationSchema}
+                enableReinitialize
+            >
+                {({handleSubmit, handleChange, handleBlur, values, errors, touched})=> (
+                <form onSubmit={handleSubmit} className='w-[70%] h-[80vh]'>
+                    <div className='flex items-center'>
+                        <img src={logo} className='w-24 h-24'/>
+                        <div className='text-xl text-[#FF8551] font-bold'>Cruelty Free</div>
+                    </div>
+                    <div>
+                        <div className='text-2xl font-bold mb-2'>Sign Up</div>
+                        <div className='font-semibold'>Already have an account? <Link to="/login" className='text-blue-700'>Log In</Link></div>
+                    </div>
                     {errorMessage && (
                     <div>
                         <h1 className="alert alert-error mt-4 w-[330px]">{errorMessage}</h1>
                     </div>
                     )}
-                    {successMessage && (
-                    <div>
-                        <h1 className="alert alert-success mt-4 w-[330px]">{successMessage}</h1>
-                    </div>
-                    )}
-                </div>
-                <div>
-                    <form onSubmit={doRegister}>
-                        <input type="text" placeholder="Full Name" className="input input-bordered w-full max-w-xs relative top-[110px]" name='fullName'/>
-                        {/* <input type="text" placeholder="Full Name" className="w-[315px] h-[45px] bg-white border rounded-[15px] relative top-[110px] pl-[25px] tracking-wide" /> */}
-                        <input type="email" placeholder="Email" className="input input-bordered w-full max-w-xs relative top-[125px]" name='email'/>
-                        <input type={showPassword ? 'text' : 'password'} placeholder="Password" className="input input-bordered w-full max-w-xs relative top-[140px]" name='password'/>
-                        <input type={showConfirmPassword ? 'text' : 'password'} placeholder="Confirm Password" className="input input-bordered w-full max-w-xs relative top-[155px]" name='confirmPassword'/>
-                        <div className='relative top-[55px] left-[270px]' onClick={handleTogglePassword}>
-                        {showPassword ? <FiEyeOff size={30}/> : <FiEye size={30}/>}
+                    <div className='my-8 flex flex-col gap-2'>
+                        <div>
+                            <input name='fullName' type="text" placeholder='Full Name' className={`input input-bordered ${errors.fullName && touched.fullName && 'input-error'} w-full`} onChange={handleChange} onBlur={handleBlur} value={values.fullName}  />
+                            {errors.fullName && touched.fullName && (
+                                <label className="label">
+                                    <span className='label-text-alt text-error'>{errors.fullName}</span>
+                                </label>
+                            )}
                         </div>
-                        <div className='relative top-[85px] left-[270px]' onClick={handleToggleConfirmPassword}>
-                        {showConfirmPassword ? <FiEyeOff size={30}/> : <FiEye size={30}/>}
+                        <div>
+                            <input name='email' type="text" placeholder='Email' className={`input input-bordered ${errors.email && touched.email && 'input-error'} w-full`} onChange={handleChange} onBlur={handleBlur} value={values.email}  />
+                            {errors.email && touched.email && (
+                                <label className="label">
+                                    <span className='label-text-alt text-error'>{errors.email}</span>
+                                </label>
+                            )}
                         </div>
-                        <button type='submit' className="btn btn-primary w-[315px] relative top-[150px]">Sign Up</button>
-                    </form>
-                    <div className="relative top-[60px] flex">
-                        <input type="checkbox" />
-                        <h5 className="ml-[15px] tracking-wide">Accept terms and condition</h5>
+                        <div>
+                            <div className='flex items-center'>
+                                <input name='password' type={showPassword ? 'text' : 'password'} placeholder='Password' className={`input input-bordered ${errors.password && touched.password && 'input-error'} w-full`} onChange={handleChange} onBlur={handleBlur} value={values.password}  />
+                                <div onClick={handleTogglePassword} className='absolute right-28 max-lg:right-20 max-md:right-16 max-sm:right-28'>
+                                    {showPassword ? <FiEyeOff size={30}/> : <FiEye size={30}/>}
+                                </div>
+                            </div>
+                            {errors.password && touched.password && (
+                                <label className="label">
+                                    <span className='label-text-alt text-error'>{errors.password}</span>
+                                </label>
+                            )}
+                        </div>
+                        <div>
+                            <div className='flex items-center'>
+                                <input name='confirmPassword' type={showConfirmPassword ? 'text' : 'password'} placeholder='Confirm Password' className={`input input-bordered ${errors.confirmPassword && touched.confirmPassword && 'input-error'} w-full`} onChange={handleChange} onBlur={handleBlur} value={values.confirmPassword}  />
+                                <div onClick={handleToggleConfirmPassword} className='absolute right-28 max-lg:right-20 max-md:right-16 max-sm:right-28'>
+                                    {showConfirmPassword ? <FiEyeOff size={30}/> : <FiEye size={30}/>}
+                                </div>
+                            </div>
+                            {errors.confirmPassword && touched.confirmPassword && (
+                                <label className="label">
+                                    <span className='label-text-alt text-error'>{errors.confirmPassword}</span>
+                                </label>
+                            )}
+                        </div>
                     </div>
-                    {/* <button className="w-[315px] h-[45px] bg-blue-500 rounded-[15px] relative top-[185px] text-white text-lg tracking-wider">Sign Up</button> */}
-                </div>
+                    <div className='flex gap-4 items-center h-6 mb-4'>
+                        <input type="checkbox" className='h-4 w-4'/>
+                        <div className='font-semibold'>Accept terms and condition</div>
+                    </div>
+                    <button type='submit' className='bg-[#FF8551] rounded-md h-10 flex justify-center items-center w-full'>
+                        <div className='text-white font-bold text-md'>Sign Up</div>
+                    </button>
+                </form>
+                )}
+                </Formik>
             </div>
-        </section>
-    </main>
+        </div>
     )
 }
 
