@@ -33,7 +33,6 @@ const Home = ()=> {
     const [cities, setCities] = useState([])
     const [category, setCategory] = useState([])
     const [selectedCategory, setSelectedCategory] = useState([])
-    const [partners, setPartners] = useState([])
     
     async function getEventsCategory(name){
         const {data} = await http(token).get('/events', {params: {category: name}})
@@ -62,17 +61,17 @@ const Home = ()=> {
             const {data} = await http(token).get('/categories', {params:{limit: 1000}})
             setCategory(data.results)
         }
-        async function getPartners(){
-            const {data} = await http().get('http://localhost:8888/partners')
-            setPartners(data.results)
-        }
+        // async function getPartners(){
+        //     const {data} = await http().get('http://localhost:8888/partners')
+        //     // setPartners(data.results)
+        // }
         if(token){
             getProfileData()
         }
         getEvents()
         getCities()
         getCategory()
-        getPartners()
+        // getPartners()
         getEventsCategory()
     }, [dispatch, navigate, setProfile, token])
     
