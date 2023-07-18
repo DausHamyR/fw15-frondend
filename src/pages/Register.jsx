@@ -1,8 +1,6 @@
-
 import { Link, useNavigate} from "react-router-dom"
 import { useState } from 'react'
 import http from '../helpers/http.helper'
-import { useSelector } from "react-redux"
 import logo from '../assets/logo_kelinci.png'
 import orang from '../assets/2orang.png'
 import {FiEye, FiEyeOff} from 'react-icons/fi'
@@ -11,19 +9,19 @@ import * as Yup from 'yup';
 
 const validationSchema = Yup.object({
     fullName: Yup.string()
-      .required('Required Full Name')
-      .min(4, 'FullName must be at least 4 characters long'),
+    .required('Required Full Name')
+    .min(4, 'FullName must be at least 4 characters long'),
     email: Yup.string().email('Invalid email address').required('Required Email'),
     password: Yup.string()
-      .required('Password cannot be empty')
-      .matches(
+    .required('Password cannot be empty')
+    .matches(
         /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/,
         'Password must contain at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 symbol',
-      ),
+    ),
     confirmPassword: Yup.string()
-      .required('Confirm Password cannot be empty')
-      .oneOf([Yup.ref('password'), null], 'Passwords must match'),
-  });
+    .required('Confirm Password cannot be empty')
+    .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+});
 
 const Register = ()=> {
     const navigate = useNavigate()

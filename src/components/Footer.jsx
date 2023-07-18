@@ -90,7 +90,7 @@ const Footer = ()=> {
             </ul>
         </div>
     </div>
-    <div className="px-12">&copy; 2020 Wetick All Rights Reserved</div>
+    <div className="px-12">&copy; 2023 Cruelty Free All Rights Reserved</div>
 </footer>
     )
 }
