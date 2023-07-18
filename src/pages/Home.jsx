@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react"
 import moment from "moment"
-import org1 from '../assets/org1.png'
-import org2 from '../assets/org2.png'
-import org3 from '../assets/org3.png'
-import org4 from '../assets/org4.png'
-import male from '../assets/male.png'
-import female from '../assets/female.png'
+import orang from '../assets/2orang.png'
+import Group5899 from '../assets/Group5899.png'
+import Group28 from '../assets/Group28.png'
+import Group5885 from '../assets/Group5885.png'
+import Group58852 from '../assets/Group58852.png'
+import Group5877 from '../assets/Group5877.png' 
+import Group5878 from '../assets/Group5878.png' 
+import Group5892 from '../assets/Group5892.png'
+import Group5911 from '../assets/Group5911.png'
+import Icon01 from '../assets/Icon-01.png'
+import Icon02 from '../assets/Icon-02.png'
+import Icon03 from '../assets/Icon-03.png'
+import Icon04 from '../assets/Icon-04.png'
+import Icon05 from '../assets/Icon-05.png'
+import Icon06 from '../assets/Icon-06.png'
 import { Link, useNavigate } from "react-router-dom"
 import http from "../helpers/http.helper"
 import { useDispatch, useSelector } from "react-redux"
@@ -13,6 +22,7 @@ import { logout as logoutAction, setWarningMessage } from "../redux/reducers/aut
 import { Formik } from "formik"
 import NavbarLogout from '../components/NavbarLogout'
 import Footer from "../components/Footer"
+import {BiSearch} from 'react-icons/bi'
 
 const Home = ()=> {
     const navigate = useNavigate()
@@ -23,10 +33,10 @@ const Home = ()=> {
     const [cities, setCities] = useState([])
     const [category, setCategory] = useState([])
     const [selectedCategory, setSelectedCategory] = useState([])
-    const [partners, setPartners] = useState([])
     
     async function getEventsCategory(name){
         const {data} = await http(token).get('/events', {params: {category: name}})
+        console.log(data)
         setSelectedCategory(data.results)
     }
     useEffect(()=> {
@@ -51,212 +61,169 @@ const Home = ()=> {
             const {data} = await http(token).get('/categories', {params:{limit: 1000}})
             setCategory(data.results)
         }
-        async function getPartners(){
-            const {data} = await http().get('http://localhost:8888/partners')
-            setPartners(data.results)
-        }
+        // async function getPartners(){
+        //     const {data} = await http().get('http://localhost:8888/partners')
+        //     // setPartners(data.results)
+        // }
         if(token){
             getProfileData()
         }
         getEvents()
         getCities()
         getCategory()
-        getPartners()
+        // getPartners()
         getEventsCategory()
     }, [dispatch, navigate, setProfile, token])
     
     const onSearch = (values)=> {
+        console.log(values)
         const qs = new URLSearchParams(values).toString()
         navigate(`/search?${qs}`)
     }
 
-    useEffect(() => {
-        console.log(selectedCategory)
-    }, [selectedCategory]);
+    // useEffect(() => {
+    //     console.log(cities)
+    // }, [cities]);
     
     return (
         <>
         <NavbarLogout />
-<main className="container mx-auto pt-4">
-    <section className="bg-sky-600 h-[35rem]">
-        <img src={male} className="w-[14rem] absolute right-[10rem] top-[16rem] max-md:right-[2rem] max-sm:right-[0rem]" />
-        <img src={female} className="w-[21rem] absolute top-[13rem] right-[20rem] max-md:right-[10rem] max-sm:right-[7rem]" />
-        <h1 className="w-[600px] text-white text-7xl font-bold relative top-[150px] left-[130px] tracking-wider leading-tight">Find events you love with our</h1>
-        <Formik initialValues={
-            {search: '', city: ''}
-        } onSubmit={onSearch}>
-            {({handleBlur, handleChange, handleSubmit}) => (
-                <form onSubmit={handleSubmit} className="max-w-md p-10 relative top-[150px] left-[100px] max-lg:hidden gap-2 grid">
-                <div className="form-control">
-                    <input className="input input-bordered" onChange={handleChange} onBlur={handleBlur} name="search" />
-                </div>
-                <div className="form-control">
-                    <select onBlur={handleBlur} onChange={handleChange} name="city" className="select select-bordered">
-                        <option value=''>All Location</option>
-                        {cities.map(city => (
-                            <option key={`cities-select-${city.id}`} value={city.name}>{city.name}</option>
-                        ))}
-                    </select>
+        <div>
+            <div className="bg-[#FF8551] flex justify-between px-12 items-center h-[70vh]">
+                <div className="max-w-[550px] flex flex-col gap-6">
+                    <div className="text-7xl text-white font-bold">Find events you love with our</div>
+                    <Formik initialValues={
+                        {search: ''}} 
+                    onSubmit={onSearch}>
+                    {({handleBlur, handleChange, handleSubmit}) => (
+                        <form onSubmit={handleSubmit} className="flex relative items-center">
+                            <input name='search' type="text" placeholder='Search Event' className='input input-bordered w-full' onChange={handleChange} onBlur={handleBlur} />
+                            <button>
+                                <BiSearch size={40} className="absolute right-4 top-[5px] text-slate-400"/>
+                            </button>
+                        </form>
+                    )}
+                    </Formik>
                 </div>
                 <div>
-                    <button type="submit" className="btn btn-primary">Search</button>
+                    <img src={orang} className="w-[450px] h-[380px] max-lg:hidden"/>
                 </div>
-            </form>
-            )}
-        </Formik>
-    </section>
-    <section className="flex flex-col items-center gap-[30px] my-[40px]">
-        <div className="w-[150px] h-[30px] bg-red-300 rounded-[30px] flex justify-center items-center">
-            <div className="w-[30px] h-[2px] bg-red-500 mr-2"></div>
-            <div className="text-red-500 font-semibold text-md tracking-wider">EVENT</div>
-        </div>
-        <div className="font-bold text-3xl tracking-wider">Events For You</div>
-        <div className="w-[400px] h-[50px] flex justify-between">
-            <div className="grid justify-items-center">
-                <h1 className="text-slate-400">13</h1>
-                <h1 className="text-slate-400">Mon</h1>
             </div>
-            <div className="grid justify-items-center">
-                <h1 className="text-slate-400">14</h1>
-                <h1 className="text-slate-400">Tue</h1>
-            </div>
-            <div className="grid justify-items-center">
-                <h1 className="text-orange-400">15</h1>
-                <h1 className="text-orange-400">wed</h1>
-                <div className="w-2 h-2 rounded-full bg-orange-400 mt-2"></div>
-                <div className="w-[40px] rounded-2xl border-orange-400 h-[80px] border-2 relative top-[-70px]"></div>
-            </div>
-            <div className="grid justify-items-center">
-                <h1 className="text-slate-400">16</h1>
-                <h1 className="text-slate-400">Thu</h1>
-            </div>
-            <div className="grid justify-items-center">
-                <h1 className="text-slate-400">17</h1>
-                <h1 className="text-slate-400">Fri</h1>
-            </div>
-        </div>
-    </section>
-    <section className="w-full flex flex-wrap justify-evenly">
-        {events.map(event => {
-            return (
-        <Link to={`/events/${event.id}`} className="w-[200px]" key={`eventDetails-${event.id}`} >
-            <img className="h-[270px] object-cover rounded-2xl filter brightness-75" src={`${event.picture}`} />
-            <div className="relative top-[-80px] left-[5px] text-white">
-                <h1 className="text-xs">{moment(event.date).format('DD-MM-YYYY')}</h1>
-                <h1 className="text-xl font-bold">{event.title}</h1>
-            </div>
-        </Link>
-            )
-        })}
-    </section>
-    <section className="flex justify-center items-center gap-3 my-5 mb-24">
-        <button className="font-bold rounded-lg text-slate-600 h-8 w-8 bg-slate-200">&larr;</button>
-        <button className="font-bold rounded-lg text-white h-8 w-8 bg-blue-500">&rarr;</button>
-    </section>
-    <section className="bg-blue-500 m-4 md:m-14 rounded-xl bg-center bg-no-repeat bg-cover md:p-24 p-8">
-        <div className="flex justify-center md:justify-start mb-5">
-        <div className="py-2 px-5 rounded-full inline-flex items-center gap-2 text-white bg-[rgba(255,255,255,0.25)]">
-                    <div className="w-8 border-t border-white"></div>
-                    <span>LOCATION</span>
+            <div className="my-12 mx-12">
+                <div className="mb-12">
+                    <img src={Group5899} className="w-[180px] h-[90px]"/>
                 </div>
-        </div>
-        <div className="flex md:flex-row flex-col gap-5 md:gap-0 text-white mt-5">
-            <div className="text:xl md:text-5xl font-bold w-[360px]">Discover Events Near You</div>
-            <div className="flex flex-wrap gap-5 justify-center md:justify-start">
-                {cities.map(city => {
-                return (
-                <div className="w-full md:w-1/4 grid content-center justify-items-center" key={city.id}>
-                    <img src={`http://localhost:8888/uploads/${city.picture}`} alt="city1" className="w-[230px] h-[140px] rounded-lg"/>
-                    <h5 className="text-xl font-bold mt-2">{city.name}</h5>
+                <div className="flex justify-between">
+                    <div className="flex gap-4 items-center">
+                        <button>
+                            <img src={Group5877} className="w-16 h-16"/>
+                        </button>
+                        <div className="w-[500px] flex justify-between items-center h-full">
+                            <div className="flex flex-col items-center">
+                                <div>13</div>
+                                <div>Mon</div>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <div>14</div>
+                                <div>Tue</div>
+                            </div>
+                            <div className="flex flex-col items-center text-[#FF8900] border-2 border-[#FF8900] py-4 px-2 rounded-xl">
+                                <div>15</div>
+                                <div>Wed</div>
+                                <div className="w-2 h-2 rounded-full bg-[#FF8900] mt-4"></div>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <div>16</div>
+                                <div>Thu</div>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <div>17</div>
+                                <div>Fri</div>
+                            </div>
+                        </div>
+                        <button>
+                            <img src={Group5878} className="w-16 h-16"/>
+                        </button>
+                    </div>
+                    <img src={Group5892} className="h-[45px]"/>
                 </div>
-                )
-                })}
-            </div>
-        </div>
-        <div className="flex justify-center md:justify-start mt-5 relative left-[450px] max-md:left-0">
-            <a className="text-blue-500 bg-white flex justify-center items-center font-bold min-w-[300px] tracking-widest h-12 rounded-xl" href="#">See All</a>
-        </div>
-    </section>
-    <section className="flex flex-col items-center gap-[30px] my-[40px]">
-        <div className="bg-red-200 flex gap-[10px] items-center text-d0093e py-[5px] px-[10px] rounded-[20px]">
-            <div></div>
-            <div className="text-red-500 font-medium">CATEGORY</div>
-        </div>
-        <div className="font-bold text-2xl flex flex-col items-center gap-[30px] my-[40px]">Browse Events By Category</div>
-        <div className="flex md:flex-row flex-col flex-1 gap-3">
-            <div className="flex gap-5">
-                {category.map(category => (
-                    <button
-                    key={`cate-${category.id}`}
-                    onClick={()=> getEventsCategory(category.name)}
-                    className={`flex justify-center items-center min-w-[170px] text-gray-400 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary`}
-                    >
-                    {category.name}
+                <div className="mt-16 mb-6 flex justify-center gap-6 w-full flex-wrap">
+                    {events.map(event => {
+                        return (
+                        <Link to={`/events/${event.id}`} key={`event-category-${event.id}`} className="relative">
+                            <img src={event.picture} className="w-[260px] h-[300px] rounded-2xl object-cover"/>
+                            <div className="mx-4 absolute top-36 text-white max-lg:top-24">
+                                <div className="font-semibold">{moment(event.date).format('DD-MM-YYYY')}</div>
+                                <div className="font-bold text-xl my-4">{event.title}</div>
+                                <img src={Group28} />
+                            </div>
+                        </Link>
+                        )
+                    })}
+                </div>
+                <div className="flex justify-center">
+                    <button className="w-32 h-12 bg-[#FF8551] rounded-xl">
+                        <div className="text-white font-bold">See All</div>
                     </button>
-                ))}
+                </div>
             </div>
-        </div>
-    </section>
-    <section className="flex md:flex-row flex-col justify-center items-center gap-5 my-5 mb-24">
-        <div className="hidden md:block">
-            <button className="hidden md:inline-block font-bold rounded-lg text-slate-600 h-8 w-8 bg-slate-200">&larr;</button>
-        </div>
-        {selectedCategory
-        .map((event) => {
-            return (
-        <Link to={`/events/${event.id}`} key={`event-category-${event.id}`}>
-        <div className="w-[300px] h-[350px] rounded-xl overflow-hidden flex flex-col">
-            <div className="flex-2 overflow-hidden">
-                <img className="object-cover w-full h-[200px]" src={`${event.picture}`} alt="banner1" />
+            <div className="bg-[#FF8551] w-[90%] mx-[5%] rounded-xl flex gap-16 max-lg:flex-col">
+                <div className="pt-12 pl-12 lg:max-w-[300px] max-lg:max-w-[700px] flex flex-col gap-4">
+                    <img src={Group5885} className="w-[200px]"/>
+                    <div className="text-6xl text-white">Discover Events Near You</div>
+                </div>
+                <div className="flex flex-wrap gap-6 justify-center my-6">
+                    {cities.map(city=>
+                    <div key={city.id} className="flex flex-col items-center">
+                        <img src={city.picture} className="w-[240px] h-[120px] rounded-md"/>
+                        <div className="text-white font-semibold">{city.name}</div>
+                    </div>
+                        )}
+                </div>
             </div>
-            <div className="flex flex-col justify-end flex-1 min-h-[161px] bg-blue-500 text-white p-8 relative">
-                <div className="flex absolute -top-5 ml-2">
-                    <div className="w-8 h-8 rounded-full overflow-hidden border border-white -ml-2">
-                        <img className="w-full h-full object-cover" src={org1} alt="profile1" />
-                    </div>
-                    <div className="w-8 h-8 rounded-full overflow-hidden border border-white -ml-2">
-                        <img className="w-full h-full object-cover" src={org2} alt="profile2" />
-                    </div>
-                    <div className="w-8 h-8 rounded-full overflow-hidden border border-white -ml-2">
-                        <img className="w-full h-full object-cover" src={org3} alt="profile3" />
-                    </div>
-                    <div className="w-8 h-8 rounded-full overflow-hidden border border-white -ml-2">
-                        <img className="w-full h-full object-cover" src={org4} alt="profile4" />
+            <div className="my-24">
+                <div className="mb-8 flex flex-col items-center gap-4">
+                    <img src={Group5911} className="w-[160px] v-[30px]"/>
+                    <div className="text-3xl font-bold">Browse Events By Category</div>
+                </div>
+                <div className="flex justify-between max-sm:justify-center mx-28 mb-8 max-md:mx-6 max-sm:flex-wrap max-sm:gap-12">
+                    {category.map(category => 
+                        <button key={category.id} onClick={()=> getEventsCategory(category.name)} className="font-bold text-gray-400 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary">{category.name}</button>
+                    )}
+                </div>
+                <div className="flex justify-center gap-12 max-xl:flex-wrap">
+                    {selectedCategory.slice(0, 3).map(events=> 
+                    <Link to={`/events/${events.id}`} key={`event-category-${events.id}`} className="relative max-xl:mb-4">
+                        <img src={events.picture} className="w-[400px] h-[300px] rounded-xl"/>
+                        <div className="bg-blue-500 w-full h-[50%] absolute top-[200px] rounded-b-xl">
+                            <div className="ml-6 absolute top-[-15px] text-white">
+                                <img src={Group28} className="object-cover"/>
+                                <div className="text-xl font-semibold my-2">{moment(events.date).format('DD-MM-YYYY')}</div>
+                                <div className="text-xl font-semibold">{events.title}</div>
+                            </div>
+                        </div>
+                    </Link>
+                        )}
+                </div>
+            </div>
+            <div className="bg-black w-[90%] h-[500px] mx-[5%] rounded-xl">
+                <div className="flex flex-col gap-6 items-center pt-12">
+                    <img src={Group58852} />
+                    <div className="text-2xl font-bold text-white">Our Trusted Partners</div>
+                    <div className="text-white">By companies like :</div>
+                </div>
+                <div className="flex justify-center">
+                    <div className="flex mt-[50px] mx-12 justify-between w-[1000px] gap-6 flex-wrap">
+                        <img src={Icon01} />
+                        <img src={Icon02} />
+                        <img src={Icon03} />
+                        <img src={Icon04} />
+                        <img src={Icon05} />
+                        <img src={Icon06} />
                     </div>
                 </div>
-                <div>{moment(event.date).format('DD-MM-YYYY')}</div>
-                <div className="text-2xl">{event.title}</div>
             </div>
-        </div></Link>
-            )
-        })}
-        <div>
-            <button className="inline-block md:hidden font-bold rounded-lg text-slate-600 h-8 w-8 bg-slate-200">&larr;</button>
-            <button className="font-bold rounded-lg text-white h-8 w-8 bg-blue-500">&rarr;</button>
         </div>
-    </section>
-    <div className="bg-gray-700 bg-repeat flex justify-center items-center text-white py-[95px] bg-cover p-5 md:py-24">
-        <section className="flex flex-col items-center gap-[30px] my-[40px]">
-            <div className="bg-opacity-25 bg-white w-[150px] h-[30px] flex justify-center items-center rounded-2xl">
-                <div className="w-[30px] h-[1px] bg-white mr-3"></div>
-                <div className="text-white">PARTNER</div>
-            </div>
-            <div className="font-bold text-3xl tracking-wider text-center">Our Trusted Partners</div>
-            <div className="text-gray-400">By companies like :</div>
-            <div className="flex gap-16 md:flex-row flex-col" >
-            {partners.map(partner => {
-                return (
-                <div className="flex gap-16" key={partner.id}>
-                    <div>
-                        <img src={`http://localhost:8888/uploads/${partner.picture}`} alt="sponsor" />
-                    </div>
-                </div>
-                )
-            })}
-                </div>
-        </section>
-    </div>
-</main>
 <Footer />
         </>
     )
