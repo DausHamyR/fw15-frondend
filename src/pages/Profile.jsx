@@ -16,8 +16,8 @@ import { Formik, Field } from 'formik'
 import defaultProfile from '../assets/default-avatar.jpg'
 import {AiOutlineLoading3Quarters} from 'react-icons/ai'
 import Logout from '../components/Logout'
-import Navbar from '../components/Navbar'
 import Footer from "../components/Footer"
+import NavbarLogout from '../components/NavbarLogout'
 
 const Profile = ()=> {
     // const navigate = useNavigate()
@@ -83,7 +83,7 @@ const Profile = ()=> {
     // }, [token, initToken, navigate])
     return (
         <>
-        <Navbar />
+        <NavbarLogout />
     <main className="w-full flex max-sm:ml-[0]">
         <section className="w-[25%] min-h-[825px] mt-12 max-md:hidden">
             <div className="flex justify-center">

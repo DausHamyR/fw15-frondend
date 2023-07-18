@@ -8,11 +8,11 @@ import Vector6 from '../assets/Vector (6).png'
 import Vector7 from '../assets/Vector (7).png'
 import { Link } from "react-router-dom"
 import Logout from '../components/Logout'
-import Navbar from '../components/Navbar'
 import Footer from "../components/Footer"
 import { useState, useEffect } from 'react'
 import http from '../helpers/http.helper'
 import { useSelector } from 'react-redux'
+import NavbarLogout from '../components/NavbarLogout'
 
 const ChangePassword = ()=> {
     const [profile, setProfile] = useState({})
@@ -59,7 +59,7 @@ const ChangePassword = ()=> {
     }
     return (
         <>
-        <Navbar />
+        <NavbarLogout />
     <main className="w-full flex max-sm:ml-[0]">
         <section className="w-[25%] min-h-[825px] mt-12 max-md:hidden">
             <div className="flex justify-center">
@@ -102,11 +102,11 @@ const ChangePassword = ()=> {
                 <Logout />
             </div>
         </section>
-        <section className="w-[70%] bg-white min-h-[100vh] max-md:min-h-[50vh] mt-12 rounded-xl max-md:w-full">
+        <section className="w-[70%] min-h-[100vh] max-md:min-h-[50vh] mt-12 rounded-xl max-md:w-full">
             <div className="w-[30%] max-lg:w-[50%] h-[80px] flex justify-center items-center text-2xl font-semibold">
                 <h1>Change Password</h1>
             </div>
-            <form onSubmit={doChangePassword} className="w-[80%] grid h-[400px] ml-16 max-sm:ml-4">
+            <form onSubmit={doChangePassword} className="w-[80%] max-sm:w-[95%] grid h-[400px] ml-16 max-sm:ml-4">
                 <div className="flex items-center justify-between">
                     <h1 className="text-slate-400">Old Password</h1>
                     <input type="text" className="input input-bordered w-[70%] h-[45px] rounded-2xl border-2 border-slate-400 pl-6 tracking-wider" placeholder="Input Old Password ..." name='oldPassword' />

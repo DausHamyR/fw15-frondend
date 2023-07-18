@@ -36,7 +36,7 @@ const NavbarLogout = ()=> {
                 <div className='text-xl text-[#FF8551] font-bold'>Cruelty Free</div>
             </div>
             <div className='flex gap-6 font-semibold max-md:hidden'>
-                <Link to='./home' className='text-[#FF8551]'>Home</Link>
+                <Link to='/home' className='text-[#FF8551]'>Home</Link>
                 <Link to='/create-event'>Create Event</Link>
                 <button>Location</button>
             </div>
