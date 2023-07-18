@@ -37,6 +37,7 @@ const Home = ()=> {
     
     async function getEventsCategory(name){
         const {data} = await http(token).get('/events', {params: {category: name}})
+        console.log(data)
         setSelectedCategory(data.results)
     }
     useEffect(()=> {
@@ -76,13 +77,14 @@ const Home = ()=> {
     }, [dispatch, navigate, setProfile, token])
     
     const onSearch = (values)=> {
+        console.log(values)
         const qs = new URLSearchParams(values).toString()
         navigate(`/search?${qs}`)
     }
 
-    useEffect(() => {
-        console.log(cities)
-    }, [cities]);
+    // useEffect(() => {
+    //     console.log(cities)
+    // }, [cities]);
     
     return (
         <>
@@ -91,10 +93,18 @@ const Home = ()=> {
             <div className="bg-[#FF8551] flex justify-between px-12 items-center h-[70vh]">
                 <div className="max-w-[550px] flex flex-col gap-6">
                     <div className="text-7xl text-white font-bold">Find events you love with our</div>
-                    <div className="flex relative items-center">
-                        <input name='email' type="text" placeholder='Email' className='input input-bordered w-full' />
-                        <BiSearch size={40} className="absolute right-4 text-slate-400"/>
-                    </div>
+                    <Formik initialValues={
+                        {search: ''}} 
+                    onSubmit={onSearch}>
+                    {({handleBlur, handleChange, handleSubmit}) => (
+                        <form onSubmit={handleSubmit} className="flex relative items-center">
+                            <input name='search' type="text" placeholder='Search Event' className='input input-bordered w-full' onChange={handleChange} onBlur={handleBlur} />
+                            <button>
+                                <BiSearch size={40} className="absolute right-4 top-[5px] text-slate-400"/>
+                            </button>
+                        </form>
+                    )}
+                    </Formik>
                 </div>
                 <div>
                     <img src={orang} className="w-[450px] h-[380px] max-lg:hidden"/>
@@ -141,14 +151,14 @@ const Home = ()=> {
                 <div className="mt-16 mb-6 flex justify-center gap-6 w-full flex-wrap">
                     {events.map(event => {
                         return (
-                        <div key={event.id} className="relative">
+                        <Link to={`/events/${event.id}`} key={`event-category-${event.id}`} className="relative">
                             <img src={event.picture} className="w-[260px] h-[300px] rounded-2xl object-cover"/>
                             <div className="mx-4 absolute top-36 text-white max-lg:top-24">
                                 <div className="font-semibold">{moment(event.date).format('DD-MM-YYYY')}</div>
                                 <div className="font-bold text-xl my-4">{event.title}</div>
                                 <img src={Group28} />
                             </div>
-                        </div>
+                        </Link>
                         )
                     })}
                 </div>
@@ -179,12 +189,12 @@ const Home = ()=> {
                 </div>
                 <div className="flex justify-between max-sm:justify-center mx-28 mb-8 max-md:mx-6 max-sm:flex-wrap max-sm:gap-12">
                     {category.map(category => 
-                        <div key={category.id} className="font-bold">{category.name}</div>
+                        <button key={category.id} onClick={()=> getEventsCategory(category.name)} className="font-bold text-gray-400 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary">{category.name}</button>
                     )}
                 </div>
                 <div className="flex justify-center gap-12 max-xl:flex-wrap">
-                    {events.slice(0, 3).map(events=> 
-                    <div key={events.id} className="relative max-xl:mb-4">
+                    {selectedCategory.slice(0, 3).map(events=> 
+                    <Link to={`/events/${events.id}`} key={`event-category-${events.id}`} className="relative max-xl:mb-4">
                         <img src={events.picture} className="w-[400px] h-[300px] rounded-xl"/>
                         <div className="bg-blue-500 w-full h-[50%] absolute top-[200px] rounded-b-xl">
                             <div className="ml-6 absolute top-[-15px] text-white">
@@ -193,7 +203,7 @@ const Home = ()=> {
                                 <div className="text-xl font-semibold">{events.title}</div>
                             </div>
                         </div>
-                    </div>
+                    </Link>
                         )}
                 </div>
             </div>

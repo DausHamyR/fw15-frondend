@@ -36,18 +36,18 @@ const NavbarLogout = ()=> {
                 <div className='text-xl text-[#FF8551] font-bold'>Cruelty Free</div>
             </div>
             <div className='flex gap-6 font-semibold max-md:hidden'>
-                <div className='text-[#FF8551]'>Home</div>
-                <div>Create Event</div>
-                <div>Location</div>
+                <Link to='./home' className='text-[#FF8551]'>Home</Link>
+                <Link to='/create-event'>Create Event</Link>
+                <button>Location</button>
             </div>
             {token ?
             (<div className='flex gap-6 max-md:hidden items-center'>
-                <div className='flex items-center gap-2'>
+                <Link to='./profile' className='flex items-center gap-2'>
                     <div className='w-16 h-16'>
                         <img src={profile.picture} className='w-full h-full rounded-full object-cover' />
                     </div>
                     <div className='font-semibold'>{profile.fullName}</div>
-                </div>
+                </Link>
                 <button onClick={doLogout} className='w-24 h-12 bg-red-500 rounded-xl'>
                     <div className='text-white font-semibold'>Logout</div>
                 </button>
