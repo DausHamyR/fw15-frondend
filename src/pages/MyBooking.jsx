@@ -12,9 +12,9 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import http from '../helpers/http.helper'
 import Logout from '../components/Logout'
-import Navbar from '../components/Navbar'
 import Footer from "../components/Footer"
 import moment from "moment"
+import NavbarLogout from '../components/NavbarLogout'
 
 const MyBooking = ()=> {
     const [histories, setHistories] = useState([])
@@ -38,7 +38,7 @@ const MyBooking = ()=> {
 
     return (
         <>
-        <Navbar />
+        <NavbarLogout />
     <main className="w-full flex max-sm:ml-[0]">
         <section className="w-[25%] min-h-[825px] mt-12 max-md:hidden">
             <div className="flex justify-center">

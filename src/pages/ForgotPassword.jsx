@@ -13,6 +13,7 @@ const ForgotPassword = ()=> {
     const doForgotPassword = async (event) => {
         setErrorMessage('')
         try{
+            console.log('tes tes')
             event.preventDefault()
             const {value: email} = event.target.email
             const body = new URLSearchParams({email}).toString()
@@ -49,9 +50,9 @@ const ForgotPassword = ()=> {
                 <div className='my-8 grid gap-2'>
                     <input name='email' type="text" placeholder='Email' className="input input-bordered w-full" />
                 </div>
-                <div className='bg-[#FF8551] rounded-md h-10 flex justify-center items-center'>
-                    <button className='text-white font-bold text-md'>Send</button>
-                </div>
+                <button onSubmit={doForgotPassword} className='bg-[#FF8551] w-full rounded-md h-10 flex justify-center items-center'>
+                    <div className='text-white font-bold text-md'>Send</div>
+                </button>
             </div>
         </div>
     </div>

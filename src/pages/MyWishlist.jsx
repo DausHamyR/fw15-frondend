@@ -9,12 +9,12 @@ import Vector5 from '../assets/Vector (5).png'
 import Vector7 from '../assets/Vector (7).png'
 import { Link, useParams } from "react-router-dom"
 import Logout from '../components/Logout'
-import Navbar from '../components/Navbar'
 import Footer from "../components/Footer"
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import http from '../helpers/http.helper'
 import moment from "moment"
+import NavbarLogout from '../components/NavbarLogout'
 
 const MyWishlist = ()=> {
     const {id} = useParams()
@@ -49,7 +49,7 @@ const MyWishlist = ()=> {
 
     return (
         <>
-        <Navbar />
+        <NavbarLogout />
     <main className="w-full flex max-sm:ml-[0]">
         <section className="w-[25%] min-h-[825px] mt-12 max-md:hidden">
             <div className="flex justify-center">
@@ -111,7 +111,7 @@ const MyWishlist = ()=> {
                                 <p className="text-slate-400 mb-1">{moment(history.date).format('DD-MM-YYYY')}</p>
                             </div>
                         </div>
-                        <button onClick={()=>handleClearHistories(history.id)} className="grid content-between max-md:content-normal relative right-[-600px] h-[83%] max-md:h-[105%]">
+                        <button onClick={()=>handleClearHistories(history.id)} className='flex justify-end items-center w-full'>
                             <img src={loveWishlist} />
                         </button>
                     </div>
