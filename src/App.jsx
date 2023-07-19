@@ -24,7 +24,7 @@ const App = ()=> {
             <PersistGate persistor={persistor}>
                 <BrowserRouter>
                     <Routes>
-                        <Route path="/home" element={<Home />} />
+                        <Route path="/" element={<Home />} />
                         <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/forgot-password" element={<ForgotPassword />} />

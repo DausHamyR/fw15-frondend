@@ -43,7 +43,7 @@ const NavbarLogout = ()=> {
                     <div className='text-xl text-[#FF8551] font-bold'>Cruelty Free</div>
                 </div>
                 <div className='flex gap-6 font-semibold max-md:hidden'>
-                    <Link to='/home' className='text-[#FF8551]'>Home</Link>
+                    <Link to='/' className='text-[#FF8551]'>Home</Link>
                     <Link to='/create-event'>Create Event</Link>
                     <button>Location</button>
                 </div>
@@ -75,7 +75,7 @@ const NavbarLogout = ()=> {
             {menu &&
             <>
                 <div className='w-full h-[100px] flex flex-col justify-center items-center gap-2 text-black font-bold'>
-                    <Link to='/home' className='hover:text-blue-500'>Home</Link>
+                    <Link to='/' className='hover:text-blue-500'>Home</Link>
                     <Link to='/create-event' className='hover:text-blue-500'>Create Event</Link>
                     <div className='hover:text-blue-500'>Location</div>
                 </div>
