@@ -1,4 +1,4 @@
-import Vector8 from '../assets/Vector 8.png'
+import Vector8 from '../assets/vector8.png'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { logout as logoutAction } from "../redux/reducers/auth"
