@@ -260,15 +260,15 @@ const Profile = ()=> {
     </main>
     <Footer />
     <input type="checkbox" id="loading" className="modal-toggle" checked={openModal}/>
-<div className="modal">
-    <div className="modal-box bg-transparent shadow-none">
-        <div className='flex justify-center'>
-            <AiOutlineLoading3Quarters className='animate-spin' color='white' size={80}/>
+    <div className="modal">
+        <div className="modal-box bg-transparent shadow-none">
+            <div className='flex justify-center'>
+                <AiOutlineLoading3Quarters className='animate-spin' color='white' size={80}/>
+            </div>
         </div>
     </div>
-</div>
-    </>
-    )
+</>
+)
 }
 
 export default Profile
