@@ -72,7 +72,7 @@ const NavbarLogout = ()=> {
                     <FiMenu size={30} />
                 </button>
             </div>
-            {menu &&
+            {menu && token &&
             <>
                 <div className='w-full h-[100px] flex flex-col justify-center items-center gap-2 text-black font-bold'>
                     <Link to='/' className='hover:text-blue-500'>Home</Link>

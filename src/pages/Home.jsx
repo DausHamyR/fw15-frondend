@@ -130,11 +130,11 @@ const Home = ()=> {
                     <img src={Group5899} className="w-[180px] h-[90px]"/>
                 </div>
                 <div className="flex justify-between">
-                    <div className="flex gap-4 items-center">
+                    <div className="flex gap-4 items-center max-sm:justify-center w-full">
                         <button onClick={() => pagePrev()}>
                             <img src={Group5877} className="w-16 h-16"/>
                         </button>
-                        <div className="w-[500px] flex justify-between items-center h-full">
+                        <div className="w-[500px] max-sm:hidden flex justify-between items-center h-full">
                             <div className="flex flex-col items-center">
                                 <div>13</div>
                                 <div>Mon</div>
@@ -161,7 +161,9 @@ const Home = ()=> {
                             <img src={Group5878} className="w-16 h-16"/>
                         </button>
                     </div>
-                    <img src={Group5892} className="h-[45px]"/>
+                    <div className="max-lg:hidden">
+                        <img src={Group5892} className="h-[45px]"/>
+                    </div>
                 </div>
                 <div className="mt-16 mb-6 flex justify-center gap-6 w-full flex-wrap">
                     {events.map(event => {
@@ -178,7 +180,7 @@ const Home = ()=> {
                     })}
                 </div>
                 <div className="flex justify-center">
-                    <button onClick={()=> navigate('/search?limit=9999')} className="w-32 h-12 bg-[#FF8551] rounded-xl">
+                    <button onClick={()=> navigate('/search?page=1&limit=8')} className="w-32 h-12 bg-[#FF8551] rounded-xl">
                         <div className="text-white font-bold">See All</div>
                     </button>
                 </div>
