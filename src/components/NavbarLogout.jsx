@@ -61,9 +61,15 @@ const NavbarLogout = ()=> {
                 </Link>
             </div>)
             }
-            <div className='md:hidden'>
-                <FiMenu size={30} />
-            </div>
+            <details className="dropdown mb-32 md:hidden">
+                <summary className=''>
+                    <FiMenu size={30} />
+                </summary>
+                <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                    <li><a><Link to='/home'>Home</Link></a></li>
+                    <li><a><Link to='/create-event'>Create Event</Link></a></li>
+                </ul>
+            </details>
         </div>
     )
 }
