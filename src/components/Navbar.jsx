@@ -23,7 +23,7 @@ const Navbar = () => {
         </div>
         <div className="max-md:hidden">
             <nav className="text-black">
-                <Link className="mr-8" to='/home'>Home</Link>
+                <Link className="mr-8" to='/'>Home</Link>
                 <Link className="mr-8" to='/create-event'>Create Event</Link>
                 <Link className="" to='/event'>Location</Link>
             </nav>
