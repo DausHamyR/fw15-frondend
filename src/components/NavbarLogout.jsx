@@ -19,9 +19,9 @@ const NavbarLogout = ()=> {
         getProfile()
     }, [token])
 
-    useEffect(() => {
-        console.log(profile)
-    }, [profile])
+    // useEffect(() => {
+    //     console.log(profile)
+    // }, [profile])
 
     const doLogout = ()=> {
         window.localStorage.removeItem('token')
@@ -42,7 +42,7 @@ const NavbarLogout = ()=> {
             </div>
             {token ?
             (<div className='flex gap-6 max-md:hidden items-center'>
-                <Link to='./profile' className='flex items-center gap-2'>
+                <Link to='/profile' className='flex items-center gap-2'>
                     <div className='w-16 h-16'>
                         <img src={profile.picture} className='w-full h-full rounded-full object-cover' />
                     </div>
