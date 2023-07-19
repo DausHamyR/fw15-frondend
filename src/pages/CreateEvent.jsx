@@ -1,4 +1,3 @@
-// import Avatar from '../assets/Avatar.png'
 import coklat from '../assets/coklat.png'
 import Vector from '../assets/Vector.png'
 import tambahBiru from '../assets/tambah biru.png'
@@ -16,18 +15,19 @@ import http from '../helpers/http.helper'
 import moment from "moment"
 import { Formik } from 'formik'
 import NavbarLogout from '../components/NavbarLogout'
+import {AiOutlineLoading3Quarters} from 'react-icons/ai'
 
 const CreateEvent = ()=> {
     const [getAllmanage, setGetAllManage] = useState([])
     const [profile, setProfile] = useState({})
     const token = useSelector(state => state.auth.token)
     const [selectedPicture, setSelectedPicture] = useState('');
-    const [getManageEvent, setGetManageEvent] = useState();
     const [successMessage, setSuccessMessage] = useState('');
     const [idEvent, setIdEvent] = useState();
+    const [loading, setLoading] = useState(false)
 
     const btnCreateEvent = async values => {
-        // setLoading(true);
+        setLoading(true);
         const form = new FormData();
         Object.keys(values).forEach(key => {
             if (values[key]) {
@@ -53,16 +53,13 @@ const CreateEvent = ()=> {
                 'Content-Type': 'multipart/form-data',
             },
         });
-        console.log(data.results);
-        setGetManageEvent(data.results);
+        setGetAllManage(data.results);
         setSuccessMessage('Create Events successfully');
-        <div className='modal-actions'>
-            <label htmlFor="my_modal_6"></label>
-        </div>
+        setLoading(false);
     };
 
     const btnUpdateEvent = async values => {
-        // setLoading(true);
+        setLoading(true);
         const form = new FormData();
         Object.keys(values).forEach(key => {
             if (values[key]) {
@@ -89,8 +86,9 @@ const CreateEvent = ()=> {
             },
         });
         console.log(data.results);
-        setGetManageEvent(data.results);
+        setGetAllManage(data.results);
         setSuccessMessage('Update Events successfully');
+        setLoading(false);
     };
 
     async function removeEvent(id) {
@@ -183,32 +181,32 @@ const CreateEvent = ()=> {
             </div>
             <div className="w-[80%] h-[80%] mt-10 ml-16 max-sm:ml-4">
                 {getAllmanage.map(history => (
-                <div key={`history-list-${history.id}`} className="flex mb-12">
+                <div key={`history-list-${history?.id}`} className="flex mb-12">
                     <div className="grid content-start justify-items-center mr-8">
-                        <p className="text-orange-500 font-medium">{moment(history.date).format('DD')}</p>
-                        <p className="text-slate-400">{moment(history.date).format('dddd')}</p>
+                        <p className="text-orange-500 font-medium">{moment(history?.date).format('DD')}</p>
+                        <p className="text-slate-400">{moment(history?.date).format('dddd')}</p>
                     </div>
                     <div className="grid content-start">
-                        <h1 className="font-bold text-2xl">{history.title}</h1>
+                        <h1 className="font-bold text-2xl">{history?.title}</h1>
                         <div className="mt-4">
-                            <p className="text-slate-400 mb-1">{history.location}</p>
-                            <p className="text-slate-400 mb-1">{moment(history.date).format('DD-MM-YYYY')}</p>
+                            <p className="text-slate-400 mb-1">{history?.location}</p>
+                            <p className="text-slate-400 mb-1">{moment(history?.date).format('DD-MM-YYYY')}</p>
                             <div className="flex">
-                                <label htmlFor={`my-modal-${history.id}`} className="cursor-pointer text-blue-600 font-semibold mr-4">Detail</label>
-                                <input type="checkbox" id={`my-modal-${history.id}`} className="modal-toggle" />
+                                <label htmlFor={`my-modal-${history?.id}`} className="cursor-pointer text-blue-600 font-semibold mr-4">Detail</label>
+                                <input type="checkbox" id={`my-modal-${history?.id}`} className="modal-toggle" />
                             <div className="modal">
                             <div className="modal-box relative">
-                                <label htmlFor={`my-modal-${history.id}`} className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                                <label htmlFor={`my-modal-${history?.id}`} className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
                                 <h3 className="text-lg font-bold">Detail Events!</h3>
-                                <p className="py-2">{history.id}</p>
-                                <p className="py-2">{history.title}</p>
-                                <p className="py-2">{history.name}</p>
-                                <p className="py-2">{moment(history.date).format('DD-MM-YYYY')}</p>
-                                <p className="py-2">{history.descriptions}</p>
+                                <p className="py-2">{history?.id}</p>
+                                <p className="py-2">{history?.title}</p>
+                                <p className="py-2">{history?.name}</p>
+                                <p className="py-2">{moment(history?.date).format('DD-MM-YYYY')}</p>
+                                <p className="py-2">{history?.descriptions}</p>
                             </div>
                             </div>
-                                <label htmlFor="modalUpdate" onClick={() => updateEvent(history.id)} className="cursor-pointer text-blue-600 font-semibold mr-4">Update</label>
-                                <button onClick={()=> removeEvent(history.id)}  className="text-blue-600 font-semibold">Delete</button>
+                                <label htmlFor="modalUpdate" onClick={() => updateEvent(history?.id)} className="cursor-pointer text-blue-600 font-semibold mr-4">Update</label>
+                                <button onClick={()=> removeEvent(history?.id)}  className="text-blue-600 font-semibold">Delete</button>
                             </div>
                         </div>
                     </div>
@@ -232,7 +230,6 @@ const CreateEvent = ()=> {
             price: '',
             category: '',
             date:  '',
-            picture: '',
             detail: ''
         }}
         onSubmit={btnCreateEvent}
@@ -268,7 +265,7 @@ const CreateEvent = ()=> {
                 </div>
                 <div>
                     <div className='mb-2'>Image</div>
-                    <input name='picture' type="file" placeholder='Chose File ...' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.picture}/>
+                    <input name='picture' type="file" placeholder='Chose File ...' className="input input-bordered w-full max-w-xs"  onChange={(e)=>setSelectedPicture(e.target.files[0])} onBlur={handleBlur} value={values.picture}/>
                 </div>
             </div>
             <div className='flex justify-between mb-6'>
@@ -305,7 +302,6 @@ const CreateEvent = ()=> {
             price: '',
             category: '',
             date:  '',
-            picture: '',
             detail: ''
         }}
         onSubmit={btnUpdateEvent}
@@ -341,7 +337,7 @@ const CreateEvent = ()=> {
                 </div>
                 <div>
                     <div className='mb-2'>Image</div>
-                    <input name='picture' type="file" placeholder='Chose File ...' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.picture}/>
+                    <input name='picture' type="file" placeholder='Chose File ...' className="input input-bordered w-full max-w-xs"  onChange={(e)=>setSelectedPicture(e.target.files[0])} onBlur={handleBlur} value={values.picture}/>
                 </div>
             </div>
             <div className='flex justify-between mb-6'>
@@ -364,6 +360,14 @@ const CreateEvent = ()=> {
     </div>
   </div>
 </div>
+    <input type="checkbox" id="loading" className="modal-toggle" checked={loading}/>
+    <div className="modal">
+        <div className="modal-box bg-transparent shadow-none">
+            <div className='flex justify-center'>
+                <AiOutlineLoading3Quarters className='animate-spin' color='white' size={80}/>
+            </div>
+        </div>
+    </div>
     </>
     )
 }

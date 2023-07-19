@@ -33,12 +33,16 @@ const Home = ()=> {
     const [cities, setCities] = useState([])
     const [category, setCategory] = useState([])
     const [selectedCategory, setSelectedCategory] = useState([])
-    
+    const [paginition, setPaginition] = useState(1);
+    const [sortBy, setSortBy] = useState('ASC');
+    const [sortName, setSortName] = useState('id');
+    const [categoryName, setCategoryName] = useState('');
+
     async function getEventsCategory(name){
-        const {data} = await http(token).get('/events', {params: {category: name}})
-        console.log(data)
-        setSelectedCategory(data.results)
+        setCategoryName(name)
+        // const {data} = await http(token).get('/events', {params: {category: name}})
     }
+
     useEffect(()=> {
         async function getProfileData(){
             const fallback = (message)=> {
@@ -46,12 +50,12 @@ const Home = ()=> {
                 dispatch(setWarningMessage(message))
                 navigate('/login')
             }
-            const {data} = await http(token, fallback).get('/profile')
-            setProfile(data.results)
+            await http(token, fallback).get('/profile')
         }
         async function getEvents(){
-            const {data} = await http(token).get('/events')
+            const {data} = await http(token).get(`/events?page=${paginition}&sortBy=${sortBy}&sort=${sortName}&category=${categoryName}`)
             setEvents(data.results)
+            setSelectedCategory(data.results)
         }
         async function getCities(){
             const {data} = await http(token).get('/city', {params:{limit: 1000}})
@@ -72,19 +76,29 @@ const Home = ()=> {
         getCities()
         getCategory()
         // getPartners()
-        getEventsCategory()
-    }, [dispatch, navigate, setProfile, token])
-    
+    }, [dispatch, navigate, setProfile, token, events, paginition, sortBy, sortName, categoryName])
+
     const onSearch = (values)=> {
-        console.log(values)
         const qs = new URLSearchParams(values).toString()
         navigate(`/search?${qs}`)
     }
 
+    const allEventByCity = (cityName)=> {
+        navigate(`/search?city=${cityName}`)
+    }
+
+    const pageNext = () => {
+        setPaginition(paginition + 1);
+    };
+
+    const pagePrev = () => {
+        setPaginition(paginition - 1);
+    };
+
     // useEffect(() => {
-    //     console.log(cities)
-    // }, [cities]);
-    
+    //     selectedCategory
+    // }, [selectedCategory]);
+
     return (
         <>
         <NavbarLogout />
@@ -92,13 +106,15 @@ const Home = ()=> {
             <div className="bg-[#FF8551] flex justify-between px-12 items-center h-[70vh]">
                 <div className="max-w-[550px] flex flex-col gap-6">
                     <div className="text-7xl text-white font-bold">Find events you love with our</div>
-                    <Formik initialValues={
-                        {search: ''}} 
+                    <Formik 
+                    initialValues={
+                        {search: ''}
+                    } 
                     onSubmit={onSearch}>
                     {({handleBlur, handleChange, handleSubmit}) => (
                         <form onSubmit={handleSubmit} className="flex relative items-center">
                             <input name='search' type="text" placeholder='Search Event' className='input input-bordered w-full' onChange={handleChange} onBlur={handleBlur} />
-                            <button>
+                            <button type="submit">
                                 <BiSearch size={40} className="absolute right-4 top-[5px] text-slate-400"/>
                             </button>
                         </form>
@@ -115,7 +131,7 @@ const Home = ()=> {
                 </div>
                 <div className="flex justify-between">
                     <div className="flex gap-4 items-center">
-                        <button>
+                        <button onClick={() => pagePrev()}>
                             <img src={Group5877} className="w-16 h-16"/>
                         </button>
                         <div className="w-[500px] flex justify-between items-center h-full">
@@ -141,7 +157,7 @@ const Home = ()=> {
                                 <div>Fri</div>
                             </div>
                         </div>
-                        <button>
+                        <button onClick={() => pageNext()}>
                             <img src={Group5878} className="w-16 h-16"/>
                         </button>
                     </div>
@@ -162,7 +178,7 @@ const Home = ()=> {
                     })}
                 </div>
                 <div className="flex justify-center">
-                    <button className="w-32 h-12 bg-[#FF8551] rounded-xl">
+                    <button onClick={()=> navigate('/search?limit=9999')} className="w-32 h-12 bg-[#FF8551] rounded-xl">
                         <div className="text-white font-bold">See All</div>
                     </button>
                 </div>
@@ -175,7 +191,7 @@ const Home = ()=> {
                 <div className="flex flex-wrap gap-6 justify-center my-6">
                     {cities.map(city=>
                     <div key={city.id} className="flex flex-col items-center">
-                        <img src={city.picture} className="w-[240px] h-[120px] rounded-md"/>
+                        <img onClick={()=> allEventByCity(city.name)} src={city.picture} className="w-[240px] h-[120px] rounded-md cursor-pointer"/>
                         <div className="text-white font-semibold">{city.name}</div>
                     </div>
                         )}
