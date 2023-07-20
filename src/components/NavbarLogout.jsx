@@ -92,6 +92,23 @@ const NavbarLogout = ()=> {
                 </div>
             </>
             }
+            {menu && !token &&
+            <>
+                <div className='w-full h-[100px] flex flex-col justify-center items-center gap-2 text-black font-bold'>
+                    <Link to='/' className='hover:text-blue-500'>Home</Link>
+                    <Link to='/create-event' className='hover:text-blue-500'>Create Event</Link>
+                    <div className='hover:text-blue-500'>Location</div>
+                </div>
+                <div className='flex gap-6 justify-center my-4'>
+                    <Link to='/login' className='w-24 h-12 bg-[#FF8551] rounded-xl flex justify-center items-center'>
+                        <div className='text-white font-semibold'>Log In</div>
+                    </Link>
+                    <Link to='/register' className='w-24 h-12 bg-blue-500 rounded-xl flex justify-center items-center'>
+                        <div className='text-white font-semibold'>Sign Up</div>
+                    </Link>
+                </div>
+            </>
+            }
         </>
     )
 }

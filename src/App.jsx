@@ -34,8 +34,8 @@ const App = ()=> {
                         <Route path="/payment" element={<PrivateRoute><Payment /></PrivateRoute>} />
                         <Route path="/change-password" element={<ChangePassword />} />
                         <Route path="/my-booking" element={<PrivateRoute><MyBooking /></PrivateRoute>} />
-                        <Route path="/my-wishlist" element={<MyWishlist />} />
-                        <Route path="/create-event" element={<CreateEvent />} />
+                        <Route path="/my-wishlist" element={<PrivateRoute><MyWishlist /></PrivateRoute>} />
+                        <Route path="/create-event" element={<PrivateRoute><CreateEvent /></PrivateRoute>} />
                         <Route path="/search" element={<SearchResults />} />
                         <Route path="/code-forgot-password" element={<CodeForgotPassword />} />
                     </Routes>

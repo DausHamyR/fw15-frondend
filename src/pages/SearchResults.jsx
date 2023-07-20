@@ -20,19 +20,18 @@ const SearchResults = ()=> {
 
     useEffect(()=> {
         const getEventBySearch = async ()=> {
-            const {data} = await http(token).get(`/events?page=${paginition}&limit=${limit}&sortBy=${sortBy}&sort=${sortName}&category=${categoryName}`)
-            console.log(data)
+            const {data} = await http(token).get(`/events?page=${paginition}&limit=${limit}&sortBy=${sortBy}&sort=${sortName}&category=${categoryName}`, {params:searchParams})
             setSearchResults(data.results)
         }
         getEventBySearch()
     }, [searchParams, token, paginition, limit, sortBy, sortName, categoryName])
 
-    useEffect(()=> {
-        console.log(searchResults)
-    }, [searchResults])
+    // useEffect(()=> {
+    //     console.log(searchResults)
+    // }, [searchResults])
 
     const pageNext = () => {
-        setLimit(limit + limit)
+        setLimit(limit + 8)
     };
 
     return(
