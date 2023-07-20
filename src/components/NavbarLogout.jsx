@@ -1,5 +1,5 @@
 import logo from '../assets/logo_kelinci.png'
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import http from '../helpers/http.helper'
@@ -12,6 +12,7 @@ const NavbarLogout = ()=> {
     const token = useSelector(state => state.auth.token)
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const location = useLocation()
 
     useEffect(() => {
         const getProfile = async() => {
@@ -43,9 +44,9 @@ const NavbarLogout = ()=> {
                     <div className='text-xl text-[#FF8551] font-bold'>Cruelty Free</div>
                 </div>
                 <div className='flex gap-6 font-semibold max-md:hidden'>
-                    <Link to='/' className='text-[#FF8551]'>Home</Link>
-                    <Link to='/create-event'>Create Event</Link>
-                    <button>Location</button>
+                    <Link to='/' className={`hover:text-blue-500 ${location.pathname === '/' ? 'text-[#FF8551]' : ''}`}>Home</Link>
+                    <Link to='/create-event' className={`hover:text-blue-500 ${location.pathname === '/create-event' ? 'text-[#FF8551]' : ''}`}>Create Event</Link>
+                    <button className='hover:text-blue-500'>Location</button>
                 </div>
                 {token ?
                 (<div className='flex gap-6 max-md:hidden items-center'>
@@ -75,9 +76,9 @@ const NavbarLogout = ()=> {
             {menu && token &&
             <>
                 <div className='w-full h-[100px] flex flex-col justify-center items-center gap-2 text-black font-bold'>
-                    <Link to='/' className='hover:text-blue-500'>Home</Link>
-                    <Link to='/create-event' className='hover:text-blue-500'>Create Event</Link>
-                    <div className='hover:text-blue-500'>Location</div>
+                    <Link to='/' className={`hover:text-blue-500 ${location.pathname === '/' ? 'text-[#FF8551]' : ''}`}>Home</Link>
+                    <Link to='/create-event' className={`hover:text-blue-500 ${location.pathname === '/create-event' ? 'text-[#FF8551]' : ''}`}>Create Event</Link>
+                    <div className={`hover:text-blue-500`}>Location</div>
                 </div>
                 <div className='flex gap-6 justify-center my-4'>
                     <Link to='/profile' className='flex items-center gap-2'>
@@ -95,9 +96,9 @@ const NavbarLogout = ()=> {
             {menu && !token &&
             <>
                 <div className='w-full h-[100px] flex flex-col justify-center items-center gap-2 text-black font-bold'>
-                    <Link to='/' className='hover:text-blue-500'>Home</Link>
-                    <Link to='/create-event' className='hover:text-blue-500'>Create Event</Link>
-                    <div className='hover:text-blue-500'>Location</div>
+                    <Link to='/' className={`hover:text-blue-500 ${location.pathname === '/' ? 'text-[#FF8551]' : ''}`}>Home</Link>
+                    <Link to='/create-event' className={`hover:text-blue-500 ${location.pathname === '/create-event' ? 'text-[#FF8551]' : ''}`}>Create Event</Link>
+                    <div className={`hover:text-blue-500`}>Location</div>
                 </div>
                 <div className='flex gap-6 justify-center my-4'>
                     <Link to='/login' className='w-24 h-12 bg-[#FF8551] rounded-xl flex justify-center items-center'>
