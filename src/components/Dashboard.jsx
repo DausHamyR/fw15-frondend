@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout as logoutAction } from "../redux/reducers/auth"
 // import {FiMenu} from 'react-icons/fi'
-import defaultavatar from '../assets/default-avatar.jpg'
+import defaultavatar from '../assets/default-avatar.png'
 import {CgProfile} from 'react-icons/cg'
 import {BsCreditCard2BackFill} from 'react-icons/bs'
 import {AiFillEdit} from 'react-icons/ai'
@@ -29,12 +29,12 @@ const Dashboard = ()=> {
 
     return (
         <>
-            <div className='max-w-[350px] mx-16'>
-                <div className='flex items-center my-8'>
-                    <img src={defaultavatar} className='w-28 h-28'/>
+            <div className='w-1/4 mx-16 max-lg:hidden'>
+                <div className='flex items-center my-8 gap-4'>
+                    <img src={getProfile.picture ? getProfile?.picture : defaultavatar} className='w-20 h-20 rounded-full'/>
                     <div className='flex flex-col gap-2'>
-                        <div className='font-bold'>Jhon Tomson</div>
-                        <div className='text-slate-400'>Entrepreneur, ID</div>
+                        <div className='font-bold'>{getProfile.fullName}</div>
+                        <div className='text-slate-400'>{getProfile.profession}, {getProfile.nationality}</div>
                     </div>
                 </div>
                 <div className='flex justify-center'>
