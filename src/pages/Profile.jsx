@@ -1,14 +1,10 @@
-import Avatar from '../assets/Avatar.png'
-import kamera from '../assets/kamera.png'
-import { Link } from "react-router-dom"
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import http from '../helpers/http.helper'
 import moment from 'moment'
 import { Formik, Field } from 'formik'
-import defaultProfile from '../assets/default-avatar.jpg'
+import defaultProfile from '../assets/default-avatar.png'
 import {AiOutlineLoading3Quarters} from 'react-icons/ai'
-import Logout from '../components/Logout'
 import Footer from "../components/Footer"
 import NavbarLogout from '../components/NavbarLogout'
 import Dashboard from '../components/Dashboard'
@@ -23,9 +19,9 @@ const Profile = ()=> {
     const [editEmail, setEditEmail] = useState(false)
     const [editPhoneNumber, setEditPhoneNumber] = useState(false)
     const [selectedPicture, setSelectedPicture] = useState(false)
-    // const [editGender, setEditGender] = useState(false)
-    // const [editProfession, setEditProfession] = useState(false)
-    // const [editNationality, setEditNationality] = useState(false)
+    const [editGender, setEditGender] = useState(false)
+    const [editProfession, setEditProfession] = useState(false)
+    const [editNationality, setEditNationality] = useState(false)
     const [editBirthday, setEditBirthday] = useState(false)
     const [openModal, setOpenModal] = useState(false)
 
@@ -46,11 +42,7 @@ const Profile = ()=> {
         const form = new FormData()
         Object.keys(values).forEach((key)=> {
             if(values[key]) {
-                if(key === 'birthDate') {
-                    form.append(key, moment(values[key], 'DD-MM-YYYY').format('YYYY/MM/DD'))
-                }else {
-                    form.append(key, values[key])
-                }
+                form.append(key, values[key])
             }
         })
         if(selectedPicture) {
@@ -61,6 +53,7 @@ const Profile = ()=> {
                 'Content-Type': 'multipart/form-data'
             }
         })
+        console.log(data.results)
         dispatch(dataProfile(data.results))
         setProfile(data.results)
         setEditBirthday(false)
@@ -70,13 +63,6 @@ const Profile = ()=> {
         setOpenModal(false)
     }
 
-    // useEffect(()=> {
-    //     if(initToken){
-    //         if(!token){
-    //             navigate('/login', {state: {warningMessage: 'You have to login first!'}})
-    //         }   
-    //     }
-    // }, [token, initToken, navigate])
     return (
         <>
         <NavbarLogout />
@@ -91,123 +77,101 @@ const Profile = ()=> {
                 gender: profile?.gender ? "1" : "0",
                 profession: profile?.profession,
                 nationality: profile?.nationality,
-                birthDate: profile?.birthDate && moment(profile.birthDate).format('YYYY/MM/DD')
+                birthDate: profile?.birthDate
+                // birthDate: profile?.birthDate && moment(profile.birthDate).format('YYYY/MM/DD')
             }}
             onSubmit={editProfile}
             enableReinitialize
         >
-            {({handleSubmit, handleChange, handleBlur, errors, touched, values})=> (
-            <form onSubmit={handleSubmit} className="w-[70%] bg-white min-h-[100vh] mt-12 rounded-xl max-md:ml-[20vw] max-sm:ml-0 max-md:w-full">
-                <article className="w-[20%] h-[120px] flex justify-center items-center text-2xl font-semibold">
-                    <h1>Profile</h1>
-                </article>
-                <div className="w-[45%] md:hidden">
-                    <div className="w-full grid">
-                        <img src={Avatar} className="h-[110px] w-[110px] justify-self-center p-1 brightness-75 border-[4px] rounded-full border-blue-500" />
-                        <img src={kamera} className="relative left-[47.5%] max-md:left-[45%] max-lg:left-[45.5%] top-[-60px]" />
-                    </div>
-                </div>
-                <div className="flex max-md:h-[100vh]">
-                    <article className="w-[55%] grid content-between h-[550px] text-md font-normal pt-8 pl-8">
-                        <div className="flex justify-between items-center max-md:grid max-md:mb-6">
-                            <h3 className="max-md:mb-2">Name</h3>
-                            <input name='fullName' onChange={handleChange} onBlur={handleBlur} value={values.fullName} type="text" placeholder={`${profile.fullName}`} className="input input-bordered w-full max-w-xs" />
+            {({handleSubmit, handleChange, handleBlur, values})=> (
+        <form onSubmit={handleSubmit} className='bg-slate-400 w-3/4 max-lg:w-full my-12 rounded-xl'>
+            <div className='flex flex-wrap-reverse justify-center'>
+                <div className='w-[600px] my-8 mx-12'>
+                    <div className='font-bold text-2xl mb-6'>Profile</div>
+                    <div className='flex flex-col gap-4'>
+                        <div className='flex items-center gap-16 max-sm:flex-wrap max-sm:gap-2'>
+                            <div className='font-semibold w-[120px]'>Name</div>
+                            <input name='fullName' type="text" placeholder='Full Name' className={`input input-bordered w-full`} onChange={handleChange} onBlur={handleBlur} value={values.fullName} />
                         </div>
-                        <div className="flex items-center max-md:grid max-md:mb-6">
-                            <div className='flex justify-between w-[23%]'>
-                                <h3 className="max-md:mb-2">Username</h3>
-                                <div className='flex justify-center gap-5'>
-                                    {!editUsername && <p className="max-md:pl-0 text-slate-400 ml-[150px]">{profile?.username === null ? <span className='text-red-400'>Not Set</span> : profile?.username}</p>}
-                                    {!editUsername && <button onClick={()=> setEditUsername(true)} className='text-primary font-bold'>Edit</button>}
-                                </div>
-                            </div>
-                            {editUsername && <input name='username' onChange={handleChange} onBlur={handleBlur} value={values.username} type='text' className="input input-bordered w-full max-w-xs ml-[160px]" />}
+                        <div className='flex items-center gap-16 max-sm:flex-wrap max-sm:gap-2'>
+                            <div className='font-semibold w-[120px]'>Username</div>
+                            {editUsername ? 
+                                <input name='username' type="text" placeholder='Input Username' className={`input input-bordered w-full`} onChange={handleChange} onBlur={handleBlur} value={values.username} /> :
+                                <>
+                                    <div>{profile.username}</div>
+                                    <button onClick={()=> setEditUsername(true)} className='text-[#FF8551] font-bold'>Edit</button>
+                                </>
+                            }
                         </div>
-                        <div className="flex items-center max-md:grid max-md:mb-6">
-                            <div className='flex justify-between w-[23%]'>
-                                <h3 className="max-md:mb-2">Email</h3>
-                                <div className='flex justify-center gap-5'>
-                                    {!editEmail && <p className="max-md:pl-0 text-slate-400 ml-[150px]">{profile?.email === null ? <span className='text-red-400'>Not Set</span> : profile?.email}</p>}
-                                    {!editEmail && <button onClick={()=> setEditEmail(true)} className='text-primary font-bold ml-8'>Edit</button>}
-                                </div>
-                            </div>
-                            {editEmail && <input name='email' onChange={handleChange} onBlur={handleBlur} value={values.email} type='email' className="input input-bordered w-full max-w-xs ml-[160px]" />}
+                        <div className='flex items-center gap-16 max-sm:flex-wrap max-sm:gap-2'>
+                            <div className='font-semibold w-[120px]'>Email</div>
+                            {editEmail ? 
+                                <input name='email' type="text" placeholder='Input Email' className={`input input-bordered w-full`} onChange={handleChange} onBlur={handleBlur} value={values.email} /> :
+                                <>
+                                    <div>{profile.email}</div>
+                                    <button onClick={()=> setEditEmail(true)} className='text-[#FF8551] font-bold'>Edit</button>
+                                </>
+                            }
                         </div>
-                        <div className="flex items-center max-md:grid max-md:mb-6">
-                        <div className='flex justify-between w-[23%]'>
-                                <h3 className="max-md:mb-2">Phone Number</h3>
-                                <div className='flex justify-center gap-5'>
-                                    {!editPhoneNumber && <p className="max-md:pl-0 text-slate-400 ml-[150px]">{profile?.phoneNumber === null ? <span className='text-red-400'>Not Set</span> : profile?.phoneNumber}</p>}
-                                    {!editPhoneNumber && <button onClick={()=> setEditPhoneNumber(true)} className='text-primary font-bold ml-3'>Edit</button>}
-                                </div>
-                            </div>
-                            {editPhoneNumber && <input name='phoneNumber' onChange={handleChange} onBlur={handleBlur} value={values.phoneNumber} type='text' className="input input-bordered w-full max-w-xs ml-[160px]" />}
+                        <div className='flex items-center gap-16 max-sm:flex-wrap max-sm:gap-2'>
+                            <div className='font-semibold w-[120px]'>Phone Number</div>
+                            {editPhoneNumber ? 
+                                <input name='phoneNumber' type="text" placeholder='Input Phone Number' className={`input input-bordered w-full`} onChange={handleChange} onBlur={handleBlur} value={values.phoneNumber} /> :
+                                <>
+                                    <div>{profile.phoneNumber}</div>
+                                    <button onClick={()=> setEditPhoneNumber(true)} className='text-[#FF8551] font-bold'>Edit</button>
+                                </>
+                            }
                         </div>
-                        <div className="flex items-center max-md:grid max-md:mb-6">
-                            <h3 className="max-md:mb-2">Gender</h3>
-                            <div className="flex pl-[12vw] max-md:pl-0">
-                                <Field type="radio" className="mr-1" name="gender" value='0' /><div className="text-slate-400">Male</div> 
-                                <Field type="radio" className="ml-6 mr-1 pt-[-20px]" name="gender" value='1' /><div className="text-slate-400">Female</div> 
+                        <div className='flex items-center gap-16 max-sm:flex-wrap max-sm:gap-2'>
+                            <div className='font-semibold w-[120px]'>Gender</div>
+                            <div className='flex items-center'>
+                                <Field type="radio" className="mr-1" name="gender" value='0' /><div className="font-semibold">Male</div> 
+                                <Field type="radio" className="ml-6 mr-1 pt-[-20px]" name="gender" value='1' /><div className="font-semibold">Female</div> 
                             </div>
                         </div>
-                        <div className="flex justify-between items-center max-md:grid max-md:mb-6">
-                            <h3 className="max-md:mb-2">Profession</h3>
-                            <select name='profession' onChange={handleChange} onBlur={handleBlur} value={values.profession}  className="input input-bordered w-full max-w-xs">
-                                <option className='hidden'>Select Profession</option>
-                                <option>Fullstack Web Developer</option>
-                                <option>Backend Developer</option>
-                                <option>Frontend Developer</option>
-                            </select>
+                        <div className='flex items-center gap-16 max-sm:flex-wrap max-sm:gap-2'>
+                            <div className='font-semibold w-[120px]'>Profession</div>
+                            <select name='profession' onChange={handleChange} onBlur={handleBlur} value={values.profession} className="input input-bordered w-full">
+                                    <option className='hidden'>Select Profession</option>
+                                    <option>Fullstack Web Developer</option>
+                                    <option>Backend Developer</option>
+                                    <option>Frontend Developer</option>
+                                </select>
                         </div>
-                        <div className="flex justify-between items-center max-md:grid max-md:mb-6">
-                            <h3 className="max-md:mb-2">Nationality</h3>
-                            <select name='nationality' onChange={handleChange} onBlur={handleBlur} value={values.nationality}  className="input input-bordered w-full max-w-xs">
-                                <option className='hidden'>Select Nationality</option>
-                                <option>Indonesia</option>
-                            </select>
+                        <div className='flex items-center gap-16 max-sm:flex-wrap max-sm:gap-2'>
+                            <div className='font-semibold w-[120px]'>Nationality</div>
+                            <select name='nationality' onChange={handleChange} onBlur={handleBlur} value={values.nationality} className="input input-bordered w-full">
+                                    <option className='hidden'>Select Nationality</option>
+                                    <option>Indonesia</option>
+                                    <option>Singapure</option>
+                                    <option>Malaysia</option>
+                                </select>
                         </div>
-                        <div className="flex items-center max-md:grid">
-                        <div className='flex justify-between w-[23%]'>
-                                <h3 className="max-md:mb-2">Birthday Date</h3>
-                                <div className='flex justify-center gap-5'>
-                                    {!editBirthday && <p className="max-md:pl-0 text-slate-400 ml-[150px]">{profile?.birthDate === null ? <span className='text-red-400'>Not Set</span> : moment(profile?.birthDate).format('DD/MM/YYYY')}</p>}
-                                    {!editBirthday && <button onClick={()=> setEditBirthday(true)} className='text-primary font-bold'>Edit</button>}
-                                </div>
-                            </div>
-                            {editBirthday && <input name='birthDate' onChange={handleChange} onBlur={handleBlur} value={values.birthDate} type='date' className="input input-bordered w-full max-w-xs ml-[160px]" />}
-                        </div>
-                    </article>
-                    <div className="w-[45%] h-[550px] max-md:hidden">
-                        <div className="w-[80%] grid">
-                            <img src={
-                                profile?.picture?.startsWith('https') ?
-                                profile?.picture :
-                                (
-                                    profile?.picture === null ?
-                                    defaultProfile :
-                                    `http://${import.meta.env.VITE_BACKEND_URL}/uploads/${profile?.picture}`
-                                )} 
-                            className="h-[110px] w-[110px] justify-self-center p-1 brightness-75 border-[4px] rounded-full border-blue-500" />
-                            <img src={kamera} className="relative left-[47.5%] max-md:left-[45%] max-lg:left-[45.5%] top-[-60px]" />
-                        </div>
-                        <label >
-                            <span className='btn btn-outline btn-primary w-[80%] mt-8' >Choose Photo</span>
-                            <input name='picture' onChange={(e)=>setSelectedPicture(e.target.files[0])} type="file" className='hidden'/>
-                        </label>
-                        {/* <div className="w-[80%] h-[40px] mx-[10%] flex justify-center items-center border-2 rounded-md border-blue-500 mt-8">
-                            <h1 className="text-blue-500 font-bold tracking-wider">Choose Photo</h1>
-                        </div> */}
-                        <div className="w-[80%] mx-[10%]">
-                            <p className="my-4">Image size: max, 2 MB</p>
-                            <p>Image formats: .JPG, .JPEG, .PNG</p>
+                        <div className='flex items-center gap-16 max-sm:flex-wrap max-sm:gap-2'>
+                            <div className='font-semibold w-[120px]'>Birthday Date</div>
+                            <input name='birthDate' type="date" placeholder='Input Date' className={`input input-bordered w-full`} onChange={handleChange} onBlur={handleBlur} value={values.birthDate} />
                         </div>
                     </div>
                 </div>
-                <div className="mt-10 ml-8">
-                    <button className="btn btn-primary w-full max-w-xs">Save</button>
+                <div className='flex flex-col items-center w-[300px] mt-12 gap-4'>
+                    <div >
+                        <img src={
+                            profile?.picture ? 
+                            profile?.picture :
+                            defaultProfile} className='w-32 h-32 rounded-full object-cover border-2 p-1'/>
+                    </div>
+                    <label className='cursor-pointer bg-white border-blue-500 border-2 py-4 px-6 rounded-xl'>
+                        <div>Choose Photo</div>
+                        <input name='picture' onChange={(e)=>setSelectedPicture(e.target.files[0])} type="file" className='hidden'/>
+                    </label>
                 </div>
-            </form>
-            )}
+            </div>
+            <div className="mt-2 mx-12 mb-8">
+                <button type='submit' className="btn btn-primary w-full max-w-xs">Save</button>
+            </div>
+        </form>
+        )}
         </Formik>
     </main>
     <Footer />
