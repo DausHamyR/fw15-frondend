@@ -44,7 +44,7 @@ const MyWishlist = ()=> {
         <NavbarLogout />
     <main className="w-full flex max-sm:ml-[0]">
         <Dashboard />
-        <section className="w-[70%] bg-white min-h-[100vh] max-md:min-h-[50vh] mt-12 rounded-xl max-md:w-full">
+        <section className="w-[70%] bg-white min-h-[100vh] max-md:min-h-[50vh] mt-12 rounded-xl max-lg:w-full">
             <div className="w-[90%] h-[80px] flex justify-between items-center mx-6">
                 <h1 className="text-2xl font-semibold">My Wishlist</h1>
             </div>
