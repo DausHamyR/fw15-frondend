@@ -53,7 +53,7 @@ const ChangePassword = ()=> {
         <NavbarLogout />
     <main className="w-full flex max-sm:ml-[0]">
         <Dashboard />
-        <section className="w-[70%] min-h-[100vh] max-md:min-h-[50vh] mt-12 rounded-xl max-md:w-full">
+        <section className="w-[70%] min-h-[100vh] max-md:min-h-[50vh] mt-12 rounded-xl max-lg:w-full">
             <div className="w-[30%] max-lg:w-[50%] h-[80px] flex justify-center items-center text-2xl font-semibold">
                 <h1>Change Password</h1>
             </div>

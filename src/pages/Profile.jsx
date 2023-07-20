@@ -161,8 +161,8 @@ const Profile = ()=> {
                             profile?.picture :
                             defaultProfile} className='w-32 h-32 rounded-full object-cover border-2 p-1'/>
                     </div>
-                    <label className='cursor-pointer bg-white border-blue-500 border-2 py-4 px-6 rounded-xl'>
-                        <div>Choose Photo</div>
+                    <label className='cursor-pointer hover:bg-[#FF8551] hover:text-white bg-white border-blue-500 border-2 py-4 px-6 rounded-xl'>
+                        <div className='font-semibold'>Choose Photo</div>
                         <input name='picture' onChange={(e)=>setSelectedPicture(e.target.files[0])} type="file" className='hidden'/>
                     </label>
                 </div>

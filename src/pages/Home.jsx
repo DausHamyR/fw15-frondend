@@ -40,7 +40,6 @@ const Home = ()=> {
 
     async function getEventsCategory(name){
         setCategoryName(name)
-        // const {data} = await http(token).get('/events', {params: {category: name}})
     }
 
     useEffect(()=> {
@@ -53,8 +52,11 @@ const Home = ()=> {
             await http(token, fallback).get('/profile')
         }
         async function getEvents(){
-            const {data} = await http(token).get(`/events?page=${paginition}&sortBy=${sortBy}&sort=${sortName}&category=${categoryName}`)
+            const {data} = await http(token).get(`/events?page=${paginition}&sortBy=${sortBy}&sort=${sortName}`)
             setEvents(data.results)
+        }
+        async function getEventsCategory(){
+            const {data} = await http(token).get(`/events?category=${categoryName}`)
             setSelectedCategory(data.results)
         }
         async function getCities(){
@@ -72,6 +74,7 @@ const Home = ()=> {
         if(token){
             getProfileData()
         }
+        getEventsCategory()
         getEvents()
         getCities()
         getCategory()
@@ -206,7 +209,7 @@ const Home = ()=> {
                 </div>
                 <div className="flex justify-between max-sm:justify-center mx-28 mb-8 max-md:mx-6 max-sm:flex-wrap max-sm:gap-12">
                     {category.map(category => 
-                        <button key={category.id} onClick={()=> getEventsCategory(category.name)} className="font-bold text-gray-400 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary">{category.name}</button>
+                        <button key={category.id} onClick={()=> getEventsCategory(category.name)} className={`font-bold ${categoryName === category.name ? 'text-primary border-primary' : 'text-gray-400'} hover:text-primary font-bold border-b-2 border-transparent hover:border-primary`}>{category.name}</button>
                     )}
                 </div>
                 <div className="flex justify-center gap-12 max-xl:flex-wrap">
