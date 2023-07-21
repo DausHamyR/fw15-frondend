@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import http from '../helpers/http.helper'
 import { logout as logoutAction } from "../redux/reducers/auth"
 import {FiMenu} from 'react-icons/fi'
+import defaultavatar from '../assets/default-avatar.png'
 
 const NavbarLogout = ()=> {
     const [profile, setProfile] = useState({})
@@ -52,7 +53,10 @@ const NavbarLogout = ()=> {
                 (<div className='flex gap-6 max-md:hidden items-center'>
                     <Link to='/profile' className='flex items-center gap-2'>
                         <div className='w-16 h-16'>
-                            <img src={profile.picture} className='w-full h-full rounded-full object-cover' />
+                            {profile.picture ? 
+                            <img src={profile.picture} className='w-full h-full rounded-full object-cover' /> :
+                            <img src={defaultavatar} />
+                        }
                         </div>
                         <div className='font-semibold'>{profile.fullName}</div>
                     </Link>

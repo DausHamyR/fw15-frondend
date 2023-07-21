@@ -10,7 +10,6 @@ import Dashboard from '../components/Dashboard'
 
 const CreateEvent = ()=> {
     const [getAllmanage, setGetAllManage] = useState([])
-    const [profile, setProfile] = useState({})
     const token = useSelector(state => state.auth.token)
     const [selectedPicture, setSelectedPicture] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
@@ -19,22 +18,10 @@ const CreateEvent = ()=> {
 
     const btnCreateEvent = async values => {
         setLoading(true);
+        console.log(values)
         const form = new FormData();
         Object.keys(values).forEach(key => {
-            if (values[key]) {
-                if (key === 'price') {
-                const priceId = (values.price = 3);
-                form.append('price', priceId);
-                } else if (key === 'location') {
-                const cityId = (values.location = 5);
-                form.append('location', cityId);
-                } else if (key === 'category') {
-                const categoryId = (values.category = 3);
-                form.append('category', categoryId);
-                } else {
-                form.append(key, values[key]);
-                }
-            }
+            form.append(key, values[key]);
         });
         if (selectedPicture) {
             form.append('picture', selectedPicture);
@@ -53,20 +40,7 @@ const CreateEvent = ()=> {
         setLoading(true);
         const form = new FormData();
         Object.keys(values).forEach(key => {
-            if (values[key]) {
-                if (key === 'price') {
-                const priceId = (values.price = 2);
-                form.append('price', priceId);
-                } else if (key === 'location') {
-                const cityId = (values.location = 2);
-                form.append('location', cityId);
-                } else if (key === 'category') {
-                const categoryId = (values.category = 2);
-                form.append('category', categoryId);
-                } else {
-                form.append(key, values[key]);
-                }
-            }
+            form.append(key, values[key]);
         });
         if (selectedPicture) {
             form.append('picture', selectedPicture);
@@ -91,14 +65,6 @@ const CreateEvent = ()=> {
     }
 
     useEffect(() => {
-        const getProfile = async() => {
-            const {data} = await http(token).get('/profile')
-            setProfile(data.results)
-        }
-        getProfile()
-    }, [token])
-
-    useEffect(() => {
         const manageEvent = async () => {
             try {
                 const {data} = await http(token).get('/events/manage');
@@ -119,7 +85,7 @@ const CreateEvent = ()=> {
         <NavbarLogout />
     <main className="w-full flex max-sm:ml-[0]">
         <Dashboard />
-        <section className="w-[70%] bg-white min-h-[100vh] max-md:min-h-[50vh] mt-12 rounded-xl max-md:w-full">
+        <section className="w-[70%] bg-white min-h-[100vh] max-md:min-h-[50vh] mt-12 rounded-xl max-lg:w-full">
             <div className="w-[90%] h-[80px] flex justify-between items-center mx-6">
                 <h1 className="text-2xl font-semibold">Manage Event</h1>
                 <div className="flex justify-center px-8 py-3 items-center rounded-md">
@@ -223,7 +189,7 @@ const CreateEvent = ()=> {
             </div>
             <div className='flex justify-end gap-6 items-end'>
                 <div className='bg-green-600 w-20 h-12 rounded-md flex justify-center items-center'>
-                    <button className='text-white'>Create</button>
+                    <button type="submit" className='text-white'>Create</button>
                 </div>
                 <div className="modal-action">
                     <label htmlFor="my_modal_6" className="btn bg-red-500 hover:bg-white hover:text-red-500">Close!</label>
@@ -295,7 +261,7 @@ const CreateEvent = ()=> {
             </div>
             <div className='flex justify-end gap-6 items-end'>
                 <div className='bg-blue-600 w-20 h-12 rounded-md flex justify-center items-center'>
-                    <button className='text-white'>Update</button>
+                    <button type="submit" className='text-white'>Update</button>
                 </div>
                 <div className="modal-action">
                     <label htmlFor="modalUpdate" className="btn bg-red-500 hover:bg-white hover:text-red-500">Close!</label>
