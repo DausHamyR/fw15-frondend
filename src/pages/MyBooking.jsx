@@ -1,13 +1,4 @@
-// import Avatar from '../assets/Avatar.png'
-import coklat from '../assets/coklat.png'
-import blue from '../assets/blue.png'
 import calender from '../assets/calender.png'
-import Vector from '../assets/Vector.png'
-import Vector1 from '../assets/Vector (1).png'
-import Vector4 from '../assets/Vector (4).png'
-import Vector6 from '../assets/Vector (6).png'
-import Vector7 from '../assets/Vector (7).png'
-import { Link } from "react-router-dom"
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import http from '../helpers/http.helper'
