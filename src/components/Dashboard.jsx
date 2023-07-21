@@ -2,7 +2,6 @@ import { Link, useNavigate } from "react-router-dom"
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout as logoutAction } from "../redux/reducers/auth"
-// import {FiMenu} from 'react-icons/fi'
 import defaultavatar from '../assets/default-avatar.png'
 import {CgProfile} from 'react-icons/cg'
 import {BsCreditCard2BackFill} from 'react-icons/bs'
@@ -23,9 +22,9 @@ const Dashboard = ()=> {
     }
     const getProfile = useSelector(state => state.profile.data)
 
-    useEffect(() => {
-        console.log(getProfile)
-    }, [getProfile])
+    // useEffect(() => {
+    //     console.log(getProfile)
+    // }, [getProfile])
 
     return (
         <>

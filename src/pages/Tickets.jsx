@@ -53,16 +53,14 @@ const Tickets = ()=> {
             sectionId: filledSection.id,
             quantity: filledSection.quantity
         }).toString()
-        console.log(form)
         const {data} = await http(token).post('/reservations', form)
-        console.log(data)
         navigate('/payment', {state: {
             eventId,
             // eventName: data.results.events.title,
             reservationId: data.results.reservationId,
             sectionName: data.results.ticketSection,
             quantity: data.results.quantity,
-            totalPayment: data.results.totalPrice
+            totalPayment: data.results.totalPayment
         },
         replace: true
     })

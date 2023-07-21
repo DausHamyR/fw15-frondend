@@ -1,27 +1,18 @@
 import logo from '../assets/logo_kelinci.png'
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import http from '../helpers/http.helper'
 import { logout as logoutAction } from "../redux/reducers/auth"
 import {FiMenu} from 'react-icons/fi'
 import defaultavatar from '../assets/default-avatar.png'
 
 const NavbarLogout = ()=> {
-    const [profile, setProfile] = useState({})
     const [menu, setMenu] = useState(false)
     const token = useSelector(state => state.auth.token)
+    const getProfile = useSelector(state => state.profile.data)
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const location = useLocation()
-
-    useEffect(() => {
-        const getProfile = async() => {
-            const {data} = await http(token).get('/profile')
-            setProfile(data.results)
-        }
-        getProfile()
-    }, [token, menu])
 
     // useEffect(() => {
     //     console.log(profile)
@@ -53,12 +44,12 @@ const NavbarLogout = ()=> {
                 (<div className='flex gap-6 max-md:hidden items-center'>
                     <Link to='/profile' className='flex items-center gap-2'>
                         <div className='w-16 h-16'>
-                            {profile.picture ? 
-                            <img src={profile.picture} className='w-full h-full rounded-full object-cover' /> :
+                            {getProfile.picture ? 
+                            <img src={getProfile.picture} className='w-full h-full rounded-full object-cover' /> :
                             <img src={defaultavatar} />
                         }
                         </div>
-                        <div className='font-semibold'>{profile.fullName}</div>
+                        <div className='font-semibold'>{getProfile.fullName}</div>
                     </Link>
                     <button onClick={doLogout} className='w-24 h-12 bg-red-500 rounded-xl'>
                         <div className='text-white font-semibold'>Logout</div>
@@ -87,9 +78,9 @@ const NavbarLogout = ()=> {
                 <div className='flex gap-6 justify-center my-4'>
                     <Link to='/profile' className='flex items-center gap-2'>
                         <div className='w-16 h-16'>
-                            <img src={profile.picture} className='w-full h-full rounded-full object-cover' />
+                            <img src={getProfile.picture} className='w-full h-full rounded-full object-cover' />
                         </div>
-                        <div className='font-semibold'>{profile.fullName}</div>
+                        <div className='font-semibold'>{getProfile.fullName}</div>
                     </Link>
                     <button onClick={doLogout} className='w-24 h-12 bg-red-500 rounded-xl'>
                         <div className='text-white font-semibold'>Logout</div>
