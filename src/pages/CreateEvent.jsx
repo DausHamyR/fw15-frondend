@@ -38,11 +38,13 @@ const CreateEvent = ()=> {
 
     const btnUpdateEvent = async values => {
         setLoading(true);
+        console.log(values)
         const form = new FormData();
         Object.keys(values).forEach(key => {
             form.append(key, values[key]);
         });
         if (selectedPicture) {
+            console.log(selectedPicture)
             form.append('picture', selectedPicture);
         }
         const {data} = await http(token).patch(`/events/manage/${idEvent}`, form, {

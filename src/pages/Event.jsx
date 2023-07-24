@@ -3,7 +3,7 @@ import clock from '../assets/clock.png'
 import Group28 from '../assets/Group28.png'
 import peta from '../assets/peta.png'
 import { Link } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import moment from "moment"
 import { useParams, useNavigate } from 'react-router-dom'
 import http from '../helpers/http.helper'
@@ -18,7 +18,6 @@ const Event = ()=> {
     const dispatch = useDispatch()
     const {id} = useParams()
     const [event, setEvent] = useState({})
-    const [setProfile] = useState({})
     const token = useSelector(state => state.auth.token)
     const [wishlist, setWishlist] = useState(false);
 
@@ -39,13 +38,12 @@ const Event = ()=> {
                 dispatch(setWarningMessage(message))
                 navigate('/login')
             }
-            const {data} = await http(token, fallback).get('/profile')
-            setProfile(data.results)
+            await http(token, fallback).get('/profile')
         }
         if(token){
             getProfileData()
         }
-    }, [dispatch, navigate, token, setProfile])
+    }, [dispatch, navigate, token])
 
     async function postWishlist(id) {
         try {
@@ -64,17 +62,21 @@ const Event = ()=> {
         }
       }
 
-      useEffect(() => {
-        async function getWishlist(id) {
-          const {data} = await http(token).get(`/wishlists/${id}`);
-          if (!data) {
-            setWishlist(false);
-          } else {
-            setWishlist(true);
-          }
-        }
+    useEffect(() => {
         getWishlist(id);
-      }, [token, id]);
+    }, []);
+
+    const getWishlist = useCallback(
+        async () => {
+            try {
+                const {data} = await http(token).get(`/wishlists/${id}`)
+                setWishlist(!!data);
+            } catch (err) {
+            console.log(err);
+            }
+        },
+        [token, id],
+    );
 
     return (
     <>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import moment from "moment"
 import orang from '../assets/2orang.png'
 import Group5899 from '../assets/Group5899.png'
@@ -38,7 +38,7 @@ const Home = ()=> {
     const [sortName, setSortName] = useState('id');
     const [categoryName, setCategoryName] = useState('');
 
-    async function getEventsCategory(name){
+    async function getEventsCategoryy(name){
         setCategoryName(name)
     }
 
@@ -51,26 +51,6 @@ const Home = ()=> {
             }
             await http(token, fallback).get('/profile')
         }
-        async function getEvents(){
-            const {data} = await http(token).get(`/events?page=${paginition}&sortBy=${sortBy}&sort=${sortName}`)
-            setEvents(data.results)
-        }
-        async function getEventsCategory(){
-            const {data} = await http(token).get(`/events?category=${categoryName}`)
-            setSelectedCategory(data.results)
-        }
-        async function getCities(){
-            const {data} = await http(token).get('/city', {params:{limit: 1000}})
-            setCities(data.results)
-        }
-        async function getCategory(){
-            const {data} = await http(token).get('/categories', {params:{limit: 1000}})
-            setCategory(data.results)
-        }
-        // async function getPartners(){
-        //     const {data} = await http().get('http://localhost:8888/partners')
-        //     // setPartners(data.results)
-        // }
         if(token){
             getProfileData()
         }
@@ -78,7 +58,6 @@ const Home = ()=> {
         getEvents()
         getCities()
         getCategory()
-        // getPartners()
     }, [dispatch, navigate, setProfile, token, events, paginition, sortBy, sortName, categoryName])
 
     const onSearch = (values)=> {
@@ -101,6 +80,54 @@ const Home = ()=> {
     // useEffect(() => {
     //     selectedCategory
     // }, [selectedCategory]);
+
+    const getEvents = useCallback(
+        async () => {
+            try {
+            const {data} = await http(token).get(`/events?page=${paginition}&sortBy=${sortBy}&sort=${sortName}`)
+            setEvents(data.results)
+            } catch (err) {
+            console.log(err);
+            }
+        },
+        [token, sortBy, sortName, paginition],
+    );
+
+    const getEventsCategory = useCallback(
+        async () => {
+            try {
+                const {data} = await http(token).get(`/events?category=${categoryName}`)
+                setSelectedCategory(data.results)
+            } catch (err) {
+            console.log(err);
+            }
+        },
+        [token, categoryName],
+    );
+
+    const getCategory = useCallback(
+        async () => {
+            try {
+                const {data} = await http(token).get('/categories', {params:{limit: 1000}})
+                setCategory(data.results)
+            } catch (err) {
+            console.log(err);
+            }
+        },
+        [token],
+    );
+
+    const getCities = useCallback(
+        async () => {
+            try {
+                const {data} = await http(token).get('/city', {params:{limit: 1000}})
+                setCities(data.results)
+            } catch (err) {
+            console.log(err);
+            }
+        },
+        [token],
+    );
 
     return (
         <>
@@ -209,7 +236,7 @@ const Home = ()=> {
                 </div>
                 <div className="flex justify-between max-sm:justify-center mx-28 mb-8 max-md:mx-6 max-sm:flex-wrap max-sm:gap-12">
                     {category.map(category => 
-                        <button key={category.id} onClick={()=> getEventsCategory(category.name)} className={`font-bold ${categoryName === category.name ? 'text-primary border-primary' : 'text-gray-400'} hover:text-primary font-bold border-b-2 border-transparent hover:border-primary`}>{category.name}</button>
+                        <button key={category.id} onClick={()=> getEventsCategoryy(category.name)} className={`font-bold ${categoryName === category.name ? 'text-primary border-primary' : 'text-gray-400'} hover:text-primary font-bold border-b-2 border-transparent hover:border-primary`}>{category.name}</button>
                     )}
                 </div>
                 <div className="flex justify-center gap-12 max-xl:flex-wrap">
