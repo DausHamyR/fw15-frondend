@@ -1,5 +1,4 @@
 import { Link, useNavigate } from "react-router-dom"
-import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout as logoutAction } from "../redux/reducers/auth"
 import defaultavatar from '../assets/default-avatar.png'

@@ -24,10 +24,11 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false)
 
     useEffect(() => {
+        dispatch(clearMessage())
         if(token){
             navigate('/')
         }
-    }, [token, navigate])
+    }, [token, navigate, dispatch])
 
     const handleTogglePassword = () => {
         setShowPassword(!showPassword)
