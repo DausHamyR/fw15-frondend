@@ -42,24 +42,43 @@ const Home = ()=> {
         setCategoryName(name)
     }
 
-    // const getCities = useCallback(
-    //     async () => {
-    //         try {
-    //             const {data} = await http(token).get('/city', {params:{limit: 1000}})
-    //             setCities(data.results)
-    //         } catch (err) {
-    //         console.log(err);
-    //         }
-    //     },
-    //     [token],
-    // );
+    const getProfileData = useCallback(
+        async () => {
+            try {
+                const fallback = (message)=> {
+                    dispatch(logoutAction())
+                    dispatch(setWarningMessage(message))
+                    navigate('/login')
+                }
+                await http(token, fallback).get('/profile')
+                
+            } catch (err) {
+            console.log(err);
+            }
+        },
+        [token, dispatch, navigate],
+    );
 
     useEffect(()=> {
+        // async function getProfileData(){
+        //     const fallback = (message)=> {
+        //         dispatch(logoutAction())
+        //         dispatch(setWarningMessage(message))
+        //         navigate('/login')
+        //     }
+        //     await http(token, fallback).get('/profile')
+        // }
+        // if(token){
+        //     getProfileData()
+        // }
+        if(token){
+            getProfileData()
+        }
         getEventsCategory()
         getEvents()
         getCities()
         getCategory()
-    }, [events,getCategory,getCities,getEvents,getEventsCategory])
+    }, [ token, events, getCategory,getCities,getEvents,getEventsCategory, getProfileData])
 
     const onSearch = (values)=> {
         const qs = new URLSearchParams(values).toString()
