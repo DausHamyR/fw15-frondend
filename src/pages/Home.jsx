@@ -54,15 +54,16 @@ const Home = ()=> {
     //     [token],
     // );
 
+    async function getProfileData() {
+        const fallback = (message) => {
+          dispatch(logoutAction());
+          dispatch(setWarningMessage(message));
+          navigate('/login');
+        };
+        await http(token, fallback).get('/profile');
+      }
+
     useEffect(()=> {
-        async function getProfileData(){
-            const fallback = (message)=> {
-                dispatch(logoutAction())
-                dispatch(setWarningMessage(message))
-                navigate('/login')
-            }
-            await http(token, fallback).get('/profile')
-        }
         if(token){
             getProfileData()
         }
@@ -70,7 +71,7 @@ const Home = ()=> {
         getEvents()
         getCities()
         getCategory()
-    }, [dispatch, navigate, token, events,getEventsCategory,getEvents,getCities,getCategory])
+    }, [token, events,getEventsCategory,getEvents,getCities,getCategory])
 
     const onSearch = (values)=> {
         const qs = new URLSearchParams(values).toString()
