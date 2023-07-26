@@ -42,35 +42,27 @@ const Home = ()=> {
         setCategoryName(name)
     }
 
-    const getProfileData = useCallback(
-        async () => {
-            try {
-                const fallback = (message)=> {
-                    dispatch(logoutAction())
-                    dispatch(setWarningMessage(message))
-                    navigate('/login')
-                }
-                await http(token, fallback).get('/profile')
-                
-            } catch (err) {
-            console.log(err);
-            }
-        },
-        [token, dispatch, navigate],
-    );
+    // const getCities = useCallback(
+    //     async () => {
+    //         try {
+    //             const {data} = await http(token).get('/city', {params:{limit: 1000}})
+    //             setCities(data.results)
+    //         } catch (err) {
+    //         console.log(err);
+    //         }
+    //     },
+    //     [token],
+    // );
 
     useEffect(()=> {
-        // async function getProfileData(){
-        //     const fallback = (message)=> {
-        //         dispatch(logoutAction())
-        //         dispatch(setWarningMessage(message))
-        //         navigate('/login')
-        //     }
-        //     await http(token, fallback).get('/profile')
-        // }
-        // if(token){
-        //     getProfileData()
-        // }
+        async function getProfileData(){
+            const fallback = (message)=> {
+                dispatch(logoutAction())
+                dispatch(setWarningMessage(message))
+                navigate('/login')
+            }
+            await http(token, fallback).get('/profile')
+        }
         if(token){
             getProfileData()
         }
@@ -78,7 +70,7 @@ const Home = ()=> {
         getEvents()
         getCities()
         getCategory()
-    }, [ token, events, getCategory,getCities,getEvents,getEventsCategory, getProfileData])
+    }, [dispatch, navigate, token, events,getEventsCategory,getEvents,getCities,getCategory])
 
     const onSearch = (values)=> {
         const qs = new URLSearchParams(values).toString()
