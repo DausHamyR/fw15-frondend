@@ -41,24 +41,24 @@ const Home = ()=> {
         setCategoryName(name)
     }
 
-    const getProfileData = useCallback(
-        async () => {
-            try {
-                const fallback = (message)=> {
-                    dispatch(logoutAction())
-                    dispatch(setWarningMessage(message))
-                    navigate('/login')
-                }
-                await http(token, fallback).get('/profile')
-                if(token){
-                    getProfileData()
-                }
-            } catch (err) {
-            console.log(err);
-            }
-        },
-        [token, dispatch, navigate],
-    );
+    // const getProfileData = useCallback(
+    //     async () => {
+    //         try {
+    //             const fallback = (message)=> {
+    //                 dispatch(logoutAction())
+    //                 dispatch(setWarningMessage(message))
+    //                 navigate('/login')
+    //             }
+    //             await http(token, fallback).get('/profile')
+    //             if(token){
+    //                 getProfileData()
+    //             }
+    //         } catch (err) {
+    //         console.log(err);
+    //         }
+    //     },
+    //     [token, dispatch, navigate],
+    // );
 
     useEffect(()=> {
         getEventsCategory()
