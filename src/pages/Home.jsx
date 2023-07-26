@@ -27,6 +27,7 @@ import {BiSearch} from 'react-icons/bi'
 const Home = ()=> {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const [setProfile] = useState({})
     const token = useSelector(state => state.auth.token)
     const [events, setEvents] = useState([])
     const [cities, setCities] = useState([])
@@ -41,31 +42,35 @@ const Home = ()=> {
         setCategoryName(name)
     }
 
-    // const getProfileData = useCallback(
+    // const getCities = useCallback(
     //     async () => {
     //         try {
-    //             const fallback = (message)=> {
-    //                 dispatch(logoutAction())
-    //                 dispatch(setWarningMessage(message))
-    //                 navigate('/login')
-    //             }
-    //             await http(token, fallback).get('/profile')
-    //             if(token){
-    //                 getProfileData()
-    //             }
+    //             const {data} = await http(token).get('/city', {params:{limit: 1000}})
+    //             setCities(data.results)
     //         } catch (err) {
     //         console.log(err);
     //         }
     //     },
-    //     [token, dispatch, navigate],
+    //     [token],
     // );
 
     useEffect(()=> {
+        async function getProfileData(){
+            const fallback = (message)=> {
+                dispatch(logoutAction())
+                dispatch(setWarningMessage(message))
+                navigate('/login')
+            }
+            await http(token, fallback).get('/profile')
+        }
+        if(token){
+            getProfileData()
+        }
         getEventsCategory()
         getEvents()
         getCities()
         getCategory()
-    }, [getCategory,getCities,getEvents,getEventsCategory])
+    }, [dispatch, navigate, setProfile, token, events, paginition, sortBy, sortName, categoryName])
 
     const onSearch = (values)=> {
         const qs = new URLSearchParams(values).toString()
