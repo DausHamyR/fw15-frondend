@@ -55,22 +55,11 @@ const Home = ()=> {
     // );
 
     useEffect(()=> {
-        async function getProfileData(){
-            const fallback = (message)=> {
-                dispatch(logoutAction())
-                dispatch(setWarningMessage(message))
-                navigate('/login')
-            }
-            await http(token, fallback).get('/profile')
-        }
-        if(token){
-            getProfileData()
-        }
         getEventsCategory()
         getEvents()
         getCities()
         getCategory()
-    }, [dispatch, navigate, setProfile, token, events, paginition, sortBy, sortName, categoryName])
+    }, [events,getCategory,getCities,getEvents,getEventsCategory])
 
     const onSearch = (values)=> {
         const qs = new URLSearchParams(values).toString()
