@@ -27,7 +27,6 @@ import {BiSearch} from 'react-icons/bi'
 const Home = ()=> {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const [setProfile] = useState({})
     const token = useSelector(state => state.auth.token)
     const [events, setEvents] = useState([])
     const [cities, setCities] = useState([])
@@ -42,23 +41,31 @@ const Home = ()=> {
         setCategoryName(name)
     }
 
-    useEffect(()=> {
-        async function getProfileData(){
-            const fallback = (message)=> {
-                dispatch(logoutAction())
-                dispatch(setWarningMessage(message))
-                navigate('/login')
+    const getProfileData = useCallback(
+        async () => {
+            try {
+                const fallback = (message)=> {
+                    dispatch(logoutAction())
+                    dispatch(setWarningMessage(message))
+                    navigate('/login')
+                }
+                await http(token, fallback).get('/profile')
+                if(token){
+                    getProfileData()
+                }
+            } catch (err) {
+            console.log(err);
             }
-            await http(token, fallback).get('/profile')
-        }
-        if(token){
-            getProfileData()
-        }
+        },
+        [token, dispatch, navigate],
+    );
+
+    useEffect(()=> {
         getEventsCategory()
         getEvents()
         getCities()
         getCategory()
-    }, [dispatch, navigate, setProfile, token, events, paginition, sortBy, sortName, categoryName])
+    }, [getCategory,getCities,getEvents,getEventsCategory])
 
     const onSearch = (values)=> {
         const qs = new URLSearchParams(values).toString()
