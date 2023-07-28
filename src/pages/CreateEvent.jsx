@@ -23,6 +23,8 @@ const CreateEvent = ()=> {
     const [selectedPrice, setSelectedPrice] = useState('Select Price');
     const [valuesPrice, setValuesPrice] = useState();
     const [showModalCreateEvent, setShowModalCreateEvent] = useState(false);
+    const [showModalUpdateEvent, setShowModalUpdateEvent] = useState(false);
+    const [indexEvent, setIndexEvent] = useState();
 
     const toggleDropdown = () => {
         setIsDropdownOpen((prevState) => !prevState);
@@ -80,24 +82,31 @@ const CreateEvent = ()=> {
 
     const btnUpdateEvent = async values => {
         setLoading(true);
-        console.log(values)
         const form = new FormData();
         Object.keys(values).forEach(key => {
             form.append(key, values[key]);
         });
         if (selectedPicture) {
-            console.log(selectedPicture)
             form.append('picture', selectedPicture);
+        }
+        if (valuesCategory) {
+            form.append('category', valuesCategory);
+        }
+        if (valuesLocation) {
+            form.append('location', valuesLocation);
+        }
+        if (valuesPrice) {
+            form.append('price', valuesPrice);
         }
         const {data} = await http(token).patch(`/events/manage/${idEvent}`, form, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         });
-        console.log(data.results);
         setGetAllManage(data.results);
         setSuccessMessage('Update Events successfully');
         setLoading(false);
+        setShowModalUpdateEvent(false)
     };
 
     async function removeEvent(id) {
@@ -129,8 +138,16 @@ const CreateEvent = ()=> {
         }
     }, [successMessage]);
 
+    // useEffect(() => {
+    //     console.log(getAllmanage[indexEvent]?.title)
+    // }, [indexEvent, getAllmanage]);
+
     const updateEvent = async id => {
         setIdEvent(id);
+        const getid = getAllmanage.map(getId => getId.id)
+        const a = getid.indexOf(id)
+        setIndexEvent(a)
+        setShowModalUpdateEvent(true)
     };
 
     return (
@@ -281,7 +298,7 @@ const CreateEvent = ()=> {
                     <button type="submit" className='text-white'>Create</button>
                 </div>
                 <div className="modal-action">
-                    <label htmlFor="my_modal_6" className="btn bg-red-500 hover:bg-white hover:text-red-500">Close!</label>
+                    <label onClick={()=> setShowModalCreateEvent(false)} htmlFor="my_modal_6" className="btn bg-red-500 hover:bg-white hover:text-red-500">Close!</label>
                 </div>
             </div>
         </form>
@@ -290,7 +307,7 @@ const CreateEvent = ()=> {
     </div>
   </div>
 </div>
-    <input type="checkbox" id="modalUpdate" className="modal-toggle" />
+    <input type="checkbox" id="modalUpdate" className="modal-toggle" checked={showModalUpdateEvent} />
 <div className="modal">
   <div className="modal-box min-w-[30%]">
     <div>
@@ -299,12 +316,12 @@ const CreateEvent = ()=> {
         </div>
         <Formik
         initialValues={{
-            name: '',
+            name: getAllmanage[indexEvent]?.title,
             location: '',
             price: '',
             category: '',
-            date:  '',
-            detail: ''
+            date:  moment(getAllmanage[indexEvent]?.date).format('YYYY-MM-DD'),
+            detail: getAllmanage[indexEvent]?.descriptions
         }}
         onSubmit={btnUpdateEvent}
         enableReinitialize
@@ -318,15 +335,41 @@ const CreateEvent = ()=> {
                     onChange={handleChange} onBlur={handleBlur} value={values.name} />
                 </div>
                 <div>
-                    <div className='mb-2'>Category</div>
-                    <input name='category' type="text" placeholder='Select Location' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.category}/>
+                    <div className='mb-5'>Category</div>
+                    <div className="dropdown">
+                        <label onClick={toggleDropdown} tabIndex={0} className="py-[12px] pl-[10px] pr-[100px] border-2 rounded-md">{selectedOption}</label>
+                        {isDropdownOpen && (
+                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <li><a onClick={() => handleOptionClick('Music', 1)}>Music</a></li>
+                            <li><a onClick={() => handleOptionClick('Arts', 2)}>Arts</a></li>
+                            <li><a onClick={() => handleOptionClick('Outdoors', 3)}>Outdoors</a></li>
+                            <li><a onClick={() => handleOptionClick('Workshop', 4)}>Workshop</a></li>
+                            <li><a onClick={() => handleOptionClick('Sport', 5)}>Sport</a></li>
+                            <li><a onClick={() => handleOptionClick('Festival', 6)}>Festival</a></li>
+                            <li><a onClick={() => handleOptionClick('Fashion', 7)}>Fashion</a></li>
+                        </ul>
+                        )}
+                    </div>
                 </div>
             </div>
             <div className='flex justify-between mb-6'>
                 <div>
-                    <div className='mb-2'>Location</div>
-                    <input name='location' type="text" placeholder='Select Location' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.location}/>
-                </div>
+                    <div className='mb-5'>Location</div>
+                        <div className="dropdown">
+                            <label onClick={toggleDropdown} tabIndex={0} className="py-[12px] pl-[10px] pr-[100px] border-2 rounded-md" value={getAllmanage[indexEvent]?.name}>{selectedLocation}</label>
+                            {isDropdownOpen && (
+                            <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                <li><a onClick={() => handleLocation('Bandung', 1)}>Bandung</a></li>
+                                <li><a onClick={() => handleLocation('Jakarta', 2)}>Jakarta</a></li>
+                                <li><a onClick={() => handleLocation('Aceh', 3)}>Aceh</a></li>
+                                <li><a onClick={() => handleLocation('Solo', 4)}>Solo</a></li>
+                                <li><a onClick={() => handleLocation('Bali', 5)}>Bali</a></li>
+                                <li><a onClick={() => handleLocation('Jogyakarta', 6)}>Jogyakarta</a></li>
+                                <li><a onClick={() => handleLocation('Semarang', 7)}>Semarang</a></li>
+                            </ul>
+                            )}
+                        </div>
+                    </div>
                 <div>
                     <div className='mb-2'>Date Time Show</div>
                     <input name='date' type="date" placeholder='Input Price' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.date}/>
@@ -334,8 +377,17 @@ const CreateEvent = ()=> {
             </div>
             <div className='flex justify-between mb-6'>
                 <div>
-                    <div className='mb-2'>Price</div>
-                    <input name='price' type="text" placeholder='Input Price' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.price}/>
+                    <div className='mb-5'>Price</div>
+                    <div className="dropdown">
+                        <label onClick={toggleDropdown} tabIndex={0} className="py-[12px] pl-[10px] pr-[30px] border-2 rounded-md">{selectedPrice}</label>
+                        {isDropdownOpen && (
+                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <li><a onClick={() => handlePrice('$15', 1)}>$15</a></li>
+                            <li><a onClick={() => handlePrice('$30', 2)}>$30</a></li>
+                            <li><a onClick={() => handlePrice('$50', 3)}>$50</a></li>
+                        </ul>
+                        )}
+                    </div>
                 </div>
                 <div>
                     <div className='mb-2'>Image</div>
@@ -353,7 +405,7 @@ const CreateEvent = ()=> {
                     <button type="submit" className='text-white'>Update</button>
                 </div>
                 <div className="modal-action">
-                    <label htmlFor="modalUpdate" className="btn bg-red-500 hover:bg-white hover:text-red-500">Close!</label>
+                    <label onClick={()=> setShowModalUpdateEvent(false)} htmlFor="modalUpdate" className="btn bg-red-500 hover:bg-white hover:text-red-500">Close!</label>
                 </div>
             </div>
         </form>
