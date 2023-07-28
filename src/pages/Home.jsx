@@ -27,7 +27,6 @@ import {BiSearch} from 'react-icons/bi'
 const Home = ()=> {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const [setProfile] = useState({})
     const token = useSelector(state => state.auth.token)
     const [events, setEvents] = useState([])
     const [cities, setCities] = useState([])
@@ -42,80 +41,20 @@ const Home = ()=> {
         setCategoryName(name)
     }
 
-    // const getCities = useCallback(
-    //     async () => {
-    //         try {
-    //             const {data} = await http(token).get('/city', {params:{limit: 1000}})
-    //             setCities(data.results)
-    //         } catch (err) {
-    //         console.log(err);
-    //         }
-    //     },
-    //     [token],
-    // );
-
-    async function getProfileData() {
-        const fallback = (message) => {
-          dispatch(logoutAction());
-          dispatch(setWarningMessage(message));
-          navigate('/login');
-        };
-        await http(token, fallback).get('/profile');
-      }
-
-    useEffect(()=> {
-        if(token){
-            getProfileData()
-        }
-        getEventsCategory()
-        getEvents()
-        getCities()
-        getCategory()
-    }, [token, events,getEventsCategory,getEvents,getCities,getCategory])
-
-    const onSearch = (values)=> {
-        const qs = new URLSearchParams(values).toString()
-        navigate(`/search?${qs}`)
-    }
-
-    const allEventByCity = (cityName)=> {
-        navigate(`/search?city=${cityName}`)
-    }
-
-    const pageNext = () => {
-        setPaginition(paginition + 1);
-    };
-
-    const pagePrev = () => {
-        setPaginition(paginition - 1);
-    };
-
-    // useEffect(() => {
-    //     selectedCategory
-    // }, [selectedCategory]);
-
-    const getEvents = useCallback(
+    const getProfileData = useCallback(
         async () => {
             try {
-            const {data} = await http(token).get(`/events?page=${paginition}&sortBy=${sortBy}&sort=${sortName}`)
-            setEvents(data.results)
+                const fallback = (message) => {
+                    dispatch(logoutAction());
+                    dispatch(setWarningMessage(message));
+                    navigate('/login');
+                };
+                await http(token, fallback).get('/profile');
             } catch (err) {
             console.log(err);
             }
         },
-        [token, sortBy, sortName, paginition],
-    );
-
-    const getEventsCategory = useCallback(
-        async () => {
-            try {
-                const {data} = await http(token).get(`/events?category=${categoryName}`)
-                setSelectedCategory(data.results)
-            } catch (err) {
-            console.log(err);
-            }
-        },
-        [token, categoryName],
+        [token, dispatch, navigate],
     );
 
     const getCategory = useCallback(
@@ -141,6 +80,61 @@ const Home = ()=> {
         },
         [token],
     );
+
+    const getEvents = useCallback(
+        async () => {
+            try {
+            const {data} = await http(token).get(`/events?page=${paginition}&sortBy=${sortBy}&sort=${sortName}`)
+            setEvents(data.results)
+            } catch (err) {
+            console.log(err);
+            }
+        },
+        [token, sortBy, sortName, paginition],
+    );
+
+    const getEventsCategory = useCallback(
+        async () => {
+            try {
+                const {data} = await http(token).get(`/events?category=${categoryName}`)
+                setSelectedCategory(data.results)
+            } catch (err) {
+            console.log(err);
+            }
+        },
+        [token, categoryName],
+    );
+
+    useEffect(()=> {
+        if(token){
+            getProfileData()
+        }
+        getEventsCategory()
+        getEvents()
+        getCities()
+        getCategory()
+    }, [getCategory, getCities, getEvents, getEventsCategory, getProfileData, token])
+
+    const onSearch = (values)=> {
+        const qs = new URLSearchParams(values).toString()
+        navigate(`/search?${qs}`)
+    }
+
+    const allEventByCity = (cityName)=> {
+        navigate(`/search?city=${cityName}`)
+    }
+
+    const pageNext = () => {
+        setPaginition(paginition + 1);
+    };
+
+    const pagePrev = () => {
+        setPaginition(paginition - 1);
+    };
+
+    // useEffect(() => {
+    //     selectedCategory
+    // }, [selectedCategory]);
 
     return (
         <>
