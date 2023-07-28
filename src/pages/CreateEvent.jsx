@@ -159,8 +159,20 @@ const CreateEvent = ()=> {
                     onChange={handleChange} onBlur={handleBlur} value={values.name} />
                 </div>
                 <div>
-                    <div className='mb-2'>Category</div>
-                    <input name='category' type="text" placeholder='Select Location' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.category}/>
+                    <div className='mb-5'>Category</div>
+                    {/* <input name='category' type="text" placeholder='Select Location' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.category}/> */}
+                    <div className="dropdown">
+                        <label tabIndex={0} className="py-[12px] pl-[10px] pr-[100px] border-2 rounded-md">Select Category</label>
+                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <li><a>Music</a></li>
+                            <li><a>Arts</a></li>
+                            <li><a>Outdoors</a></li>
+                            <li><a>Workshop</a></li>
+                            <li><a>Sport</a></li>
+                            <li><a>Festival</a></li>
+                            <li><a>Fashion</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div className='flex justify-between mb-6'>

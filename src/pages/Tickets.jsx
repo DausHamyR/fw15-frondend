@@ -53,7 +53,9 @@ const Tickets = ()=> {
             sectionId: filledSection.id,
             quantity: filledSection.quantity
         }).toString()
+        console.log(form)
         const {data} = await http(token).post('/reservations', form)
+        console.log(data)
         navigate('/payment', {state: {
             eventId,
             // eventName: data.results.events.title,
@@ -69,8 +71,9 @@ const Tickets = ()=> {
     const selectedSection = filledSection && sections.filter(item => item.id === filledSection.id)[0]
 
     // useEffect(() => {
-    //     console.log(selectedSection)
-    // }, [selectedSection]);
+    //     console.log(filledSection)
+    //     console.log(sections[2], 'sections')
+    // }, [filledSection, sections]);
 
     useEffect(()=> {
         async function getProfileData(){
@@ -211,6 +214,7 @@ const Tickets = ()=> {
                     </div>
                     <div className="grid content-between h-[100px] text-blue-500 font-semibold">
                         <h1>{selectedSection?.name || "-"}</h1>
+                        <h1>{filledSection.quantity || "0"}</h1>
                         <h1>${(selectedSection?.price * filledSection?.quantity) || "0"}</h1>
                     </div>
                 </div>

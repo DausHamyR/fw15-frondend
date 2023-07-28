@@ -54,14 +54,15 @@ const Payment = ()=> {
             reservationId,
             paymentMethodId: selectedOption
         }).toString()
+        console.log(form)
         const {data} = await http(token).post('/payment', form)
         navigate('/my-booking', {replace: true})
     }
 
-    useEffect(()=> {
-        console.log(state)
-    }, [state])
-    
+    // useEffect(()=> {
+    //     console.log(token)
+    // }, [token])
+
     return (
     <>
         <NavbarLogout />
