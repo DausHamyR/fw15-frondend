@@ -15,10 +15,39 @@ const CreateEvent = ()=> {
     const [successMessage, setSuccessMessage] = useState('');
     const [idEvent, setIdEvent] = useState();
     const [loading, setLoading] = useState(false)
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [selectedOption, setSelectedOption] = useState('Select Category');
+    const [valuesCategory, setValuesCategory] = useState();
+    const [selectedLocation, setSelectedLocation] = useState('Select Location');
+    const [valuesLocation, setValuesLocation] = useState();
+    const [selectedPrice, setSelectedPrice] = useState('Select Price');
+    const [valuesPrice, setValuesPrice] = useState();
+    const [showModalCreateEvent, setShowModalCreateEvent] = useState(false);
+
+    const toggleDropdown = () => {
+        setIsDropdownOpen((prevState) => !prevState);
+    };
+
+    const handleOptionClick = (option, id) => {
+        setSelectedOption(option);
+        setIsDropdownOpen(false);
+        setValuesCategory(id)
+    };
+
+    const handleLocation = (option, id) => {
+        setSelectedLocation(option);
+        setIsDropdownOpen(false);
+        setValuesLocation(id)
+    };
+
+    const handlePrice = (option, id) => {
+        setSelectedPrice(option);
+        setIsDropdownOpen(false);
+        setValuesPrice(id)
+    };
 
     const btnCreateEvent = async values => {
         setLoading(true);
-        console.log(values)
         const form = new FormData();
         Object.keys(values).forEach(key => {
             form.append(key, values[key]);
@@ -26,6 +55,18 @@ const CreateEvent = ()=> {
         if (selectedPicture) {
             form.append('picture', selectedPicture);
         }
+        if (valuesCategory) {
+            form.append('category', valuesCategory);
+        }
+        if (valuesLocation) {
+            form.append('location', valuesLocation);
+        }
+        if (valuesPrice) {
+            form.append('price', valuesPrice);
+        }
+        // form.forEach((value, key) => {
+        //     console.log(value)
+        // })
         const {data} = await http(token).post('/events/manage', form, {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -34,6 +75,7 @@ const CreateEvent = ()=> {
         setGetAllManage(data.results);
         setSuccessMessage('Create Events successfully');
         setLoading(false);
+        setShowModalCreateEvent(false)
     };
 
     const btnUpdateEvent = async values => {
@@ -78,6 +120,15 @@ const CreateEvent = ()=> {
         manageEvent();
     }, [token, getAllmanage]);
 
+    useEffect(() => {
+        if(successMessage){
+            const timeout = setTimeout(() => {
+                setSuccessMessage('');
+                }, 3000);
+                return () => clearTimeout(timeout);
+        }
+    }, [successMessage]);
+
     const updateEvent = async id => {
         setIdEvent(id);
     };
@@ -88,10 +139,11 @@ const CreateEvent = ()=> {
     <main className="w-full flex max-sm:ml-[0]">
         <Dashboard />
         <section className="w-[70%] bg-white min-h-[100vh] max-md:min-h-[50vh] mt-12 rounded-xl max-lg:w-full">
+            <h1 className="text-xl font-semibold text-green-700">{successMessage}</h1>
             <div className="w-[90%] h-[80px] flex justify-between items-center mx-6">
                 <h1 className="text-2xl font-semibold">Manage Event</h1>
                 <div className="flex justify-center px-8 py-3 items-center rounded-md">
-                    <label htmlFor='my_modal_6' className="text-xs font-bold tracking-wider btn">Create</label>
+                    <label htmlFor='my_modal_6' onClick={()=> setShowModalCreateEvent(true)} className="text-xs font-bold tracking-wider btn">Create</label>
                 </div>
             </div>
             <div className="w-[80%] h-[80%] mt-10 ml-16 max-sm:ml-4">
@@ -131,7 +183,7 @@ const CreateEvent = ()=> {
         </section>
     </main>
     <Footer />
-    <input type="checkbox" id="my_modal_6" className="modal-toggle" />
+    <input type="checkbox" id="my_modal_6" className="modal-toggle" checked={showModalCreateEvent} />
 <div className="modal">
   <div className="modal-box min-w-[30%]">
     <div>
@@ -158,27 +210,41 @@ const CreateEvent = ()=> {
                     <input name='name' type="text" placeholder='Input Name Event' className="input input-bordered w-full max-w-xs" 
                     onChange={handleChange} onBlur={handleBlur} value={values.name} />
                 </div>
-                <div>
+                <div className="w-1/2">
                     <div className='mb-5'>Category</div>
-                    {/* <input name='category' type="text" placeholder='Select Location' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.category}/> */}
                     <div className="dropdown">
-                        <label tabIndex={0} className="py-[12px] pl-[10px] pr-[100px] border-2 rounded-md">Select Category</label>
+                        <label onClick={toggleDropdown} tabIndex={0} className="py-[12px] pl-[10px] pr-[100px] border-2 rounded-md">{selectedOption}</label>
+                        {isDropdownOpen && (
                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                            <li><a>Music</a></li>
-                            <li><a>Arts</a></li>
-                            <li><a>Outdoors</a></li>
-                            <li><a>Workshop</a></li>
-                            <li><a>Sport</a></li>
-                            <li><a>Festival</a></li>
-                            <li><a>Fashion</a></li>
+                            <li><a onClick={() => handleOptionClick('Music', 1)}>Music</a></li>
+                            <li><a onClick={() => handleOptionClick('Arts', 2)}>Arts</a></li>
+                            <li><a onClick={() => handleOptionClick('Outdoors', 3)}>Outdoors</a></li>
+                            <li><a onClick={() => handleOptionClick('Workshop', 4)}>Workshop</a></li>
+                            <li><a onClick={() => handleOptionClick('Sport', 5)}>Sport</a></li>
+                            <li><a onClick={() => handleOptionClick('Festival', 6)}>Festival</a></li>
+                            <li><a onClick={() => handleOptionClick('Fashion', 7)}>Fashion</a></li>
                         </ul>
+                        )}
                     </div>
                 </div>
             </div>
             <div className='flex justify-between mb-6'>
                 <div>
-                    <div className='mb-2'>Location</div>
-                    <input name='location' type="text" placeholder='Select Location' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.location}/>
+                    <div className='mb-5'>Location</div>
+                    <div className="dropdown">
+                        <label onClick={toggleDropdown} tabIndex={0} className="py-[12px] pl-[10px] pr-[100px] border-2 rounded-md">{selectedLocation}</label>
+                        {isDropdownOpen && (
+                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <li><a onClick={() => handleLocation('Bandung', 1)}>Bandung</a></li>
+                            <li><a onClick={() => handleLocation('Jakarta', 2)}>Jakarta</a></li>
+                            <li><a onClick={() => handleLocation('Aceh', 3)}>Aceh</a></li>
+                            <li><a onClick={() => handleLocation('Solo', 4)}>Solo</a></li>
+                            <li><a onClick={() => handleLocation('Bali', 5)}>Bali</a></li>
+                            <li><a onClick={() => handleLocation('Jogyakarta', 6)}>Jogyakarta</a></li>
+                            <li><a onClick={() => handleLocation('Semarang', 7)}>Semarang</a></li>
+                        </ul>
+                        )}
+                    </div>
                 </div>
                 <div>
                     <div className='mb-2'>Date Time Show</div>
@@ -187,8 +253,17 @@ const CreateEvent = ()=> {
             </div>
             <div className='flex justify-between mb-6'>
                 <div>
-                    <div className='mb-2'>Price</div>
-                    <input name='price' type="text" placeholder='Input Price' className="input input-bordered w-full max-w-xs"  onChange={handleChange} onBlur={handleBlur} value={values.price}/>
+                    <div className='mb-5'>Price</div>
+                    <div className="dropdown">
+                        <label onClick={toggleDropdown} tabIndex={0} className="py-[12px] pl-[10px] pr-[30px] border-2 rounded-md">{selectedPrice}</label>
+                        {isDropdownOpen && (
+                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <li><a onClick={() => handlePrice('$15', 1)}>$15</a></li>
+                            <li><a onClick={() => handlePrice('$30', 2)}>$30</a></li>
+                            <li><a onClick={() => handlePrice('$50', 3)}>$50</a></li>
+                        </ul>
+                        )}
+                    </div>
                 </div>
                 <div>
                     <div className='mb-2'>Image</div>
