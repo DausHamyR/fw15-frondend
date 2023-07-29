@@ -1,5 +1,6 @@
 # Cruelty Free
 ![alt text](https://res.cloudinary.com/dxs0yxeyr/image/upload/v1690641418/Amat%20Daus/1690641415646.png))
+![alt text]([https://res.cloudinary.com/dxs0yxeyr/image/upload/v1690641418/Amat%20Daus/1690641415646.png](https://res.cloudinary.com/dxs0yxeyr/image/upload/v1690641508/Amat%20Daus/1690641506704.png)))
 ## Introduction
 Cruelty Free is a website for finding information or buying tickets to take part in events held around the world. Users can find information about when the event will be held, where the event will be held, and much more. And on the website you can also create events, ticket prices, and event management for event providers
 
