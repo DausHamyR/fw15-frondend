@@ -1,4 +1,5 @@
 # Cruelty Free
+![alt text](https://res.cloudinary.com/dxs0yxeyr/image/upload/v1690641877/Amat%20Daus/1690641875007.png)
 ![alt text](https://res.cloudinary.com/dxs0yxeyr/image/upload/v1690641418/Amat%20Daus/1690641415646.png)
 ![alt text](https://res.cloudinary.com/dxs0yxeyr/image/upload/v1690641508/Amat%20Daus/1690641506704.png)
 ## Introduction
