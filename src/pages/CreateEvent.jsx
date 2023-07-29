@@ -66,9 +66,9 @@ const CreateEvent = ()=> {
         if (valuesPrice) {
             form.append('price', valuesPrice);
         }
-        // form.forEach((value, key) => {
-        //     console.log(value)
-        // })
+        form.forEach((value, key) => {
+            console.log(value)
+        })
         const {data} = await http(token).post('/events/manage', form, {
             headers: {
                 'Content-Type': 'multipart/form-data',

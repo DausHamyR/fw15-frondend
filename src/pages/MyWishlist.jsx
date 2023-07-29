@@ -56,7 +56,7 @@ const MyWishlist = ()=> {
                             <p className="text-orange-500 font-medium">{moment(history.date).format('DD')}</p>
                             <p className="text-slate-400">{moment(history.date).format('dddd')}</p>
                         </div>
-                        <div className="grid content-start">
+                        <div className="grid content-start w-1/2">
                             <h1 className="font-bold text-2xl">{history.title}</h1>
                             <div className="mt-4">
                                 <p className="text-slate-400 mb-1">{history.name}</p>

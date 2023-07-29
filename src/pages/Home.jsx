@@ -23,6 +23,7 @@ import { Formik } from "formik"
 import NavbarLogout from '../components/NavbarLogout'
 import Footer from "../components/Footer"
 import {BiSearch} from 'react-icons/bi'
+import { dataProfile } from "../redux/reducers/profile"
 
 const Home = ()=> {
     const navigate = useNavigate()
@@ -49,7 +50,8 @@ const Home = ()=> {
                     dispatch(setWarningMessage(message));
                     navigate('/login');
                 };
-                await http(token, fallback).get('/profile');
+                const {data} = await http(token, fallback).get('/profile');
+                dispatch(dataProfile(data.results))
             } catch (err) {
             console.log(err);
             }

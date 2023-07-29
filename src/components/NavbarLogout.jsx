@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { logout as logoutAction } from "../redux/reducers/auth"
 import {FiMenu} from 'react-icons/fi'
 import defaultavatar from '../assets/default-avatar.png'
+import { removeProfile } from '../redux/reducers/profile'
 
 const NavbarLogout = ()=> {
     const [menu, setMenu] = useState(false)
@@ -21,6 +22,7 @@ const NavbarLogout = ()=> {
     const doLogout = ()=> {
         window.localStorage.removeItem('token')
         dispatch(logoutAction())
+        dispatch(removeProfile())
         navigate('/login')
     }
 
