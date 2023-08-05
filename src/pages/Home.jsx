@@ -34,7 +34,7 @@ const Home = ()=> {
     const [category, setCategory] = useState([])
     const [selectedCategory, setSelectedCategory] = useState([])
     const [paginition, setPaginition] = useState(1);
-    const [sortBy, setSortBy] = useState('ASC');
+    const [sortBy, setSortBy] = useState('DESC');
     const [sortName, setSortName] = useState('id');
     const [categoryName, setCategoryName] = useState('');
 

@@ -67,7 +67,7 @@ const CreateEvent = ()=> {
             form.append('price', valuesPrice);
         }
         form.forEach((value, key) => {
-            console.log(value)
+            console.log(key, value)
         })
         const {data} = await http(token).post('/events/manage', form, {
             headers: {
