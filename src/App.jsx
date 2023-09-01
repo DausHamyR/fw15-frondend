@@ -17,6 +17,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import {PersistGate} from 'redux-persist/integration/react'
 import SearchResults from "./pages/SearchResults";
 import CodeForgotPassword from "./pages/CodeForgotPassword";
+import Tes from "./pages/Tes";
 
 const App = ()=> {
     return (
@@ -38,6 +39,7 @@ const App = ()=> {
                         <Route path="/create-event" element={<PrivateRoute><CreateEvent /></PrivateRoute>} />
                         <Route path="/search" element={<SearchResults />} />
                         <Route path="/code-forgot-password" element={<CodeForgotPassword />} />
+                        <Route path="/tes" element={<Tes />} />
                     </Routes>
                 </BrowserRouter>
             </PersistGate>
